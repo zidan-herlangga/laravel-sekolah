@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Sekolah Unggulan Indonesia - Unggul dalam Ilmu, Berkarakter Islami')
+@section('title', 'SMP Tunas Harapan Bekasi')
 
 @section('content')
 

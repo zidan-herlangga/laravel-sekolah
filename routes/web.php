@@ -37,23 +37,26 @@ Route::post('/kontak', [PublicContactController::class, 'store'])->name('contact
 
 Route::prefix('admin')->name('admin.')->group(function () {
 
-    // Auth (Dihapus middleware 'guest' dari sini)
+    // 1. AUTH ROUTES (Login)
+    // Tidak boleh dibungkus middleware 'auth', karena user belum login saat mengakses halaman ini.
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
 
-    // Protected routes
-    Route::middleware(['auth', 'admin'])->group(function () {
+    // 2. ROUTES UNTUK ADMIN & PENULIS (Authenticated)
+    // Menggunakan middleware 'auth' saja.
+    // Artinya: Siapapun yang login (baik role 'admin' maupun 'penulis') bisa mengakses route di bawah ini.
+    Route::middleware(['auth'])->group(function () {
 
+        // Logout (Semua user yang login wajib bisa logout)
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-        // Dashboard
+        // Dashboard (Penulis & Admin bisa akses)
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        // CRUD Posts
+        // --- KONTEN (Penulis & Admin bisa akses) ---
+        
+        // CRUD Posts (Berita)
         Route::resource('posts', PostController::class);
-
-        // CRUD Teachers
-        Route::resource('teachers', TeacherController::class);
 
         // CRUD Galleries
         Route::resource('galleries', GalleryController::class);
@@ -61,16 +64,26 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // CRUD Programs
         Route::resource('programs', ProgramController::class);
 
-        // Registrations
-        Route::resource('registrations', RegistrationController::class)->only(['index', 'show', 'update', 'destroy']);
-        Route::post('registrations/export', [RegistrationController::class, 'export'])->name('registrations.export');
+        // 3. ROUTES KHUSUS ADMIN (Admin Only)
+        // Di dalam grup auth, kita buat grup baru yang menggunakan middleware 'admin'.
+        // Artinya: Hanya user yang role-nya 'admin' yang bisa mengakses route di bawah ini.
+        Route::middleware(['admin'])->group(function () {
+            
+            // CRUD Teachers (Hanya Admin)
+            Route::resource('teachers', TeacherController::class);
 
-        // Contacts
-        Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
-        Route::post('contacts/mark-all-read', [ContactController::class, 'markAllRead'])->name('contacts.mark-all-read');
+            // Registrations PPDB (Hanya Admin)
+            Route::resource('registrations', RegistrationController::class)->only(['index', 'show', 'update', 'destroy']);
+            Route::post('registrations/export', [RegistrationController::class, 'export'])->name('registrations.export');
 
-        // Settings
-        Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
-        Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
+            // Contacts/Pesan Masuk (Hanya Admin)
+            Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
+            Route::post('contacts/mark-all-read', [ContactController::class, 'markAllRead'])->name('contacts.mark-all-read');
+
+            // Settings/Pengaturan (Hanya Admin)
+            Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
+            Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
+            
+        });
     });
 });

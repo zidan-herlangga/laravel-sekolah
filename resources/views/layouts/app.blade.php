@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
-    <meta name="description" content="@yield('meta_description', 'SMP Tunas Harapan Bekasi - Berbasis Karakter & Kreativitas Digital')">
     <title>@yield('title', 'SMP Tunas Harapan Bekasi')</title>
+    <meta name="description" content="@yield('meta_description', 'SMP Tunas Harapan Bekasi - Berbasis Karakter & Kreativitas Digital')">
 
     {{-- Icon --}}
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/logo-tunas-harapan.png') }}">
@@ -205,6 +205,7 @@
     </div>
     @endif
 
+    <script id="dsq-count-scr" src="//zidanherlangga.disqus.com/count.js" async></script>
     <script>
         // Navbar scroll effect
         const navbar = document.getElementById('navbar');

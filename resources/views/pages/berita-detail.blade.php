@@ -6,6 +6,7 @@
 @section('content')
 
 <style>
+    /* ... Style Anda sebelumnya tetap sama ... */
     .berita-content {
     font-size: 1.1rem;
     line-height: 1.8;
@@ -62,6 +63,35 @@
         <article class="berita-content">
             {!! $post->content !!}
         </article>
+
+        <!-- BAGIAN KOMENTAR (DISQUS) -->
+        <div class="mt-16 pt-8 border-t border-gray-200">
+            <h3 class="font-display text-2xl font-bold text-dark-900 mb-6">Komentar</h3>
+            <p class="text-gray-600 mb-8">Silakan berikan tanggapan atau pertanyaan Anda mengenai berita ini.</p>
+            
+            <div id="disqus_thread"></div>
+            <script>
+                /**
+                *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+                *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+                
+                var disqus_config = function () {
+                this.page.url = '{{ url()->current() }}';  // URL Halaman saat ini
+                this.page.identifier = '{{ $post->id }}'; // ID Unik Post
+                this.page.title = '{{ $post->title }}';    // Judul Halaman
+                };
+                
+                (function() { // DON'T EDIT BELOW THIS LINE
+                var d = document, s = d.createElement('script');
+                // URL disqus yang sudah disesuaikan
+                s.src = 'https://zidanherlangga.disqus.com/embed.js'; 
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        </div>
+        <!-- END KOMENTAR -->
 
         <!-- Related Posts -->
         @if($relatedPosts->count())
