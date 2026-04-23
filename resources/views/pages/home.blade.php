@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'SMP Tunas Harapan Bekasi')
+@section('title', $settings->get('school_name'))
 
 @section('content')
 
@@ -22,7 +22,7 @@
             <div>
                 <div class="inline-flex items-center gap-2 px-4 py-2 bg-primary-400/10 border border-primary-400/20 rounded-full mb-6">
                     <span class="w-2 h-2 bg-primary-400 rounded-full animate-pulse"></span>
-                    <span class="text-primary-300 text-xs font-semibold uppercase tracking-widest">SMP Tunas Harapan Bekasi</span>
+                    <span class="text-primary-300 text-xs font-semibold uppercase tracking-widest">{{ $settings->get('school_name') }}</span>
                 </div>
 
                 <h1 class="font-display text-5xl sm:text-5xl lg:text-5xl xl:text-6xl font-extrabold text-white leading-[1.05] tracking-tight mb-6">
@@ -31,7 +31,7 @@
                 </h1>
 
                 <p class="text-lg text-dark-300 leading-relaxed max-w-lg mb-8">
-                    Membangun Generasi Berkarakter, Kreatif, dan Siap Era Digital.
+                    {{ $settings->get('school_motto') }}
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-4">
@@ -210,9 +210,9 @@
         <div class="grid lg:grid-cols-5 gap-12 items-center">
             <div class="lg:col-span-2 fade-up flex justify-center">
                 <div class="relative">
-                    <img src="{{ asset('storage/teachers/EJQGoCrROq8F4Q4g_1776739630.jpeg') }}" alt="Kepala Sekolah" class="rounded-3xl shadow-xl w-72 h-80 object-cover">
+                    <img src="{{ asset('storage/teachers/EJQGoCrROq8F4Q4g_1776739630.jpeg') }}" alt="{{ $settings->get('headmaster_name', '#') }}" class="rounded-3xl shadow-xl w-72 h-80 object-cover">
                     <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-white rounded-xl px-6 py-3 shadow-lg whitespace-nowrap">
-                        <span class="font-display font-bold text-dark-900 text-sm">Dra. Hj. Neneng Yeti. D, M.Pd</span>
+                        <span class="font-display font-bold text-dark-900 text-sm">{{ $settings->get('headmaster_name', '#') }}</span>
                     </div>
                 </div>
             </div>
@@ -222,7 +222,7 @@
                 <h2 class="font-display text-3xl md:text-4xl font-bold text-dark-900 tracking-tight mb-6">Sambutan Kepala Sekolah</h2>
                 <div class="relative pl-6 border-l-4 border-primary-400">
                     <div class="text-dark-600 leading-relaxed italic text-lg mb-4">
-                        {!! $settings->get('headmaster_welcome', 'Assalamualaikum Warahmatullahi Wabarakatuh. Segala puji bagi Allah SWT. Selamat datang di website resmi Sekolah Unggulan Indonesia.') !!}
+                        {!! $settings->get('headmaster_welcome', '#') !!}
                     </div>
                 </div>
                 <p class="text-dark-500 leading-relaxed mt-4">
@@ -313,7 +313,7 @@
                 Daftar Sekarang
                 <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
             </a>
-            <a href="tel:02112345678" class="inline-flex items-center justify-center gap-2 px-8 py-4 border border-dark-600 text-white font-semibold rounded-xl hover:bg-white/5 transition-all duration-300 text-lg">
+            <a href="https://wa.me/{{ $settings->get('school_phone', '#') }}" class="inline-flex items-center justify-center gap-2 px-8 py-4 border border-dark-600 text-white font-semibold rounded-xl hover:bg-white/5 transition-all duration-300 text-lg" target="_blank">
                 <i class="fas fa-phone-alt"></i>
                 Hubungi Kami
             </a>

@@ -15,9 +15,12 @@ class SettingViewProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // Membuat variabel $settings tersedia di SEMUA file view Blade
+        // Membuat variabel $settings tersedia di SEMUA file view Blade,
+        // KECUALI halaman admin (karena admin butuh format Array, bukan Object)
         View::composer('*', function ($view) {
-            $view->with('settings', app(SettingService::class));
+            if (!str_contains($view->getName(), 'admin.')) {
+                $view->with('settings', app(SettingService::class));
+            }
         });
     }
 }

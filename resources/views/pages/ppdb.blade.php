@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'PPDB Online - Sekolah Unggulan Indonesia')
+@section('title', 'PPDB Online - ' . $settings->get('school_name'))
 
 @section('content')
 

@@ -1,7 +1,33 @@
 @extends('layouts.app')
 
-@section('title', $post->title . ' - Sekolah Unggulan Indonesia')
+@section('title', $post->title . '- ' . $settings->get('school_name'))
+
 @section('meta_description', $post->excerpt)
+
+<!-- SEO & OPEN GRAPH (OG) TAGS -->
+@section('meta_tags')
+    <meta name="keywords" content="sekolah, berita, pendidikan, {{ $post->title }}">
+    <meta name="author" content="SMP Tunas Harapan Bekasi">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="{{ $post->title }}">
+    <meta property="og:description" content="{{ Str::limit(strip_tags($post->content), 150) }}">
+    <meta property="og:image" content="{{ $post->image ? asset(Storage::url($post->image)) : asset('img/default-og.jpg') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="SMP Tunas Harapan Bekasi">
+    <meta property="article:published_time" content="{{ $post->created_at->toIso8601String() }}">
+    <meta property="article:section" content="Berita Sekolah">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ url()->current() }}">
+    <meta property="twitter:title" content="{{ $post->title }}">
+    <meta property="twitter:description" content="{{ Str::limit(strip_tags($post->content), 150) }}">
+    <meta property="twitter:image" content="{{ $post->image ? asset(Storage::url($post->image)) : asset('img/default-og.jpg') }}">
+@endsection
 
 @section('content')
 

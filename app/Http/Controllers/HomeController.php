@@ -61,6 +61,8 @@ class HomeController extends Controller
 
     public function contact()
     {
-        return view('pages.contact');
+        $settings = $this->settingService;
+        
+        return view('pages.contact', compact('settings'));
     }
 }

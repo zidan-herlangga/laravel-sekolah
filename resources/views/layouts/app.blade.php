@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <meta name="google-site-verification" content="{{ $settings->get('google_site_verification') ?? '' }}" />
+    <meta name="msvalidate.01" content="{{ $settings->get('msvalidate.01') ?? '' }}" />
     
-    <title>@yield('title', 'SMP Tunas Harapan Bekasi')</title>
+    <title>@yield('title')</title>
+    @yield('meta_tags')
     <meta name="description" content="@yield('meta_description', 'SMP Tunas Harapan Bekasi - Berbasis Karakter & Kreativitas Digital')">
 
     {{-- Icon --}}
@@ -135,6 +139,7 @@
                         <a href="{{ $settings->get('school_instagram', '#') }}" class="w-9 h-9 rounded-lg bg-dark-800 hover:bg-primary-400 flex items-center justify-center transition-colors" target="_blank"><i class="fab fa-instagram text-sm"></i></a>
                         <a href="{{ $settings->get('school_youtube', '#') }}" class="w-9 h-9 rounded-lg bg-dark-800 hover:bg-primary-400 flex items-center justify-center transition-colors" target="_blank"><i class="fab fa-youtube text-sm"></i></a>
                         <a href="{{ $settings->get('school_tiktok', '#') }}" class="w-9 h-9 rounded-lg bg-dark-800 hover:bg-primary-400 flex items-center justify-center transition-colors" target="_blank"><i class="fab fa-tiktok text-sm"></i></a>
+                        <a href="https://wa.me/{{$settings->get('school_phone')}}" class="w-9 h-9 rounded-lg bg-dark-800 hover:bg-primary-400 flex items-center justify-center transition-colors" target="_blank"><i class="fab fa-whatsapp text-sm"></i></a>
                     </div>
                 </div>
 
@@ -167,15 +172,15 @@
                     <ul class="space-y-3">
                         <li class="flex items-start gap-3 text-sm">
                             <i class="fas fa-map-marker-alt text-primary-400 mt-1"></i>
-                            <span>{{ $settings->get('school_address', 'Jl. Pendidikan No. 1, Jakarta Selatan') }}</span>
+                            <span>{{ $settings->get('school_address', '#') }}</span>
                         </li>
                         <li class="flex items-center gap-3 text-sm">
                             <i class="fas fa-phone text-primary-400"></i>
-                            <span>{{ $settings->get('school_phone', '(021) 1234-5678') }}</span>
+                            <span>{{ $settings->get('school_phone', '#') }}</span>
                         </li>
                         <li class="flex items-center gap-3 text-sm">
                             <i class="fas fa-envelope text-primary-400"></i>
-                            <span>{{ $settings->get('school_email', 'info@sekolahunggulan.id') }}</span>
+                            <span>{{ $settings->get('school_email', '#') }}</span>
                         </li>
                     </ul>
                 </div>

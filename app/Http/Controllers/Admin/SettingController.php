@@ -34,17 +34,30 @@ class SettingController extends Controller
             'school_tiktok' => 'nullable|url|max:255',
             'ppdb_info' => 'nullable|string|max:2000',
             'headmaster_welcome' => 'nullable|string|max:5000',
+
+
+            'ppdb_disabled' => 'nullable', 
+            'google_site_verification' => 'nullable|string|max:255',
+            'msvalidate.01' => 'nullable|string|max:255',
         ]);
 
         $fields = [
             'school_name', 'school_short_name', 'school_motto',
             'school_address', 'school_phone', 'school_email',
             'school_facebook', 'school_instagram', 'school_youtube', 'school_tiktok',
-            'ppdb_info', 'headmaster_welcome',
+            'ppdb_info', 'headmaster_welcome', 'ppdb_disabled', 'google_site_verification', 'msvalidate.01'
         ];
 
         foreach ($fields as $field) {
-            $this->settingService->set($field, $request->input($field, ''));
+            // Cek khusus untuk checkbox
+            if ($field === 'ppdb_disabled') {
+                $value = $request->has('ppdb_disabled') ? '1' : '0';
+            } else {
+                // Untuk input biasa, ambil valuenya atau biarkan string kosong
+                $value = $request->input($field, '');
+            }
+            
+            $this->settingService->set($field, $value);
         }
 
         return redirect()->route('admin.settings.index')->with('success', 'Pengaturan berhasil disimpan.');

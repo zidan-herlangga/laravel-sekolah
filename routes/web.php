@@ -23,9 +23,20 @@ Route::get('/tentang', [HomeController::class, 'about'])->name('about');
 Route::get('/berita', [HomeController::class, 'berita'])->name('berita');
 Route::get('/berita/{slug}', [HomeController::class, 'beritaDetail'])->name('berita.detail');
 
-// PPDB Online
-Route::get('/ppdb', [HomeController::class, 'ppdb'])->name('ppdb');
-Route::post('/ppdb', [PublicRegistrationController::class, 'store'])->name('ppdb.store');
+// PPDB Online (Dengan logika nonaktif/ditutup)
+Route::get('/ppdb', function () {
+    if (app(\App\Services\SettingService::class)->get('ppdb_disabled') === '1') {
+        return view('pages.ppdb-closed');
+    }
+    return app(\App\Http\Controllers\HomeController::class)->ppdb();
+})->name('ppdb');
+
+Route::post('/ppdb', function (\Illuminate\Http\Request $request) {
+    if (app(\App\Services\SettingService::class)->get('ppdb_disabled') === '1') {
+        abort(404);
+    }
+    return app(\App\Http\Controllers\PublicRegistrationController::class)->store($request);
+})->name('ppdb.store');
 
 // Kontak
 Route::get('/kontak', [HomeController::class, 'contact'])->name('contact');

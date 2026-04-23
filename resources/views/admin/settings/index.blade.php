@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('page_title', 'Pengaturan Situs')
-@section('breadcrumb', " > " ."Kelola Pengaturan")
+@section('breadcrumb', " > Kelola Pengaturan")
 
 @section('content')
 <div class="card">
@@ -26,19 +26,33 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Nama Sekolah <span class="text-danger">*</span></label>
-                                <input type="text" name="school_name" value="{{ old('school_name', $settings->get('school_name')) }}" required class="form-control">
+                                <input type="text" name="school_name" value="{{ old('school_name', $settings['school_name'] ?? '') }}" required class="form-control">
                             </div>
                             <div class="form-group">
                                 <label>Nama Singkat <span class="text-danger">*</span></label>
-                                <input type="text" name="school_short_name" value="{{ old('school_short_name', $settings->get('school_short_name')) }}" required class="form-control" maxlength="20">
+                                <input type="text" name="school_short_name" value="{{ old('school_short_name', $settings['school_short_name'] ?? '') }}" required class="form-control" maxlength="20">
                             </div>
                             <div class="form-group">
                                 <label>Motto</label>
-                                <input type="text" name="school_motto" value="{{ old('school_motto', $settings->get('school_motto')) }}" class="form-control">
+                                <input type="text" name="school_motto" value="{{ old('school_motto', $settings['school_motto'] ?? '') }}" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label>Sambutan Kepala Sekolah</label>
-                                <textarea name="headmaster_welcome" class="form-control tinymce" rows="6">{{ old('headmaster_welcome', $settings->get('headmaster_welcome')) }}</textarea>
+                                <textarea name="headmaster_welcome" class="form-control tinymce" rows="6">{{ old('headmaster_welcome', $settings['headmaster_welcome'] ?? '') }}</textarea>
+                            </div>
+                        </div>
+
+                        {{-- Verification Google Console --}}
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Google Site Verification Code</label>
+                                <input type="text" name="google_site_verification" value="{{ old('google_site_verification', $settings['google_site_verification'] ?? '') }}" class="form-control" placeholder="Google Site Verification Code">
+                            </div>
+
+                            {{-- Verification Bing --}}
+                            <div class="form-group">
+                                <label>Bing Site Verification Code</label>
+                                <input type="text" name="msvalidate.01" value="{{ old('msvalidate.01', $settings['msvalidate.01'] ?? '') }}" class="form-control" placeholder="Bing Site Verification Code">
                             </div>
                         </div>
                     </div>
@@ -50,15 +64,15 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Alamat</label>
-                                <textarea name="school_address" class="form-control" rows="3">{{ old('school_address', $settings->get('school_address')) }}</textarea>
+                                <textarea name="school_address" class="form-control" rows="3">{{ old('school_address', $settings['school_address'] ?? '') }}</textarea>
                             </div>
                             <div class="form-group">
                                 <label>Telepon</label>
-                                <input type="text" name="school_phone" value="{{ old('school_phone', $settings->get('school_phone')) }}" class="form-control">
+                                <input type="text" name="school_phone" value="{{ old('school_phone', $settings['school_phone'] ?? '') }}" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="email" name="school_email" value="{{ old('school_email', $settings->get('school_email')) }}" class="form-control">
+                                <input type="email" name="school_email" value="{{ old('school_email', $settings['school_email'] ?? '') }}" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -70,19 +84,19 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label><i class="fab fa-facebook mr-1"></i> Facebook URL</label>
-                                <input type="url" name="school_facebook" value="{{ old('school_facebook', $settings->get('school_facebook')) }}" class="form-control" placeholder="https://facebook.com/...">
+                                <input type="url" name="school_facebook" value="{{ old('school_facebook', $settings['school_facebook'] ?? '') }}" class="form-control" placeholder="https://facebook.com/...">
                             </div>
                             <div class="form-group">
                                 <label><i class="fab fa-instagram mr-1"></i> Instagram URL</label>
-                                <input type="url" name="school_instagram" value="{{ old('school_instagram', $settings->get('school_instagram')) }}" class="form-control" placeholder="https://instagram.com/...">
+                                <input type="url" name="school_instagram" value="{{ old('school_instagram', $settings['school_instagram'] ?? '') }}" class="form-control" placeholder="https://instagram.com/...">
                             </div>
                             <div class="form-group">
                                 <label><i class="fab fa-youtube mr-1"></i> YouTube URL</label>
-                                <input type="url" name="school_youtube" value="{{ old('school_youtube', $settings->get('school_youtube')) }}" class="form-control" placeholder="https://youtube.com/...">
+                                <input type="url" name="school_youtube" value="{{ old('school_youtube', $settings['school_youtube'] ?? '') }}" class="form-control" placeholder="https://youtube.com/...">
                             </div>
                             <div class="form-group">
                                 <label><i class="fab fa-tiktok mr-1"></i> Tiktok URL</label>
-                                <input type="url" name="school_tiktok" value="{{ old('school_tiktok', $settings->get('school_tiktok')) }}" class="form-control" placeholder="https://tiktok.com/...">
+                                <input type="url" name="school_tiktok" value="{{ old('school_tiktok', $settings['school_tiktok'] ?? '') }}" class="form-control" placeholder="https://tiktok.com/...">
                             </div>
                         </div>
                     </div>
@@ -94,8 +108,18 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label>Informasi PPDB</label>
-                                <textarea name="ppdb_info" class="form-control tinymce" rows="5">{{ old('ppdb_info', $settings->get('ppdb_info')) }}</textarea>
+                                <textarea name="ppdb_info" class="form-control tinymce" rows="5">{{ old('ppdb_info', $settings['ppdb_info'] ?? '') }}</textarea>
                                 <small class="text-muted">Informasi ini akan ditampilkan di halaman PPDB.</small>
+                            </div>
+                        </div>
+
+                        {{-- Nonaktifkan Halaman PPDB --}}
+                        <div class="col-md-4">
+                            <div class="form-group mt-4">
+                                <div class="form-check">
+                                    <input type="checkbox" name="ppdb_disabled" value="1" {{ ($settings['ppdb_disabled'] ?? '') === '1' ? 'checked' : '' }} class="form-check-input" id="ppdbDisabled">
+                                    <label class="form-check-label" for="ppdbDisabled">Nonaktifkan Halaman PPDB</label>
+                                </div>
                             </div>
                         </div>
                     </div>
