@@ -163,7 +163,7 @@
                                 </a>
                             </li>
 
-                            <li class="nav-header">PPDB & KONTAK</li>
+                            <li class="nav-header">SPMB & KONTAK</li>
                             <li class="nav-item">
                                 <a href="{{ route('admin.registrations.index') }}" class="nav-link {{ request()->routeIs('admin.registrations.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-user-graduate"></i>

@@ -52,11 +52,11 @@ class HomeController extends Controller
         return view('pages.berita-detail', compact('post', 'relatedPosts'));
     }
 
-    public function ppdb()
+    public function spmb()
     {
         $settings = $this->settingService;
 
-        return view('pages.ppdb', compact('settings'));
+        return view('pages.spmb', compact('settings'));
     }
 
     public function contact()

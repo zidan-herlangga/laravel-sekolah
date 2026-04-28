@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PublicRegistrationController;
 use App\Http\Controllers\PublicContactController;
+use App\Http\Controllers\CheckStatusController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PostController;
@@ -14,29 +15,52 @@ use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\SettingController;
 use Illuminate\Support\Facades\Route;
 
+use App\Services\SettingService;
+
 /* ========================================
    PUBLIC ROUTES
    ======================================== */
+
+Route::get('/cek-status', [CheckStatusController::class, 'show'])->name('cek-status');
+Route::post('/cek-status/check', [CheckStatusController::class, 'check'])->name('cek-status.check');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/tentang', [HomeController::class, 'about'])->name('about');
 Route::get('/berita', [HomeController::class, 'berita'])->name('berita');
 Route::get('/berita/{slug}', [HomeController::class, 'beritaDetail'])->name('berita.detail');
 
-// PPDB Online (Dengan logika nonaktif/ditutup)
-Route::get('/ppdb', function () {
-    if (app(\App\Services\SettingService::class)->get('ppdb_disabled') === '1') {
-        return view('pages.ppdb-closed');
-    }
-    return app(\App\Http\Controllers\HomeController::class)->ppdb();
-})->name('ppdb');
+// --- SPMB Group (Pendaftaran & Cek Status) ---
+Route::prefix('spmb')->group(function () {
+    
+    // Halaman Utama SPMB / Form Pendaftaran
+    Route::get('/', function () {
+        if (app(SettingService::class)->get('spmb_disabled') === '1') {
+            return view('pages.spmb-closed');
+        }
+        return app(HomeController::class)->spmb();
+    })->name('spmb');
 
-Route::post('/ppdb', function (\Illuminate\Http\Request $request) {
-    if (app(\App\Services\SettingService::class)->get('ppdb_disabled') === '1') {
-        abort(404);
+    // Submit Pendaftaran
+    Route::post('/store', function (\Illuminate\Http\Request $request) {
+        if (app(SettingService::class)->get('spmb_disabled') === '1') {
+            abort(403, 'Pendaftaran sudah ditutup.');
+        }
+        return app(PublicRegistrationController::class)->store($request);
+    })->name('spmb.store');
+
+});
+
+// Cek Status (Halaman & Proses)
+// Tetap bisa diakses meski pendaftaran tutup (opsional, tergantung kebijakan sekolah)
+Route::get('/cek-status', function () {
+    // Jika Anda ingin cek status tetap buka meskipun pendaftaran tutup, 
+    // hapus kondisi IF di bawah ini.
+    if (app(SettingService::class)->get('spmb_disabled') === '1') {
+        return view('pages.cek-status-closed');
     }
-    return app(\App\Http\Controllers\PublicRegistrationController::class)->store($request);
-})->name('ppdb.store');
+    return app(CheckStatusController::class)->show();
+})->name('cek-status');
+Route::post('/cek-status/check', [CheckStatusController::class, 'check'])->name('cek-status.check');
 
 // Kontak
 Route::get('/kontak', [HomeController::class, 'contact'])->name('contact');
@@ -83,7 +107,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             // CRUD Teachers (Hanya Admin)
             Route::resource('teachers', TeacherController::class);
 
-            // Registrations PPDB (Hanya Admin)
+            // Registrations SPMB (Hanya Admin)
             Route::resource('registrations', RegistrationController::class)->only(['index', 'show', 'update', 'destroy']);
             Route::post('registrations/export', [RegistrationController::class, 'export'])->name('registrations.export');
 
