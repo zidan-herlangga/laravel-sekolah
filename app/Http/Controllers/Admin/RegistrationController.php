@@ -84,7 +84,7 @@ class RegistrationController extends Controller
             ];
         }
 
-        $filename = 'ppdb_data_' . date('Y-m-d_His') . '.csv';
+        $filename = 'spmb_data_' . date('Y-m-d_His') . '.csv';
         $handle = fopen('php://output', 'w');
         fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
 

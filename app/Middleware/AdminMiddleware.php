@@ -17,7 +17,7 @@ class AdminMiddleware
         }
 
         if ($user->role !== 'admin') {
-            abort(403, 'Akses ditolak.');
+            abort(403, 'Akses ditolak. Halaman ini khusus Administrator.');
         }
 
         return $next($request);

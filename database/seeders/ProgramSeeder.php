@@ -11,40 +11,28 @@ class ProgramSeeder extends Seeder
     {
         $programs = [
             [
-                'title' => 'Kurikulum Merdeka',
-                'description' => 'Implementasi Kurikulum Merdeka yang berpusat pada siswa dengan pendekatan diferensiasi dan project-based learning untuk mengoptimalkan potensi setiap peserta didik.',
-                'icon' => 'fas fa-book-open',
+                'title' => 'Kurikulum',
+                'description' => 'Kurikulum Merdeka & K-13',
+                'icon' => 'fa-solid fa-book-open-reader',
                 'order' => 1,
             ],
             [
-                'title' => 'Tahfidz Al-Quran',
-                'description' => 'Program menghafal Al-Quran dengan target minimal 3 juz selama masa studi, dibimbing oleh hafidz/hafidzah berpengalaman dengan metode talaqqi.',
-                'icon' => 'fas fa-quran',
+                'title' => 'Fasilitas',
+                'description' => 'Fasilitas Lengkap dan Menunjang Pembelajaran',
+                'icon' => 'fa-solid fa-building-flag',
                 'order' => 2,
             ],
             [
-                'title' => 'Bilingual Program',
-                'description' => 'Program dwibahasa Indonesia-Inggris untuk mempersiapkan siswa menghadapi tantangan global dengan kemampuan komunikasi internasional yang mumpuni.',
-                'icon' => 'fas fa-language',
+                'title' => 'Ekstrakurikuler',
+                'description' => 'Untuk Menunjang Kegiatan Siswa',
+                'icon' => 'fa-solid fa-football',
                 'order' => 3,
             ],
             [
-                'title' => 'STEM Education',
-                'description' => 'Pembelajaran terintegrasi Sains, Teknologi, Engineering, dan Matematika melalui eksperimen, robotika, dan proyek inovatif.',
-                'icon' => 'fas fa-flask',
+                'title' => 'Guru Terverifikasi',
+                'description' => 'Para Guru Memiliki Sertifikasi dibidangnya',
+                'icon' => 'fa-solid fa-star',
                 'order' => 4,
-            ],
-            [
-                'title' => 'Seni & Budaya',
-                'description' => 'Pengembangan bakat seni melalui kaligrafi, nasyid, tari tradisional, dan teater sebagai wadah ekspresi kreativitas siswa.',
-                'icon' => 'fas fa-palette',
-                'order' => 5,
-            ],
-            [
-                'title' => 'Leadership Camp',
-                'description' => 'Pelatihan kepemimpinan rutin di alam terbuka untuk membangun karakter, kerjasama tim, dan mental tangguh para calon pemimpin masa depan.',
-                'icon' => 'fas fa-campground',
-                'order' => 6,
             ],
         ];
 

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->text('bio')->nullable();
             $table->unsignedInteger('order')->default(0);
             $table->timestamps();
+
+            $table->softDeletes();
         });
     }
 

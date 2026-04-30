@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Berita - Sekolah Unggulan Indonesia')
+@section('title', 'Berita & Artikel - ' . $settings->get('school_name'))
 
 @section('content')
 

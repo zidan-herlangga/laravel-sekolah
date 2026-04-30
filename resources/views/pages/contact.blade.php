@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Kontak - Sekolah Unggulan Indonesia')
+@section('title', 'Kontak - ' . $settings->get('school_name'))
 
 @section('content')
 
@@ -29,8 +29,7 @@
                         </div>
                         <div>
                             <h4 class="font-semibold text-dark-900 mb-1">Alamat</h4>
-                            <p class="text-sm text-dark-500 leading-relaxed">JL. RS. Mekar Sari No 71.B Bekasi Jaya-Bekasi Timur 17112
-Kota Bekasi </p>
+                            <p class="text-sm text-dark-500 leading-relaxed">{{ $settings->get('school_address') }}</p>
                         </div>
                     </div>
 
@@ -40,8 +39,7 @@ Kota Bekasi </p>
                         </div>
                         <div>
                             <h4 class="font-semibold text-dark-900 mb-1">Telepon</h4>
-                            <p class="text-sm text-dark-500">08128726879 (WhatsApp)</p>
-                            <p class="text-sm text-dark-500">081770748835 (WhatsApp)</p>
+                            <p class="text-sm text-dark-500">{{ $settings->get('school_phone') }}</p>
                         </div>
                     </div>
 
@@ -51,7 +49,7 @@ Kota Bekasi </p>
                         </div>
                         <div>
                             <h4 class="font-semibold text-dark-900 mb-1">Email</h4>
-                            <p class="text-sm text-dark-500">smptupanbekasi71@gmail.com</p>
+                            <p class="text-sm text-dark-500">{{ $settings->get('school_email') }}</p>
                         </div>
                     </div>
 
@@ -71,10 +69,11 @@ Kota Bekasi </p>
                 <div class="mt-10">
                     <h4 class="font-semibold text-dark-900 mb-4">Ikuti Media Sosial Kami</h4>
                     <div class="flex gap-3">
-                        <a href="#" class="w-11 h-11 bg-dark-50 hover:bg-primary-400 rounded-xl flex items-center justify-center text-dark-500 hover:text-white transition-all duration-300"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="w-11 h-11 bg-dark-50 hover:bg-primary-400 rounded-xl flex items-center justify-center text-dark-500 hover:text-white transition-all duration-300"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="w-11 h-11 bg-dark-50 hover:bg-primary-400 rounded-xl flex items-center justify-center text-dark-500 hover:text-white transition-all duration-300"><i class="fab fa-youtube"></i></a>
-                        <a href="#" class="w-11 h-11 bg-dark-50 hover:bg-primary-400 rounded-xl flex items-center justify-center text-dark-500 hover:text-white transition-all duration-300"><i class="fab fa-tiktok"></i></a>
+                        <a href="{{ $settings->get('school_facebook') }}" class="w-11 h-11 bg-dark-50 hover:bg-primary-400 rounded-xl flex items-center justify-center text-dark-500 hover:text-white transition-all duration-300" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="{{ $settings->get('school_instagram') }}" class="w-11 h-11 bg-dark-50 hover:bg-primary-400 rounded-xl flex items-center justify-center text-dark-500 hover:text-white transition-all duration-300" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="{{ $settings->get('school_youtube') }}" class="w-11 h-11 bg-dark-50 hover:bg-primary-400 rounded-xl flex items-center justify-center text-dark-500 hover:text-white transition-all duration-300" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <a href="{{ $settings->get('school_tiktok') }}" class="w-11 h-11 bg-dark-50 hover:bg-primary-400 rounded-xl flex items-center justify-center text-dark-500 hover:text-white transition-all duration-300" target="_blank"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://wa.me/{{$settings->get('school_phone')}}" class="w-11 h-11 bg-dark-50 hover:bg-primary-400 rounded-xl flex items-center justify-center text-dark-500 hover:text-white transition-all duration-300" target="_blank"><i class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>
             </div>

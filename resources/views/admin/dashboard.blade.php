@@ -20,7 +20,7 @@
         <div class="small-box bg-amber">
             <div class="inner">
                 <h3>{{ $stats['total_registrations'] }}</h3>
-                <p>Pendaftar PPDB</p>
+                <p>Pendaftar SPMB</p>
             </div>
             <div class="icon"><i class="fas fa-user-graduate"></i></div>
             <a href="{{ route('admin.registrations.index') }}" class="small-box-footer">Lihat Detail <i class="fas fa-arrow-circle-right"></i></a>
@@ -53,7 +53,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title font-weight-bold"><i class="fas fa-user-graduate mr-2 text-amber-600"></i>Status Pendaftar PPDB</h3>
+                <h3 class="card-title font-weight-bold"><i class="fas fa-user-graduate mr-2 text-amber-600"></i>Status Pendaftar SPMB</h3>
             </div>
             <div class="card-body">
                 <div class="d-flex justify-content-around text-center py-3">

@@ -14,13 +14,10 @@ class SettingService
     public function get(string $key, $default = null): ?string
     {
         try {
-            // Gunakan withDefault() untuk menghindari error jika tabel cache bermasalah
             return Cache::remember("site_setting_{$key}", 3600, function () use ($key, $default) {
                 return SiteSetting::where('key', $key)->value('value') ?? $default;
             });
         } catch (\Throwable $e) {
-            // Jika error (misal: tabel cache/site_settings belum ada), 
-            // kembalikan nilai default agar website tetap bisa jalan
             Log::warning("Gagal memuat setting '{$key}': " . $e->getMessage());
             return $default;
         }
@@ -38,9 +35,13 @@ class SettingService
             );
             
             try {
+                // HAPUS cache lama
                 Cache::forget("site_setting_{$key}");
+                
+                // SIMPAN data baru ke cache (Baris ini yang sebelumnya tidak ada)
+                Cache::put("site_setting_{$key}", $value, 3600);
             } catch (\Throwable $e) {
-                // Abaikan error jika cache gagal dihapus
+                // Abaikan error jika cache gagal
             }
         } catch (\Throwable $e) {
             Log::error("Gagal menyimpan setting '{$key}': " . $e->getMessage());
@@ -56,7 +57,7 @@ class SettingService
             return SiteSetting::pluck('value', 'key')->toArray();
         } catch (\Throwable $e) {
             Log::warning("Gagal memuat semua setting: " . $e->getMessage());
-            return []; // Kembalikan array kosong agar tidak crash
+            return [];
         }
     }
 }

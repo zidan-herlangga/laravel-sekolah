@@ -13,8 +13,8 @@ class PostSeeder extends Seeder
         $posts = [
             [
                 'title' => 'Penerimaan Peserta Didik Baru Tahun Ajaran 2025/2026 Telah Dibuka',
-                'slug' => 'ppdb-tahun-ajaran-2025-2026-dibuka',
-                'content' => '<p>Alhamdulillah, dengan memohon ridho Allah SWT, Sekolah Unggulan Indonesia resmi membuka pendaftaran PPDB untuk tahun ajaran 2025/2026. Pendaftaran dibuka mulai 1 Januari hingga 30 Juni 2025.</p><p>Tahun ini kami membuka kuota untuk:</p><ul><li>Kelas 7 SMP: 120 siswa (4 rombel)</li><li>Kelas 10 SMA: 144 siswa (4 rombel)</li></ul><p>Persyaratan umum meliputi: ijazah/SKHUN, akta kelahiran, kartu keluarga, pas foto 3x4 (4 lembar), surat keterangan sehat, dan nilai rapor semester 1-5.</p><p>Untuk informasi lebih lanjut, silakan hubungi panitia PPDB di nomor (021) 1234567 atau datang langsung ke sekolah.</p>',
+                'slug' => 'spmb-tahun-ajaran-2025-2026-dibuka',
+                'content' => '<p>Alhamdulillah, dengan memohon ridho Allah SWT, Sekolah Unggulan Indonesia resmi membuka pendaftaran SPMB untuk tahun ajaran 2025/2026. Pendaftaran dibuka mulai 1 Januari hingga 30 Juni 2025.</p><p>Tahun ini kami membuka kuota untuk:</p><ul><li>Kelas 7 SMP: 120 siswa (4 rombel)</li><li>Kelas 10 SMA: 144 siswa (4 rombel)</li></ul><p>Persyaratan umum meliputi: ijazah/SKHUN, akta kelahiran, kartu keluarga, pas foto 3x4 (4 lembar), surat keterangan sehat, dan nilai rapor semester 1-5.</p><p>Untuk informasi lebih lanjut, silakan hubungi panitia SPMB di nomor (021) 1234567 atau datang langsung ke sekolah.</p>',
                 'excerpt' => 'Pendaftaran peserta didik baru untuk tahun ajaran 2025/2026 resmi dibuka. Kuota terbatas!',
                 'is_published' => true,
             ],

@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
-@section('page_title', 'Data Pendaftar PPDB')
-@section('breadcrumb', " > " ."Pendaftar PPDB")
+@section('page_title', 'Data Pendaftar SPMB')
+@section('breadcrumb', " > " ."Pendaftar SPMB")
 
 @section('content')
 <!-- Status Cards -->
