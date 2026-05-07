@@ -8,6 +8,7 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Services\FileUploadService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -17,20 +18,17 @@ class PostController extends Controller
 
     public function index(Request $request)
     {
-        $query = Post::latest();
+        $query = Post::with(['category', 'user'])->latest();
 
         if ($request->filled('search')) {
-            $search = $request->input('search');
-            $query->where('title', 'like', "%{$search}%");
+            $query->where('title', 'like', '%' . $request->search . '%');
         }
 
         if ($request->filled('status')) {
-            $status = $request->input('status');
-            $query->where('is_published', $status === 'published');
+            $query->where('is_published', $request->status === 'published');
         }
 
         $posts = $query->paginate(10)->withQueryString();
-
         return view('admin.posts.index', compact('posts'));
     }
 
@@ -42,16 +40,18 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
         $data = $request->validated();
+        
+        // Slug Logic
+        $data['slug'] = $request->filled('slug') ? Str::slug($request->slug) : Str::slug($request->title);
+        $data['user_id'] = auth()->id();
+        $data['is_published'] = $request->has('is_published');
 
         if ($request->hasFile('image')) {
             $data['image'] = $this->fileUpload->upload($request->file('image'), 'posts');
         }
 
-        $data['is_published'] = $request->boolean('is_published');
-
         Post::create($data);
-
-        return redirect()->route('admin.posts.index')->with('success', 'Berita berhasil ditambahkan.');
+        return redirect()->route('admin.posts.index')->with('success', 'Berita berhasil diterbitkan.');
     }
 
     public function edit(Post $post)
@@ -62,29 +62,23 @@ class PostController extends Controller
     public function update(UpdatePostRequest $request, Post $post)
     {
         $data = $request->validated();
+        
+        $data['slug'] = $request->filled('slug') ? Str::slug($request->slug) : Str::slug($request->title);
+        $data['is_published'] = $request->has('is_published');
 
         if ($request->hasFile('image')) {
-            if ($post->image) {
-                $this->fileUpload->delete($post->image);
-            }
+            if ($post->image) $this->fileUpload->delete($post->image);
             $data['image'] = $this->fileUpload->upload($request->file('image'), 'posts');
         }
 
-        $data['is_published'] = $request->boolean('is_published');
-
         $post->update($data);
-
         return redirect()->route('admin.posts.index')->with('success', 'Berita berhasil diperbarui.');
     }
 
     public function destroy(Post $post)
     {
-        if ($post->image) {
-            $this->fileUpload->delete($post->image);
-        }
-
+        if ($post->image) $this->fileUpload->delete($post->image);
         $post->delete();
-
         return redirect()->route('admin.posts.index')->with('success', 'Berita berhasil dihapus.');
     }
 }

@@ -4,55 +4,71 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use App\Models\Category;
+use App\Models\User;
 
 class PostSeeder extends Seeder
 {
     public function run(): void
     {
+        // Ambil ID User pertama (biasanya admin)
+        $adminId = User::first()?->id ?? 1;
+
+        // Ambil ID Kategori berdasarkan nama (Pastikan kategori ini sudah ada di DB)
+        $catKegiatan = DB::table('categories')->where('name', 'Kegiatan')->first()?->id;
+        $catPrestasi = DB::table('categories')->where('name', 'Prestasi')->first()?->id;
+        $catAkademik = DB::table('categories')->where('name', 'Akademik')->first()?->id;
+        $catEkstrakurikuler = DB::table('categories')->where('name', 'Ekstrakurikuler')->first()?->id;
+
         $posts = [
             [
-                'title' => 'Penerimaan Peserta Didik Baru Tahun Ajaran 2025/2026 Telah Dibuka',
-                'slug' => 'spmb-tahun-ajaran-2025-2026-dibuka',
-                'content' => '<p>Alhamdulillah, dengan memohon ridho Allah SWT, Sekolah Unggulan Indonesia resmi membuka pendaftaran SPMB untuk tahun ajaran 2025/2026. Pendaftaran dibuka mulai 1 Januari hingga 30 Juni 2025.</p><p>Tahun ini kami membuka kuota untuk:</p><ul><li>Kelas 7 SMP: 120 siswa (4 rombel)</li><li>Kelas 10 SMA: 144 siswa (4 rombel)</li></ul><p>Persyaratan umum meliputi: ijazah/SKHUN, akta kelahiran, kartu keluarga, pas foto 3x4 (4 lembar), surat keterangan sehat, dan nilai rapor semester 1-5.</p><p>Untuk informasi lebih lanjut, silakan hubungi panitia SPMB di nomor (021) 1234567 atau datang langsung ke sekolah.</p>',
-                'excerpt' => 'Pendaftaran peserta didik baru untuk tahun ajaran 2025/2026 resmi dibuka. Kuota terbatas!',
+                'title' => 'Aksi Lingkungan: Kerja Bakti Massal Sambut Tahun Ajaran Baru',
+                'slug' => 'kerja-bakti-massal-sekolah',
+                'category_id' => $catKegiatan,
+                'content' => '<p>Seluruh civitas akademika berkumpul hari ini untuk melaksanakan kerja bakti lingkungan. Kegiatan ini bertujuan menciptakan suasana belajar yang asri dan nyaman.</p><p>Fokus utama adalah penataan taman depan sekolah dan pembersihan area selokan untuk mencegah genangan air saat musim hujan.</p>',
+                'excerpt' => 'Gotong royong guru dan siswa dalam membersihkan lingkungan sekolah demi kenyamanan belajar.',
                 'is_published' => true,
             ],
             [
-                'title' => 'Siswa Raih Juara 1 Olimpiade Sains Tingkat Provinsi',
-                'slug' => 'juara-1-olimpiade-sains-tingkat-provinsi',
-                'content' => '<p>Membanggakan! Muhammad Farhan, siswa kelas 11 IPA, berhasil meraih juara 1 dalam Olimpiade Sains Nasional (OSN) tingkat Provinsi DKI Jakarta cabang Fisika.</p><p>Prestasi ini merupakan buah dari pembinaan intensif selama 6 bulan di bawah bimbingan Bapak Ir. Bambang Hartono, M.T. Farhan akan mewakili provinsi di tingkat nasional pada bulan Oktober mendatang.</p><p>"Saya bersyukur dan tidak menyangka bisa sampai di titik ini. Terima kasih kepada guru-guru dan orang tua yang selalu mendukung," ujar Farhan usai menerima piala.</p><p>Kepala Sekolah, Dr. H. Ahmad Fauzi, M.Pd.I menyampaikan rasa bangga dan berharap prestasi ini menjadi motivasi bagi seluruh siswa.</p>',
-                'excerpt' => 'Muhammad Farhan, siswa kelas 11 IPA, meraih juara 1 OSN tingkat provinsi cabang Fisika.',
+                'title' => 'Workshop Pemrograman: Membangun Aplikasi Pertama dengan Laravel 12',
+                'slug' => 'workshop-coding-laravel-12',
+                'category_id' => $catAkademik,
+                'content' => '<p>Ekstrakurikuler IT menyelenggarakan workshop coding intensif. Siswa belajar dasar-dasar MVC dan cara kerja Routing di Laravel 12.</p><p>Hasil dari workshop ini, setiap siswa berhasil mendeploy aplikasi "Daily Journal" sederhana di server lokal masing-masing.</p>',
+                'excerpt' => 'Siswa antusias belajar pemrograman backend menggunakan framework Laravel 12 terbaru.',
                 'is_published' => true,
             ],
             [
-                'title' => 'Kegiatan Leadership Camp 2024 Sukses Digelar',
-                'slug' => 'leadership-camp-2024-sukses',
-                'content' => '<p>Kegiatan Leadership Camp tahunan yang diselenggarakan di Bumi Perkemahan Cibubur pada 15-17 November 2024 telah berlangsung sukses dengan diikuti oleh 200 peserta dari kelas 7 dan 10.</p><p>Berbagai kegiatan dilaksanakan meliputi: outbound, seminar kepemimpinan, orientasi alam, api unggun, dan presentasi proyek kelompok. Narasumber yang hadir antara lain Letkol (Purn) H. Syamsul Bahri dan Coach Dian Pratama.</p><p>"Kegiatan ini sangat bermanfaat. Saya belajar tentang kerjasama tim, keberanian, dan tanggung jawab," kata Zahra, siswi kelas 7.</p>',
-                'excerpt' => 'Leadership Camp 2024 diikuti 200 peserta dan menghadirkan berbagai kegiatan menarik.',
+                'title' => 'Tim Robotika Sekolah Sabet Juara Nasional di ITB',
+                'slug' => 'juara-robotika-nasional-itb',
+                'category_id' => $catPrestasi,
+                'content' => '<p>Selamat kepada Tim Robotika yang berhasil meraih medali emas dalam kategori Robot Penyelamat. Inovasi sensor ultrasonik yang mereka buat mendapat pujian dari dewan juri.</p>',
+                'excerpt' => 'Kemenangan membanggakan tim robotika sekolah di ajang kompetisi teknologi nasional.',
                 'is_published' => true,
             ],
             [
-                'title' => 'MoU dengan Universitas Al-Azhar untuk Program Beasiswa',
-                'slug' => 'mou-universitas-al-azhar-beasiswa',
-                'content' => '<p>Sekolah Unggulan Indonesia menandatangani Nota Kesepahaman (MoU) dengan Universitas Al-Azhar, Kairo, Mesir, untuk program beasiswa lanjutan studi di universitas tertua di dunia tersebut.</p><p>Penandatanganan dilakukan oleh Kepala Sekolah Dr. H. Ahmad Fauzi, M.Pd.I dan perwakilan Rektor Universitas Al-Azhar di Jakarta pada Senin (20/11/2024).</p><p>Program ini memberikan kesempatan bagi 5 siswa terbaik setiap tahunnya untuk melanjutkan studi di berbagai fakultas di Universitas Al-Azhar dengan biaya penuh ditanggung.</p>',
-                'excerpt' => 'MoU dengan Universitas Al-Azhar membuka peluang beasiswa bagi siswa terbaik.',
+                'title' => 'Latihan Rutin Basket: Mempersiapkan Mental Juara DBL',
+                'slug' => 'latihan-basket-rutin-dbl',
+                'category_id' => $catEkstrakurikuler,
+                'content' => '<p>Tim basket sekolah terus mengasah kemampuan *defense* dan *shooting* dalam latihan sore yang diadakan 3 kali seminggu. Pelatih menekankan pentingnya disiplin fisik dan kerjasama tim.</p>',
+                'excerpt' => 'Persiapan intensif tim basket sekolah menuju kompetisi antar pelajar paling bergengsi.',
                 'is_published' => true,
             ],
             [
-                'title' => 'Renovasi Laboratorium Sains Rampung',
-                'slug' => 'renovasi-laboratorium-sains-rampung',
-                'content' => '<p>Renovasi besar-besaran laboratorium IPA yang memakan waktu 3 bulan telah rampung. Lab sains kini dilengkapi dengan peralatan modern termasuk mikroskop digital, set robotika, dan ruang eksperimen yang lebih luas.</p><p>Total investasi renovasi mencapai Rp 2,5 miliar yang berasal dari dana APBD dan donatur. Fasilitas baru ini diharapkan mampu mendukung program STEM Education yang menjadi unggulan sekolah.</p>',
-                'excerpt' => 'Laboratorium IPA baru dengan fasilitas modern senilai Rp 2,5 miliar siap digunakan.',
+                'title' => 'Pemanfaatan AI dalam Pembelajaran Sejarah di Kelas',
+                'slug' => 'belajar-sejarah-dengan-ai',
+                'category_id' => $catAkademik,
+                'content' => '<p>Guru sejarah mulai menerapkan metode baru dengan menggunakan visualisasi AI untuk menggambarkan suasana perang kemerdekaan, membuat siswa lebih mudah memahami konteks sejarah.</p>',
+                'excerpt' => 'Inovasi pembelajaran menggunakan teknologi AI untuk memvisualisasikan peristiwa masa lalu.',
                 'is_published' => true,
             ],
         ];
 
         foreach ($posts as $post) {
             DB::table('posts')->insert(array_merge($post, [
+                'user_id' => $adminId,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]));
         }
     }
-};
+}

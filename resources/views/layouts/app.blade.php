@@ -35,18 +35,6 @@
                             900: '#1e3a8a',
                             950: '#172554'
                         },
-                        secondary: {
-                            50: '#fdf4ff',
-                            100: '#fae8ff',
-                            200: '#f5d0fe',
-                            300: '#f0abfc',
-                            400: '#e879f9',
-                            500: '#d946ef',
-                            600: '#c026d3',
-                            700: '#a21caf',
-                            800: '#86198f',
-                            900: '#701a75'
-                        },
                         dark: {
                             50: '#f8fafc',
                             100: '#f1f5f9',
@@ -78,45 +66,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
-        .whatsapp-float {
-            position: fixed;
-            width: 60px;
-            height: 60px;
-            bottom: 40px;
-            right: 40px;
-            background-color: #25d366;
-            color: #FFF;
-            border-radius: 50px;
-            text-align: center;
-            font-size: 30px;
-            box-shadow: 2px 2px 3px #999;
-            z-index: 100;
-        }
-
-        .my-whatsapp {
-            margin-top: 16px;
-        }
-
         body {
             font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
         .font-display {
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        .hero-pattern {
-            background-image: radial-gradient(circle at 25% 25%, rgba(249, 173, 56, 0.15) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(217, 119, 6, 0.1) 0%, transparent 50%);
-        }
-
+        /* Glassmorphism Effect */
         .glass {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
+        /* Animations */
         .card-hover {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -129,7 +95,7 @@
         .fade-up {
             opacity: 0;
             transform: translateY(30px);
-            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.7s ease-out;
         }
 
         .fade-up.visible {
@@ -137,76 +103,61 @@
             transform: translateY(0);
         }
 
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0)
-            }
-
-            50% {
-                transform: translateY(-10px)
-            }
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 40px;
+            right: 40px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 5px 15px rgba(37, 211, 102, 0.4);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
         }
 
-        .float-anim {
-            animation: float 3s ease-in-out infinite;
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            background-color: #128c7e;
         }
 
-        /* Style Cetak Halaman */
         @media print {
-            body {
-                background: white !important;
-            }
 
             nav,
             footer,
-            .hero-pattern,
-            .float-anim {
-                display: none !important;
-            }
-
-            section {
-                padding: 10px 0 !important;
-                box-shadow: none !important;
-                border: none !important;
-            }
-
-            .fixed {
-                position: static !important;
-            }
-
-            .fade-up {
-                opacity: 1 !important;
-                transform: none !important;
-            }
-
-            #navbar {
+            .whatsapp-float {
                 display: none !important;
             }
         }
     </style>
-
     @stack('styles')
 </head>
 
-<body class="bg-white text-dark-900">
+<body class="bg-white text-dark-900 overflow-x-hidden">
 
     <!-- Navbar -->
-    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 <!-- Logo -->
                 <a href="{{ route('home') }}" class="flex items-center gap-3 group">
                     <div
-                        class=" bg-white/10 backdrop-blur rounded-2xl flex items-center justify-center p-1.5 overflow-hidden group-hover:scale-105 transition-transform">
-                        <img src="{{ asset('assets/images/logo-tunas-harapan.png') }}" alt="Logo Sekolah"
-                            class="w-14 h-14 object-contain">
+                        class="bg-white/10 backdrop-blur rounded-2xl flex items-center justify-center p-1.5 group-hover:scale-105 transition-transform">
+                        <img src="{{ asset('assets/images/logo-tunas-harapan.png') }}" alt="Logo"
+                            class="w-12 h-12 md:w-14 md:h-14 object-contain">
                     </div>
                     <div>
-                        <span class="font-display font-bold text-lg leading-tight block nav-text-color">SMP Tunas
-                            Harapan</span>
-                        <span class="text-xs nav-sub-text-color opacity-70">Berbasis Karakter & Kreativitas
+                        <span id="nav-brand"
+                            class="font-display font-bold text-lg leading-tight block text-white transition-colors duration-300">SMP
+                            Tunas Harapan</span>
+                        <span id="nav-sub-brand"
+                            class="text-xs text-white/70 block transition-colors duration-300">Berbasis Karakter &
                             Digital</span>
                     </div>
                 </a>
@@ -214,245 +165,219 @@
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center gap-1">
                     @php $currentRoute = request()->route()->getName(); @endphp
-                    <a href="{{ route('home') }}"
-                        class="nav-link px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ $currentRoute === 'home' ? 'text-primary-500 bg-primary-50' : 'nav-text-color hover:text-primary-500 hover:bg-primary-50/50' }}">Beranda</a>
-
-                    <a href="{{ route('about') }}"
-                        class="nav-link px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ $currentRoute === 'about' ? 'text-primary-500 bg-primary-50' : 'nav-text-color hover:text-primary-500 hover:bg-primary-50/50' }}">Tentang</a>
-
-                    <a href="{{ route('berita') }}"
-                        class="nav-link px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ str_starts_with($currentRoute, 'berita') ? 'text-primary-500 bg-primary-50' : 'nav-text-color hover:text-primary-500 hover:bg-primary-50/50' }}">Berita</a>
-
-                    <a href="{{ route('cek-status') }}"
-                        class="nav-link px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ $currentRoute === 'cek-status' ? 'text-primary-500 bg-primary-50' : 'nav-text-color hover:text-primary-500 hover:bg-primary-50/50' }}">Cek
-                        Status</a>
-
-                    <a href="{{ route('contact') }}"
-                        class="nav-link px-4 py-2 rounded-lg text-sm font-medium transition-colors {{ $currentRoute === 'contact' ? 'text-primary-500 bg-primary-50' : 'nav-text-color hover:text-primary-500 hover:bg-primary-50/50' }}">Kontak</a>
-
+                    @foreach (['home' => 'Beranda', 'about' => 'Tentang', 'berita' => 'Berita', 'cek-status' => 'Cek Status', 'contact' => 'Kontak'] as $route => $label)
+                        <a href="{{ route($route) }}"
+                            class="nav-link px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 {{ $currentRoute === $route || ($route === 'berita' && str_contains($currentRoute, 'berita')) ? 'text-primary-500 bg-primary-50' : 'text-white hover:text-primary-400' }}">
+                            {{ $label }}
+                        </a>
+                    @endforeach
                     <a href="{{ route('spmb') }}"
-                        class="ml-3 px-5 py-2.5 bg-primary-400 text-white text-sm font-semibold rounded-lg hover:bg-primary-500 hover:shadow-lg hover:shadow-primary-400/30 transition-all">
+                        class="ml-3 px-5 py-2.5 bg-primary-500 text-white text-sm font-semibold rounded-xl hover:bg-primary-600 hover:shadow-lg shadow-primary-500/30 transition-all">
                         Daftar SPMB
                     </a>
                 </div>
 
-                <!-- Mobile Menu Button -->
-                <button id="mobile-menu-btn"
-                    class="md:hidden p-2 rounded-lg nav-text-color hover:bg-gray-100 transition-colors">
-                    <i class="fas fa-bars text-xl"></i>
+                <!-- Mobile Trigger -->
+                <button id="offcanvas-open"
+                    class="md:hidden p-2.5 rounded-xl text-white hover:bg-white/10 transition-colors">
+                    <i class="fa-solid fa-bars-staggered text-2xl"></i>
                 </button>
-            </div>
-        </div>
-
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="md:hidden hidden border-t border-gray-100">
-            <div class="px-6 py-4 space-y-1 bg-white">
-                <a href="{{ route('home') }}"
-                    class="block px-4 py-3 rounded-lg text-sm font-medium text-dark-800 hover:bg-primary-50 hover:text-primary-500 transition-colors">Beranda</a>
-                <a href="{{ route('about') }}"
-                    class="block px-4 py-3 rounded-lg text-sm font-medium text-dark-800 hover:bg-primary-50 hover:text-primary-500 transition-colors">Tentang</a>
-                <a href="{{ route('berita') }}"
-                    class="block px-4 py-3 rounded-lg text-sm font-medium text-dark-800 hover:bg-primary-50 hover:text-primary-500 transition-colors">Berita</a>
-                <a href="{{ route('cek-status') }}"
-                    class="block px-4 py-3 rounded-lg text-sm font-medium text-dark-800 hover:bg-primary-50 hover:text-primary-500 transition-colors">Cek
-                    Status</a>
-                <a href="{{ route('contact') }}"
-                    class="block px-4 py-3 rounded-lg text-sm font-medium text-dark-800 hover:bg-primary-50 hover:text-primary-500 transition-colors">Kontak</a>
-                <a href="{{ route('spmb') }}"
-                    class="block px-4 py-3 bg-primary-400 text-white text-sm font-semibold rounded-lg text-center mt-2">Daftar
-                    Dftar SPMB</a>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main>
+    <!-- Offcanvas Mobile Menu -->
+    <div id="offcanvas-menu" class="fixed inset-0 z-[60] invisible transition-all duration-300">
+        <div id="offcanvas-backdrop"
+            class="absolute inset-0 bg-dark-950/40 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+        <div id="offcanvas-content"
+            class="absolute top-0 right-0 bottom-0 w-[300px] bg-white translate-x-full transition-transform duration-300 ease-out flex flex-col">
+            <div class="p-6 flex items-center justify-between border-b border-gray-100">
+                <span class="font-display font-bold text-dark-900">Navigasi</span>
+                <button id="offcanvas-close" class="p-2 rounded-lg text-gray-400 hover:bg-gray-100"><i
+                        class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6 space-y-2">
+                @foreach (['home' => ['house', 'Beranda'], 'about' => ['circle-info', 'Tentang'], 'berita' => ['newspaper', 'Berita'], 'cek-status' => ['magnifying-glass', 'Cek Status'], 'contact' => ['envelope', 'Kontak']] as $route => $info)
+                    <a href="{{ route($route) }}"
+                        class="flex items-center gap-4 px-4 py-3 rounded-xl text-dark-700 hover:bg-primary-50 hover:text-primary-600 transition-all">
+                        <i class="fa-solid fa-{{ $info[0] }} w-5"></i> <span
+                            class="font-medium">{{ $info[1] }}</span>
+                    </a>
+                @endforeach
+            </div>
+            <div class="p-6 border-t border-gray-100">
+                <a href="{{ route('spmb') }}"
+                    class="flex items-center justify-center gap-2 w-full py-4 bg-primary-500 text-white font-bold rounded-xl shadow-lg shadow-primary-500/30">
+                    Daftar SPMB <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <main class="min-h-screen">
         @yield('content')
     </main>
 
     <!-- Footer -->
-    <footer class="bg-dark-900 text-dark-300 pt-16 pb-8">
+    <footer class="bg-dark-950 text-dark-300 pt-20 pb-10">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="grid md:grid-cols-4 gap-10 pb-12 border-b border-dark-700">
-                <!-- Brand -->
+            <div class="grid md:grid-cols-4 gap-12 pb-12 border-b border-dark-800">
                 <div class="md:col-span-1">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="bg-white/10 rounded-xl flex items-center justify-center">
-                            <img src="{{ asset('assets/images/logo-tunas-harapan.png') }}"alt="Logo Sekolah"
-                                class="w-14 h-14 object-contain">
-                        </div>
-                        <span class="font-display font-bold text-lg text-white">SMP Tunas Harapan Bekasi</span>
+                    <div class="flex items-center gap-3 mb-6">
+                        <img src="{{ asset('assets/images/logo-tunas-harapan.png') }}" class="w-12 h-12 object-contain"
+                            alt="Logo">
+                        <span class="font-display font-bold text-lg text-white">SMP Tunas Harapan</span>
                     </div>
-                    <p class="text-sm leading-relaxed mb-4">SMP Berbasis Karakter & Kreativitas Digital</p>
+                    <p class="text-sm leading-relaxed mb-6">Membentuk generasi cerdas, berkarakter Islami, dan siap
+                        menghadapi tantangan era digital.</p>
                     <div class="flex gap-3">
-                        <a href="{{ $settings->get('school_facebook', '#') }}"
-                            class="w-9 h-9 rounded-lg bg-dark-800 hover:bg-primary-400 flex items-center justify-center transition-colors"
-                            target="_blank"><i class="fab fa-facebook-f text-sm"></i></a>
-                        <a href="{{ $settings->get('school_instagram', '#') }}"
-                            class="w-9 h-9 rounded-lg bg-dark-800 hover:bg-primary-400 flex items-center justify-center transition-colors"
-                            target="_blank"><i class="fab fa-instagram text-sm"></i></a>
-                        <a href="{{ $settings->get('school_youtube', '#') }}"
-                            class="w-9 h-9 rounded-lg bg-dark-800 hover:bg-primary-400 flex items-center justify-center transition-colors"
-                            target="_blank"><i class="fab fa-youtube text-sm"></i></a>
-                        <a href="{{ $settings->get('school_tiktok', '#') }}"
-                            class="w-9 h-9 rounded-lg bg-dark-800 hover:bg-primary-400 flex items-center justify-center transition-colors"
-                            target="_blank"><i class="fab fa-tiktok text-sm"></i></a>
-                        <a href="https://wa.me/{{ $settings->get('school_phone') }}"
-                            class="w-9 h-9 rounded-lg bg-dark-800 hover:bg-primary-400 flex items-center justify-center transition-colors"
-                            target="_blank"><i class="fab fa-whatsapp text-sm"></i></a>
+                        @foreach (['facebook' => 'school_facebook', 'instagram' => 'school_instagram', 'youtube' => 'school_youtube', 'tiktok' => 'school_tiktok'] as $icon => $key)
+                            <a href="{{ $settings->get($key, '#') }}"
+                                class="w-10 h-10 rounded-xl bg-dark-800 hover:bg-primary-500 flex items-center justify-center text-white transition-all"
+                                target="_blank"><i class="fab fa-{{ $icon }}"></i></a>
+                        @endforeach
                     </div>
                 </div>
-
-                <!-- Quick Links -->
                 <div>
-                    <h4 class="font-display font-semibold text-white mb-4">Navigasi</h4>
-                    <ul class="space-y-2.5">
-                        <li><a href="{{ route('home') }}"
-                                class="text-sm hover:text-primary-400 transition-colors">Beranda</a></li>
-                        <li><a href="{{ route('about') }}"
-                                class="text-sm hover:text-primary-400 transition-colors">Tentang Kami</a></li>
-                        <li><a href="{{ route('berita') }}"
-                                class="text-sm hover:text-primary-400 transition-colors">Berita</a></li>
-                        <li><a href="{{ route('spmb') }}"
-                                class="text-sm hover:text-primary-400 transition-colors">SPMB Online</a></li>
-                        <li><a href="{{ route('cek-status') }}"
-                                class="text-sm hover:text-primary-400 transition-colors">Cek Status</a></li>
-                        <li><a href="{{ route('contact') }}"
-                                class="text-sm hover:text-primary-400 transition-colors">Kontak</a></li>
+                    <h4 class="font-display font-semibold text-white mb-6 uppercase tracking-wider text-xs">Navigasi
+                    </h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="{{ route('home') }}" class="hover:text-primary-400">Beranda</a></li>
+                        <li><a href="{{ route('about') }}" class="hover:text-primary-400">Tentang Kami</a></li>
+                        <li><a href="{{ route('berita') }}" class="hover:text-primary-400">Berita</a></li>
+                        <li><a href="{{ route('spmb') }}" class="hover:text-primary-400">Pendaftaran</a></li>
                     </ul>
                 </div>
-
-                <!-- Program -->
                 <div>
-                    <h4 class="font-display font-semibold text-white mb-4">Program</h4>
-                    <ul class="space-y-2.5">
-                        <li><a href="#" class="text-sm hover:text-primary-400 transition-colors">Kurikulum
-                                Merdeka</a></li>
-                        <li><a href="#" class="text-sm hover:text-primary-400 transition-colors">Fasilitas</a>
+                    <h4 class="font-display font-semibold text-white mb-6 uppercase tracking-wider text-xs">Kontak Kami
+                    </h4>
+                    <ul class="space-y-4 text-sm">
+                        <li class="flex gap-3"><i
+                                class="fas fa-map-marker-alt text-primary-500 mt-1"></i><span>{{ $settings->get('school_address') }}</span>
                         </li>
-                        <li><a href="#" class="text-sm hover:text-primary-400 transition-colors">Ekstra
-                                Kurikuler</a></li>
-                        <li><a href="#" class="text-sm hover:text-primary-400 transition-colors">Guru
-                                Tersertifikasi</a></li>
+                        <li class="flex gap-3"><i
+                                class="fas fa-phone text-primary-500"></i><span>{{ $settings->get('school_phone') }}</span>
+                        </li>
+                        <li class="flex gap-3"><i
+                                class="fas fa-envelope text-primary-500"></i><span>{{ $settings->get('school_email') }}</span>
+                        </li>
                     </ul>
                 </div>
-
-                <!-- Contact -->
                 <div>
-                    <h4 class="font-display font-semibold text-white mb-4">Kontak</h4>
-                    <ul class="space-y-3">
-                        <li class="flex items-start gap-3 text-sm">
-                            <i class="fas fa-map-marker-alt text-primary-400 mt-1"></i>
-                            <span>{{ $settings->get('school_address', '#') }}</span>
-                        </li>
-                        <li class="flex items-center gap-3 text-sm">
-                            <i class="fas fa-phone text-primary-400"></i>
-                            <span>{{ $settings->get('school_phone', '#') }}</span>
-                        </li>
-                        <li class="flex items-center gap-3 text-sm">
-                            <i class="fas fa-envelope text-primary-400"></i>
-                            <span>{{ $settings->get('school_email', '#') }}</span>
-                        </li>
-                    </ul>
+                    <h4 class="font-display font-semibold text-white mb-6 uppercase tracking-wider text-xs">Akses Cepat
+                    </h4>
+                    <a href="{{ route('spmb') }}"
+                        class="block p-4 bg-dark-800 rounded-2xl border border-dark-700 hover:border-primary-500 transition-colors group">
+                        <span class="block text-white font-bold mb-1 group-hover:text-primary-400">SPMB 2026</span>
+                        <span class="text-xs text-dark-400">Daftar sekarang secara online.</span>
+                    </a>
                 </div>
             </div>
-
-            <div class="pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-xs text-dark-500">&copy; {{ date('Y') }} SMP Tunas Harapan Bekasi.</p>
-                <a href="{{ route('admin.login') }}" target="_blank"
-                    class="text-xs text-dark-600 hover:text-dark-400 transition-colors"><i
-                        class="fas fa-lock mr-1"></i>Admin Panel</a>
+            <div class="pt-8 flex flex-col md:row justify-between items-center gap-4 text-xs">
+                <p>&copy; {{ date('Y') }} SMP Tunas Harapan Bekasi. All rights reserved.</p>
+                <div class="flex gap-6">
+                    <a href="{{ route('admin.login') }}" class="hover:text-white"><i
+                            class="fas fa-lock mr-2"></i>Admin Area</a>
+                </div>
             </div>
         </div>
     </footer>
 
-    <a href="https://api.whatsapp.com/send?phone={{ $settings->get('school_phone') }}" class="whatsapp-float bounce"
-        target="_blank">
-        <i class="fab fa-whatsapp my-whatsapp"></i>
+    <a href="https://wa.me/{{ $settings->get('school_phone') }}" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
     </a>
 
     <!-- Flash Messages -->
-    @if (session('success'))
-        <div id="flash-success"
-            class="fixed bottom-6 right-6 z-[100] bg-emerald-500 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 transform translate-y-2 opacity-0 transition-all duration-300"
-            style="transition-delay:100ms">
-            <i class="fas fa-check-circle text-lg"></i>
-            <span class="text-sm font-medium">{{ session('success') }}</span>
-            <button onclick="this.parentElement.remove()" class="ml-2 hover:opacity-70"><i
-                    class="fas fa-times"></i></button>
-        </div>
-    @endif
+    @foreach (['success' => 'emerald', 'error' => 'red'] as $type => $color)
+        @if (session($type))
+            <div
+                class="flash-msg fixed bottom-6 right-6 z-[100] bg-{{ $color }}-500 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 animate-bounce-short">
+                <i class="fas fa-{{ $type === 'success' ? 'check-circle' : 'exclamation-circle' }} text-xl"></i>
+                <span class="text-sm font-bold">{{ session($type) }}</span>
+                <button onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+            </div>
+        @endif
+    @endforeach
 
-    @if (session('error'))
-        <div id="flash-error"
-            class="fixed bottom-6 right-6 z-[100] bg-red-500 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 transform translate-y-2 opacity-0 transition-all duration-300"
-            style="transition-delay:100ms">
-            <i class="fas fa-exclamation-circle text-lg"></i>
-            <span class="text-sm font-medium">{{ session('error') }}</span>
-            <button onclick="this.parentElement.remove()" class="ml-2 hover:opacity-70"><i
-                    class="fas fa-times"></i></button>
-        </div>
-    @endif
-
-    <script id="dsq-count-scr" src="//zidanherlangga.disqus.com/count.js" async></script>
     <script>
-        // Navbar scroll effect
+        // Navbar Logic
         const navbar = document.getElementById('navbar');
+        const navBrand = document.getElementById('nav-brand');
+        const navSubBrand = document.getElementById('nav-sub-brand');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const mobileBtn = document.getElementById('offcanvas-open');
 
-        function updateNavbar() {
-            if (window.scrollY > 20) {
-                navbar.classList.add('glass', 'shadow-lg', 'shadow-black/5');
-                navbar.querySelectorAll('.nav-text-color').forEach(el => el.style.color = '#1e293b');
-                navbar.querySelectorAll('.nav-sub-text-color').forEach(el => el.style.color = '#1e293b');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 30) {
+                navbar.classList.add('glass', 'shadow-xl', 'shadow-black/5');
+                navBrand.classList.replace('text-white', 'text-dark-900');
+                navSubBrand.classList.replace('text-white/70', 'text-dark-400');
+                mobileBtn.classList.replace('text-white', 'text-dark-900');
+                navLinks.forEach(link => {
+                    if (!link.classList.contains('text-primary-500')) link.classList.replace('text-white',
+                        'text-dark-700');
+                });
             } else {
-                navbar.classList.remove('glass', 'shadow-lg', 'shadow-black/5');
-                navbar.querySelectorAll('.nav-text-color').forEach(el => el.style.color = '#ffffff');
-                navbar.querySelectorAll('.nav-sub-text-color').forEach(el => el.style.color = '#ffffff');
+                navbar.classList.remove('glass', 'shadow-xl', 'shadow-black/5');
+                navBrand.classList.replace('text-dark-900', 'text-white');
+                navSubBrand.classList.replace('text-dark-400', 'text-white/70');
+                mobileBtn.classList.replace('text-dark-900', 'text-white');
+                navLinks.forEach(link => {
+                    if (!link.classList.contains('text-primary-500')) link.classList.replace(
+                        'text-dark-700', 'text-white');
+                });
+            }
+        });
+
+        // Offcanvas Logic
+        const offcanvas = document.getElementById('offcanvas-menu');
+        const content = document.getElementById('offcanvas-content');
+        const backdrop = document.getElementById('offcanvas-backdrop');
+        const openBtn = document.getElementById('offcanvas-open');
+        const closeBtn = document.getElementById('offcanvas-close');
+
+        function toggleMenu(show) {
+            if (show) {
+                offcanvas.classList.remove('invisible');
+                setTimeout(() => {
+                    backdrop.classList.replace('opacity-0', 'opacity-100');
+                    content.classList.replace('translate-x-full', 'translate-x-0');
+                }, 10);
+                document.body.style.overflow = 'hidden';
+            } else {
+                backdrop.classList.replace('opacity-100', 'opacity-0');
+                content.classList.replace('translate-x-0', 'translate-x-full');
+                setTimeout(() => {
+                    offcanvas.classList.add('invisible');
+                    document.body.style.overflow = '';
+                }, 300);
             }
         }
-        updateNavbar();
-        window.addEventListener('scroll', updateNavbar);
 
-        // Mobile menu toggle
-        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        });
+        openBtn.addEventListener('click', () => toggleMenu(true));
+        closeBtn.addEventListener('click', () => toggleMenu(false));
+        backdrop.addEventListener('click', () => toggleMenu(false));
 
-        // Flash messages animation
-        document.addEventListener('DOMContentLoaded', () => {
-            ['flash-success', 'flash-error'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    setTimeout(() => {
-                        el.style.transform = 'translateY(0)';
-                        el.style.opacity = '1';
-                    }, 100);
-                    setTimeout(() => {
-                        el.style.transform = 'translateY(10px)';
-                        el.style.opacity = '0';
-                        setTimeout(() => el.remove(), 300);
-                    }, 5000);
-                }
-            });
-        });
-
-        // Scroll reveal animation
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+        // Intersection Observer for Animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
+                if (entry.isIntersecting) entry.target.classList.add('visible');
             });
-        }, observerOptions);
+        }, {
+            threshold: 0.1
+        });
         document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-    </script>
 
+        // Auto-remove flash messages
+        setTimeout(() => {
+            document.querySelectorAll('.flash-msg').forEach(el => {
+                el.style.opacity = '0';
+                setTimeout(() => el.remove(), 500);
+            });
+        }, 5000);
+    </script>
     @stack('scripts')
 </body>
 
