@@ -27,6 +27,14 @@ class DatabaseSeeder extends Seeder
             'role' => 'penulis',
         ]);
 
+        User::create([
+            'name' => 'Panitia SPMB',
+            'email' => 'spmb@example.com',
+            'password' => Hash::make('password'),
+            'email_verified_at' => now(),
+            'role' => 'spmb',
+        ]);
+
         $this->call([
             ProgramSeeder::class,
             TeacherSeeder::class,

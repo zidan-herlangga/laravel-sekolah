@@ -23,15 +23,25 @@ class Registration extends Model
         'parent_phone',
         'status',
         'notes',
+        // Kolom Upload File & Verifikasi Dokumen
+        'kartu_keluarga', 
+        'ijazah', 
+        'akte_kelahiran', 
+        'documents_verified'
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'birth_date' => 'date',
-            'status' => 'string',
-        ];
-    }
+    /**
+     * The attributes that should be cast.
+     */
+    protected $casts = [
+        'birth_date' => 'date',
+        'status' => 'string',
+        'documents_verified' => 'boolean',
+    ];
+
+    // =============================
+    // LOCAL SCOPES
+    // =============================
 
     public function scopePending($query)
     {
@@ -48,26 +58,52 @@ class Registration extends Model
         return $query->where('status', 'rejected');
     }
 
+    // =============================
+    // ACCESSORS (Data Helper)
+    // =============================
+
+    /**
+     * Mendapatkan label status dalam Bahasa Indonesia
+     */
     public function getStatusLabelAttribute(): string
     {
         return match ($this->status) {
             'verified' => 'Terverifikasi',
             'rejected' => 'Ditolak',
-            default => 'Menunggu Verifikasi',
+            default => 'Menunggu Verifikasi', // 'pending'
         };
     }
 
+    /**
+     * Mendapatkan warna badge untuk status (CSS class)
+     */
     public function getStatusColorAttribute(): string
     {
         return match ($this->status) {
-            'verified' => 'green',
-            'rejected' => 'red',
-            default => 'yellow',
+            'verified' => 'success',
+            'rejected' => 'danger',
+            default => 'warning', // 'pending'
         };
     }
 
+    /**
+     * Mendapatkan label jenis kelamin
+     */
     public function getGenderLabelAttribute(): string
     {
-        return $this->gender === 'L' ? 'Laki-laki' : 'Perempuan';
+        // Tambahkan default untuk menghindari error jika gender null
+        return match ($this->gender) {
+            'L' => 'Laki-laki',
+            'P' => 'Perempuan',
+            default => '-',
+        };
+    }
+    
+    // Opsional: Helper untuk cek apakah dokumen lengkap
+    public function getDocumentsCompleteAttribute(): bool
+    {
+        return !empty($this->kartu_keluarga) 
+            && !empty($this->ijazah) 
+            && !empty($this->akte_kelahiran);
     }
 }

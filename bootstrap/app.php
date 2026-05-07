@@ -19,6 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'admin' => \App\Middleware\AdminMiddleware::class,
+            'check.role' => \App\Http\Middleware\CheckRole::class,
+            'is.spmb' => \App\Http\Middleware\IsSpmbMiddleware::class,
         ]);
 
         $middleware->append(\App\Middleware\SecurityHeaders::class);

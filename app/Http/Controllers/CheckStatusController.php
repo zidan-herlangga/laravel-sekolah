@@ -28,4 +28,23 @@ class CheckStatusController extends Controller
       // Kirim data registration ke session
       return redirect()->route('cek-status')->with('registration', $registration);
   }
+
+  public function downloadPdf(Request $request)
+  {
+      // 1. Ambil NISN dari input form
+      $nisn = $request->input('nisn');
+
+      // 2. Cari data berdasarkan NISN di Database
+      // Pastikan menggunakan model Registration yang benar
+      $reg = \App\Models\Registration::where('nisn', $nisn)->firstOrFail();
+
+      // 3. Ambil setting nama sekolah
+      $schoolName = \App\Models\SiteSetting::where('key', 'school_name')->first()?->value ?? 'Sekolah';
+
+      // 4. Load PDF
+      $pdf = \PDF::loadView('pdf.bukti-pendaftaran', compact('reg', 'schoolName'));
+
+      // 5. Download
+      return $pdf->download('Bukti-Pendaftaran-' . $reg->nisn . '.pdf');
+  }
 }

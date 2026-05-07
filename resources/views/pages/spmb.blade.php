@@ -74,7 +74,9 @@
                     <p class="text-dark-500">Isilah formulir berikut dengan data yang benar dan lengkap.</p>
                 </div>
 
-                <form method="POST" action="{{ route('spmb.store') }}" id="spmb-form" novalidate>
+                <!-- Tambahkan enctype="multipart/form-data" AGAR FILE BISA DIUPLOAD -->
+                <form method="POST" action="{{ route('spmb.store') }}" id="spmb-form" enctype="multipart/form-data"
+                    novalidate>
                     @csrf
 
                     <div class="bg-white border border-gray-200 rounded-3xl p-8 md:p-10 shadow-sm">
@@ -212,6 +214,40 @@
                             </div>
                         </div>
 
+                        <!-- Upload Dokumen (UPDATE DISINI) -->
+                        <h3 class="font-display font-bold text-dark-900 text-lg mb-6 flex items-center gap-2">
+                            <span
+                                class="w-8 h-8 bg-primary-400 text-white rounded-lg flex items-center justify-center text-sm font-bold">3</span>
+                            Upload Dokumen Pendukung (PDF/JPG)
+                        </h3>
+
+                        <div class="grid md:grid-cols-3 gap-5 mb-8">
+                            <div>
+                                <label class="block text-sm font-medium text-dark-700 mb-1.5">Kartu Keluarga <span
+                                        class="text-red-500">*</span></label>
+                                <input type="file" name="kartu_keluarga"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary-400 focus:ring-2 focus:ring-primary-400/20 outline-none transition-all text-sm file-input"
+                                    accept=".pdf,.jpg,.jpeg,.png" required>
+                                <p class="text-xs text-gray-400 mt-1">Maks. 2MB (PDF/JPG)</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-dark-700 mb-1.5">Ijazah / SKL <span
+                                        class="text-red-500">*</span></label>
+                                <input type="file" name="ijazah"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary-400 focus:ring-2 focus:ring-primary-400/20 outline-none transition-all text-sm file-input"
+                                    accept=".pdf,.jpg,.jpeg,.png" required>
+                                <p class="text-xs text-gray-400 mt-1">Maks. 2MB (PDF/JPG)</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-dark-700 mb-1.5">Akte Kelahiran <span
+                                        class="text-red-500">*</span></label>
+                                <input type="file" name="akte_kelahiran"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary-400 focus:ring-2 focus:ring-primary-400/20 outline-none transition-all text-sm file-input"
+                                    accept=".pdf,.jpg,.jpeg,.png" required>
+                                <p class="text-xs text-gray-400 mt-1">Maks. 2MB (PDF/JPG)</p>
+                            </div>
+                        </div>
+
                         <!-- Submit -->
                         <div class="flex items-start gap-3 p-5 bg-amber-50 border border-amber-200 rounded-xl mb-8">
                             <i class="fas fa-exclamation-triangle text-amber-500 mt-0.5"></i>
@@ -230,13 +266,23 @@
         </div>
     </section>
 
-    <script>
-        // Client-side validation feedback for better UX
-        document.getElementById('spmb-form').addEventListener('submit', function(e) {
-            const btn = document.getElementById('submit-btn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
-        });
-    </script>
+    <style>
+        /* Custom style untuk input file agar seragam */
+        .file-input::file-selector-button {
+            margin-right: 10px;
+            border: none;
+            background: #f3f4f6;
+            padding: 8px 12px;
+            border-radius: 0.375rem;
+            color: #4b5563;
+            cursor: pointer;
+            transition: background .2s ease-in-out;
+            font-size: 0.875rem;
+        }
+
+        .file-input::file-selector-button:hover {
+            background: #e5e7eb;
+        }
+    </style>
 
 @endsection

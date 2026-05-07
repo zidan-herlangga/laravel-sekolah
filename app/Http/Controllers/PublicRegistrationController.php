@@ -1,41 +1,68 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Registration;
 use Illuminate\Http\Request;
+
 class PublicRegistrationController extends Controller
 {
     public function store(Request $request)
     {
+        // 1. VALIDASI DATA (Digabung jadi satu blok yang rapi)
         $validated = $request->validate([
-            'name'          => 'required|string|max:255',
-            'nisn'          => 'required|digits:10|unique:registrations,nisn', // Gunakan digits untuk angka murni
-            'school_origin' => 'required|string|max:255',
-            'phone'         => 'required|string|max:20',
-            'email'         => 'nullable|email|max:255',
-            'gender'        => 'required|in:L,P',
-            'birth_date'    => 'required|date|before:today', // Validasi tanggal logis
-            'birth_place'   => 'required|string|max:255',
-            'address'       => 'required|string|max:1000',
-            'parent_name'   => 'required|string|max:255',
-            'parent_phone'  => 'required|string|max:20',
-        ]);
-
-        $request->validate([
-            'nisn' => [
+            // Data Pribadi
+            'name'              => 'required|string|max:255',
+            'nisn'              => [
                 'required',
-                'digits:10',             // Harus angka dan tepat 10 digit
-                'unique:registrations', // Tidak boleh ada NISN ganda di database
-                'numeric',              // Memastikan tidak ada karakter aneh
+                'numeric',
+                'digits:10',
+                'unique:registrations,nisn' // Cek unik di tabel registrations kolom nisn
             ],
+            'school_origin'     => 'required|string|max:255',
+            'phone'             => 'required|string|max:20',
+            'email'             => 'nullable|email|max:255',
+            'gender'            => 'required|in:L,P',
+            'birth_date'        => 'required|date|before:today',
+            'birth_place'       => 'required|string|max:255',
+            'address'           => 'required|string|max:1000',
+            
+            // Data Orang Tua
+            'parent_name'       => 'required|string|max:255',
+            'parent_phone'      => 'required|string|max:20',
+            
+            // Dokumen (Wajib diupload)
+            'kartu_keluarga'    => 'required|mimes:pdf,jpg,jpeg,png|max:2048',
+            'ijazah'            => 'required|mimes:pdf,jpg,jpeg,png|max:2048',
+            'akte_kelahiran'    => 'required|mimes:pdf,jpg,jpeg,png|max:2048',
         ], [
-            'nisn.digits' => 'Mohon masukkan 10 digit NISN yang valid.',
+            // Pesan Error Kustom (Opsional)
             'nisn.unique' => 'NISN ini sudah terdaftar sebelumnya.',
+            'nisn.digits' => 'NISN harus 10 digit angka.',
+            'kartu_keluarga.required' => 'Kartu Keluarga wajib diupload.',
+            'ijazah.required' => 'Ijazah / SKL wajib diupload.',
+            'akte_kelahiran.required' => 'Akte Kelahiran wajib diupload.',
         ]);
 
-        // Menggunakan variabel $validated lebih aman daripada $request->all()
+        // 2. PROSES UPLOAD FILE
+        // Kita ambil path file dan masukkan ke array $validated
+        if ($request->hasFile('kartu_keluarga')) {
+            $validated['kartu_keluarga'] = $request->file('kartu_keluarga')->store('documents/spmb', 'public');
+        }
+
+        if ($request->hasFile('ijazah')) {
+            $validated['ijazah'] = $request->file('ijazah')->store('documents/spmb', 'public');
+        }
+
+        if ($request->hasFile('akte_kelahiran')) {
+            $validated['akte_kelahiran'] = $request->file('akte_kelahiran')->store('documents/spmb', 'public');
+        }
+
+        // 3. SIMPAN KE DATABASE
+        // Status default 'pending' ada di migration, jadi tidak perlu di set manual
         Registration::create($validated);
 
-        return redirect()->route('spmb')->with('success', 'Pendaftaran berhasil!');
-    }   
+        // 4. REDIRECT
+        return redirect()->route('spmb')->with('success', 'Pendaftaran Berhasil! Silakan cek status secara berkala.');
+    }
 }

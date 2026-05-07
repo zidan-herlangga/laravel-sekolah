@@ -347,6 +347,54 @@
         </div>
     </footer>
 
+    <a href="https://api.whatsapp.com/send?phone=6281770748835" class="whatsapp-float bounce" target="_blank">
+        <i class="fab fa-whatsapp my-whatsapp"></i>
+    </a>
+
+    <style>
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 40px;
+            right: 40px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 3px #999;
+            z-index: 100;
+        }
+
+        .my-whatsapp {
+            margin-top: 16px;
+        }
+
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            25%,
+            50%,
+            75%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-20px);
+            }
+
+            60% {
+                transform: translateY(-12px);
+            }
+        }
+    </style>
+
     <!-- Flash Messages -->
     @if (session('success'))
         <div id="flash-success"
