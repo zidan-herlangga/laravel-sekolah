@@ -78,6 +78,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 40px;
+            right: 40px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 3px #999;
+            z-index: 100;
+        }
+
+        .my-whatsapp {
+            margin-top: 16px;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
@@ -340,12 +359,17 @@
 
             <div class="pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                 <p class="text-xs text-dark-500">&copy; {{ date('Y') }} SMP Tunas Harapan Bekasi.</p>
-                <a href="{{ route('admin.login') }}"
+                <a href="{{ route('admin.login') }}" target="_blank"
                     class="text-xs text-dark-600 hover:text-dark-400 transition-colors"><i
                         class="fas fa-lock mr-1"></i>Admin Panel</a>
             </div>
         </div>
     </footer>
+
+    <a href="https://api.whatsapp.com/send?phone={{ $settings->get('school_phone') }}" class="whatsapp-float bounce"
+        target="_blank">
+        <i class="fab fa-whatsapp my-whatsapp"></i>
+    </a>
 
     <!-- Flash Messages -->
     @if (session('success'))

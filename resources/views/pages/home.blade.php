@@ -57,7 +57,7 @@
                     <!-- Mini Stats -->
                     <div class="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-dark-700/50">
                         <div>
-                            <div class="font-display text-3xl font-bold text-white">1500<span
+                            <div class="font-display text-3xl font-bold text-white">600<span
                                     class="text-primary-400">+</span></div>
                             <div class="text-sm text-dark-400 mt-1">Siswa Aktif</div>
                         </div>
@@ -147,7 +147,7 @@
                     <img src="{{ asset('assets/images/gedung-sekolah.jpeg') }}" alt="Gedung Sekolah"
                         class="rounded-3xl shadow-xl w-full object-cover">
                     <div class="absolute -bottom-6 -right-6 bg-primary-400 text-white rounded-2xl p-6 shadow-xl">
-                        <div class="font-display text-4xl font-bold">25+</div>
+                        <div class="font-display text-4xl font-bold">38+</div>
                         <div class="text-sm text-primary-100">Tahun Melayani</div>
                     </div>
                 </div>
@@ -233,13 +233,13 @@
             <div class="grid lg:grid-cols-5 gap-12 items-center">
                 <div class="lg:col-span-2 fade-up flex justify-center">
                     <div class="relative">
-                        <img src="{{ asset('storage/teachers/EJQGoCrROq8F4Q4g_1776739630.jpeg') }}"
-                            alt="{{ $settings->get('headmaster_name', '#') }}"
+                        <img src="{{ asset('kepala-sekolah.jpeg') }}"
+                            alt="{{ $teacher->name ?? 'Dra.Hj. Neneng Yeti.D, M.Pd' }}"
                             class="rounded-3xl shadow-xl w-72 h-80 object-cover">
                         <div
                             class="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-white rounded-xl px-6 py-3 shadow-lg whitespace-nowrap">
                             <span
-                                class="font-display font-bold text-dark-900 text-sm">{{ $settings->get('headmaster_name', '#') }}</span>
+                                class="font-display font-bold text-dark-900 text-sm">{{ $teacher->name ?? 'Dra.Hj. Neneng Yeti.D, M.Pd' }}</span>
                         </div>
                     </div>
                 </div>
@@ -277,7 +277,7 @@
                 @foreach ($galleries as $index => $gallery)
                     <div
                         class="fade-up overflow-hidden rounded-2xl {{ $index === 0 ? 'md:col-span-2 md:row-span-2' : '' }} aspect-square group cursor-pointer">
-                        <img src="{{ $gallery->image }}" alt="{{ $gallery->title ?? 'Galeri' }}"
+                        <img src="storage/{{ $gallery->image }}" alt="{{ $gallery->title ?? 'Galeri' }}"
                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                             loading="lazy">
                         <div

@@ -3,6 +3,7 @@
 @section('title', 'Cek Status SPMB - ' . $settings->get('school_name'))
 
 @section('content')
+    <!-- Hero -->
     <section class="relative pt-32 pb-16 bg-dark-900 overflow-hidden">
         <div class="absolute inset-0">
             <img src="https://picsum.photos/id/20/1920/600" alt="" class="w-full h-full object-cover opacity-25">
@@ -23,6 +24,7 @@
         </div>
     </section>
 
+    <!-- Content -->
     <section class="py-24 bg-white">
         <div class="max-w-3xl mx-auto px-6 lg:px-8">
             <div class="bg-white border border-gray-200 rounded-3xl p-8 md:p-10 shadow-lg">
@@ -64,8 +66,7 @@
                 @if (session('registration'))
                     @php
                         $reg = session('registration');
-                        // Tentukan variabel berdasarkan status
-                        $status = $reg->status; // verified, rejected, pending (default)
+                        $status = $reg->status;
                     @endphp
 
                     <div class="text-center mb-8">
@@ -95,7 +96,8 @@
                         {{-- Pesan Dinamis --}}
                         <p class="text-dark-500">
                             @if ($status === 'verified')
-                                Data Anda telah divalidasi. Silakan cetak bukti pendaftaran untuk daftar ulang.
+                                Data Anda telah diverifikasi lengkap. Silakan perhatikan jadwal tes dan informasi pembayaran
+                                di bawah.
                             @elseif($status === 'rejected')
                                 Mohon maaf, pendaftaran Anda tidak dapat kami proses karena belum memenuhi persyaratan.
                             @else
@@ -103,6 +105,27 @@
                             @endif
                         </p>
                     </div>
+
+                    {{-- CARD JADWAL TES & INFORMASI (KHUSUS STATUS VERIFIED) --}}
+                    @if ($status === 'verified')
+                        <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 mb-6 text-center">
+                            <h4 class="font-bold text-emerald-800 mb-4 flex items-center justify-center gap-2">
+                                <i class="fas fa-calendar-check"></i> JADWAL TES & INFORMASI
+                            </h4>
+                            {{-- Kolom 'notes' berisi pesan dari admin saat klik tombol verifikasi --}}
+                            <p class="text-emerald-900 font-medium text-lg mb-2 leading-relaxed">
+                                {!! nl2br(e($reg->notes)) !!}
+                            </p>
+
+                            {{-- Informasi Pembayaran Hardcoded atau dari Settings --}}
+                            <div class="mt-4 pt-4 border-t border-emerald-200/50 text-sm text-emerald-800">
+                                <strong>Informasi Pembayaran:</strong><br>
+                                Silakan lakukan pembayaran uang pangkal sebelum tanggal tes di Bank BNI No. Rek: 1234567890
+                                a.n Yayasan Sekolah. <br>
+                                Bukti transfer ditunjukkan pada saat tes.
+                            </div>
+                        </div>
+                    @endif
 
                     {{-- Card Detail --}}
                     <div
@@ -131,7 +154,7 @@
                                 </span>
                             </div>
 
-                            {{-- Tampilkan Alasan Jika Ditolak (Opsional, jika Anda punya kolom 'reason' di DB) --}}
+                            {{-- Tampilkan Alasan Jika Ditolak --}}
                             @if ($status === 'rejected' && $reg->notes)
                                 <div class="pt-3">
                                     <span class="text-red-700 text-xs font-bold uppercase">Catatan Panitia:</span>
@@ -143,10 +166,16 @@
 
                     <div class="flex flex-col gap-4">
                         @if ($status === 'verified')
-                            <button onclick="window.print()"
-                                class="w-full py-4 bg-dark-900 text-white font-semibold rounded-xl hover:bg-dark-800 transition-colors flex items-center justify-center gap-2">
-                                <i class="fas fa-print"></i> Cetak Bukti Pendaftaran
-                            </button>
+                            {{-- GANTI TOMBOL INI DENGAN FORM --}}
+                            <form method="GET" action="{{ route('cek-status.pdf') }}" class="w-full">
+                                {{-- Kita kirim NISN secara rahasia (hidden) --}}
+                                <input type="hidden" name="nisn" value="{{ $reg->nisn }}">
+
+                                <button type="submit"
+                                    class="w-full py-4 bg-dark-900 text-white font-semibold rounded-xl hover:bg-dark-800 transition-colors flex items-center justify-center gap-2">
+                                    <i class="fas fa-file-pdf"></i> Unduh Bukti Pendaftaran (PDF)
+                                </button>
+                            </form>
                         @elseif($status === 'rejected')
                             <a href="{{ route('contact') }}"
                                 class="w-full py-4 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition-colors text-center flex items-center justify-center gap-2">

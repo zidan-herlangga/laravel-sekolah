@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateRegistrationRequest;
 use App\Models\Registration;
+use App\Models\SiteSetting; // Tambahkan model ini
+use Barryvdh\DomPDF\Facade\Pdf; // Tambahkan alias ini untuk PDF (Pastikan sudah install)
 use Illuminate\Http\Request;
 
 class RegistrationController extends Controller
@@ -58,13 +60,18 @@ class RegistrationController extends Controller
         return redirect()->route('admin.registrations.index')->with('success', 'Data pendaftar berhasil dihapus.');
     }
 
+    /**
+     * Export data ke CSV
+     */
     public function export()
     {
         $registrations = Registration::latest()->get();
 
+        // Siapkan header CSV
         $csvData = [];
         $csvData[] = ['ID', 'Nama', 'NISN', 'Asal Sekolah', 'Telepon', 'Email', 'Jenis Kelamin', 'Tanggal Lahir', 'Tempat Lahir', 'Alamat', 'Nama Orang Tua', 'Telepon Orang Tua', 'Status', 'Tanggal Daftar'];
 
+        // Loop data dan masukkan ke array
         foreach ($registrations as $reg) {
             $csvData[] = [
                 $reg->id,
@@ -73,33 +80,74 @@ class RegistrationController extends Controller
                 $reg->school_origin,
                 $reg->phone,
                 $reg->email,
-                $reg->gender_label,
+                $reg->gender_label, // Pastikan ada accessor di model
                 $reg->birth_date?->format('d/m/Y'),
                 $reg->birth_place,
                 $reg->address,
                 $reg->parent_name,
                 $reg->parent_phone,
-                $reg->status_label,
+                $reg->status_label, // Pastikan ada accessor di model
                 $reg->created_at->format('d/m/Y H:i'),
             ];
         }
 
+        // Download File
         $filename = 'spmb_data_' . date('Y-m-d_His') . '.csv';
-        $handle = fopen('php://output', 'w');
-        fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
-
-        foreach ($csvData as $row) {
-            fputcsv($handle, $row);
-        }
-        fclose($handle);
 
         return response()->streamDownload(function () use ($csvData) {
             $handle = fopen('php://output', 'w');
+            // Tambahkan BOM agar UTF-8 terbaca dengan benar di Excel
             fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
+            
             foreach ($csvData as $row) {
                 fputcsv($handle, $row);
             }
             fclose($handle);
         }, $filename, ['Content-Type' => 'text/csv; charset=UTF-8']);
     }
+    
+    /**
+     * Export data ke PDF
+     */
+    public function exportPdf()
+    {
+        // Ambil data pendaftar, misal urutkan berdasarkan tanggal terbaru
+        $registrations = Registration::latest()->get();
+
+        // Ambil setting nama sekolah (opsional, untuk judul PDF)
+        $schoolName = SiteSetting::where('key', 'school_name')->first()?->value ?? 'Sekolah';
+
+        // Load view PDF dan kirim datanya
+        // Pastikan Anda sudah membuat view 'admin.registrations.pdf'
+        $pdf = Pdf::loadView('admin.registrations.pdf', compact('registrations', 'schoolName'));
+
+        // Download file PDF
+        return $pdf->download('data-pendaftar-' . date('d-m-Y') . '.pdf');
+    }
+
+    public function verifyDocuments($id)
+    {
+        $registration = Registration::findOrFail($id);
+        
+        $registration->update([
+            'status' => 'verified',
+            'documents_verified' => true
+        ]);
+
+        // Ambil Data Jadwal dari Settings
+        $examDate = \App\Models\SiteSetting::where('key', 'spmb_exam_date')->first()?->value ?? '-';
+        $examLocation = \App\Models\SiteSetting::where('key', 'spmb_exam_location')->first()?->value ?? '-';
+        $examTime = \App\Models\SiteSetting::where('key', 'spmb_exam_time')->first()?->value ?? '-';
+
+        // Buat Pesan Sukses
+        $message = "Selamat, data Anda terverifikasi lengkap! Silahkan mengikuti tes offline.\n\n";
+        $message .= "📅 Tanggal: $examDate\n";
+        $message .= "⏰ Waktu: $examTime\n";
+        $message .= "📍 Lokasi: $examLocation";
+
+        // Simpan ke notes
+        $registration->update(['notes' => $message]);
+
+        return redirect()->back()->with('success', 'Data siswa diverifikasi dan jadwal tes diberikan.');
+    }  
 }
