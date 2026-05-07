@@ -10,14 +10,36 @@ class TeacherSeeder extends Seeder
     public function run(): void
     {
         $teachers = [
-            ['name' => 'Dr. H. Ahmad Fauzi, M.Pd.I', 'position' => 'Kepala Sekolah', 'type' => 'guru', 'order' => 1, 'bio' => 'Pemimpin visioner dengan pengalaman 20 tahun di dunia pendidikan. Lulusan UIN Syarif Hidayatullah Jakarta.'],
-            ['name' => 'Hj. Siti Aisyah, S.Pd.', 'position' => 'Wakil Kepala Sekolah Kurikulum', 'type' => 'guru', 'order' => 2, 'bio' => 'Ahli pengembangan kurikulum dengan sertifikasi pendidik profesional.'],
-            ['name' => 'Ustadz Muhammad Rizki, Lc.', 'position' => 'Wakil Kepala Sekolah Kesiswaan', 'type' => 'guru', 'order' => 3, 'bio' => 'Lulusan Universitas Al-Azhar, Kairo. Spesialis pembinaan karakter islami.'],
-            ['name' => 'Ir. Bambang Hartono, M.T.', 'position' => 'Guru Matematika & STEM', 'type' => 'guru', 'order' => 4, 'bio' => 'Peraih penghargaan guru berprestasi tingkat nasional bidang sains.'],
-            ['name' => 'Dewi Lestari, S.S., M.Hum.', 'position' => 'Guru Bahasa Inggris', 'type' => 'guru', 'order' => 5, 'bio' => 'IELTS certified, pengalaman mengajar bilingual selama 12 tahun.'],
-            ['name' => 'Rahmat Hidayat, S.Pd.', 'position' => 'Guru Tahfidz', 'type' => 'guru', 'order' => 6, 'bio' => 'Hafidz 30 juz, lulusan Universitas Islam Madinah.'],
-            ['name' => 'Rina Marlina, S.Kom.', 'position' => 'Staff TU', 'type' => 'staff', 'order' => 7, 'bio' => 'Bertanggung jawab atas administrasi dan keuangan sekolah.'],
-            ['name' => 'Agus Supriyadi', 'position' => 'Staff Perpustakaan', 'type' => 'staff', 'order' => 8, 'bio' => 'Mengelola koleksi perpustakaan dengan lebih dari 10.000 buku.'],
+            ['name' => 'Dra. Hj. Neneng Yeti. D, M.Pd', 'position' => 'Kepala SMP Tunas Harapan Bekasi', 'type' => 'guru', 'order' => 1, 'bio' => ''],
+
+            ['name' => 'Supriyanto, S.Pd', 'position' => 'PKS Kesiswaan', 'type' => 'guru', 'order' => 2, 'bio' => ''],
+
+            ['name' => 'Agus Maulana, S.Kom', 'position' => 'PKS Kurikulum', 'type' => 'guru', 'order' => 4, 'bio' => ''],
+
+            ['name' => 'Atin Nurhayatin, S.Pd', 'position' => 'Guru Bimbingan Konseling', 'type' => 'guru', 'order' => 5, 'bio' => ''],
+            
+            ['name' => 'Dlia Murtafiah, S.Hi', 'position' => 'Guru Prakarya', 'type' => 'guru', 'order' => 6, 'bio' => ''],
+
+            ['name' => 'Sunoto, S.Pd', 'position' => 'Guru Agama Budha', 'type' => 'guru', 'order' => 7, 'bio' => ''],
+            
+            ['name' => 'Hokdi Sitompul, S.Pd', 'position' => 'Guru Agama Kristen', 'type' => 'guru', 'order' => 8, 'bio' => ''],
+
+            ['name' => 'M. Ridwan, S.Sy', 'position' => 'Guru Agama Islam', 'type' => 'guru', 'order' => 9, 'bio' => ''],
+
+            ['name' => 'Hj. Nuryaningsih, S.Pd', 'position' => 'Guru IPS', 'type' => 'guru', 'order' => 10, 'bio' => ''],
+
+            ['name' => 'Wawan S, S.Pd', 'position' => 'Guru PJOK', 'type' => 'guru', 'order' => 11, 'bio' => ''],
+            
+            ['name' => 'Ir. Gunarso', 'position' => 'Guru IPA', 'type' => 'guru', 'order' => 12, 'bio' => ''],
+
+            ['name' => 'Siti Ruqoyah, S.Pd', 'position' => 'Guru Matematika', 'type' => 'guru', 'order' => 13, 'bio' => ''],
+
+            ['name' => 'Nurunnisa Al Musyarafah, S.Pd', 'position' => 'Guru Bahasa Indonesia', 'type' => 'guru', 'order' => 14, 'bio' => ''],
+
+            ['name' => 'Guntur Zaelani', 'position' => 'Tata Usaha', 'type' => 'staff', 'order' => 15, 'bio' => ''],
+
+            ['name' => 'Sarah Fatmaningish', 'position' => 'Tata Usaha', 'type' => 'staff', 'order' => 16, 'bio' => ''],
+
         ];
 
         foreach ($teachers as $teacher) {

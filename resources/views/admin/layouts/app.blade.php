@@ -216,6 +216,13 @@
                         @if (in_array(auth()->user()->role, ['admin', 'penulis']))
                             <li class="nav-header">KONTEN</li>
                             <li class="nav-item">
+                                <a href="{{ route('admin.categories.index') }}"
+                                    class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-tags"></i>
+                                    <p>Kategori</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="{{ route('admin.posts.index') }}"
                                     class="nav-link {{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-newspaper"></i>
@@ -352,29 +359,31 @@
         if (typeof tinymce !== 'undefined') {
             tinymce.init({
                 selector: 'textarea.tinymce',
-                height: 350,
+                height: 400, // Sedikit lebih tinggi untuk kenyamanan menulis
                 menubar: false,
                 plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen',
-                toolbar: 'undo redo | formatselect bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | link',
-                content_style: 'body { font-family: Source Sans Pro, sans-serif; font-size: 14px; padding: 10px; }',
+                toolbar: 'undo redo | formatselect bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | link image', // Tambahkan image di toolbar
+                content_style: 'body { font-family: "Source Sans Pro", sans-serif; font-size: 16px; padding: 20px; line-height: 1.6; }', // Font size 16px lebih ramah mata
                 branding: false,
                 statusbar: true,
-                // Memaksa sinkronisasi teks saat diketik
+
+                // OPTIMASI: Sinkronisasi data
                 setup: function(editor) {
-                    editor.on('change', function() {
-                        tinymce.triggerSave();
+                    // Gunakan event 'blur' daripada 'change'
+                    // 'change' dipicu setiap karakter, 'blur' dipicu saat kursor keluar dari editor
+                    editor.on('blur', function() {
+                        editor.save(); // Lebih spesifik daripada tinymce.triggerSave()
                     });
                 }
             });
         }
 
-        // Confirm delete dialog
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.btn-delete-confirm')) {
-                e.preventDefault();
-                const form = e.target.closest('.btn-delete-confirm').closest('form');
-                if (confirm('Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.')) {
-                    form.submit();
+        // Modern Confirm Delete menggunakan SweetAlert2 (Opsional tapi direkomendasikan)
+        // Jika tetap ingin native confirm, gunakan delegasi yang lebih aman:
+        document.addEventListener('submit', function(e) {
+            if (e.target && e.target.classList.contains('form-delete-confirm')) {
+                if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                    e.preventDefault();
                 }
             }
         });

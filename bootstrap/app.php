@@ -12,20 +12,25 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         
-        // Hanya perlu redirect tamu yang mencoba akses halaman admin
+        // 1. Redirect Guest to Login
         $middleware->redirectGuestsTo(function () {
             return route('admin.login');
         });
 
+        // 2. Alias Middleware (PENTING)
+        // Pastikan nama class di sini PERSIS sama dengan nama file
         $middleware->alias([
-            'admin' => \App\Middleware\AdminMiddleware::class,
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'check.role' => \App\Http\Middleware\CheckRole::class,
             'is.spmb' => \App\Http\Middleware\IsSpmbMiddleware::class,
         ]);
 
-        $middleware->append(\App\Middleware\SecurityHeaders::class);
+        // 3. Menghandle SecurityHeaders (SOLUSI STABIL)
+        // Kita daftarkan SecurityHeaders sebagai Class Middleware, bukan Closure
+        // Pastikan file ada di: app/Http/Middleware/SecurityHeaders.php
+        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
         
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();   
+    })->create();
