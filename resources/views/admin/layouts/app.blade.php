@@ -255,6 +255,33 @@
                                     <p>Data Pendaftar</p>
                                 </a>
                             </li>
+
+                            <li class="nav-item {{ request()->routeIs('admin.examp.*') ? 'menu-open' : '' }}">
+                                <a href="#"
+                                    class="nav-link {{ request()->routeIs('admin.examp.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-laptop-code"></i>
+                                    <p>
+                                        Ujian Online (CBT)
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.examp.index') }}"
+                                            class="nav-link {{ request()->routeIs('admin.examp.index') ? 'active' : '' }}">
+                                            <i class="far fa-circle nav-icon text-primary"></i>
+                                            <p>Bank Soal</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.examp.results') }}"
+                                            class="nav-link {{ request()->routeIs('admin.examp.results') ? 'active' : '' }}">
+                                            <i class="far fa-circle nav-icon text-success"></i>
+                                            <p>Hasil Ujian</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                         @endif
 
                         {{-- @if (auth()->user()->role === 'admin') --}}
@@ -359,11 +386,18 @@
         if (typeof tinymce !== 'undefined') {
             tinymce.init({
                 selector: 'textarea.tinymce',
-                height: 400, // Sedikit lebih tinggi untuk kenyamanan menulis
-                menubar: false,
-                plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen',
-                toolbar: 'undo redo | formatselect bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | link image', // Tambahkan image di toolbar
-                content_style: 'body { font-family: "Source Sans Pro", sans-serif; font-size: 16px; padding: 20px; line-height: 1.6; }', // Font size 16px lebih ramah mata
+                height: 500,
+                plugins: [
+                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                    'insertdatetime', 'media', 'table', 'help', 'wordcount',
+                ],
+                toolbar: 'undo redo | blocks | ' +
+                    'bold italic backcolor | alignleft aligncenter ' +
+                    'alignright alignjustify | bullist numlist outdent indent | ' +
+                    'removeformat | help',
+                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+
                 branding: false,
                 statusbar: true,
 

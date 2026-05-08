@@ -41,6 +41,7 @@ class DatabaseSeeder extends Seeder
             PostSeeder::class,
             GallerySeeder::class,
             SiteSettingSeeder::class,
+            QuestionSeeder::class,
         ]);
     }
 };

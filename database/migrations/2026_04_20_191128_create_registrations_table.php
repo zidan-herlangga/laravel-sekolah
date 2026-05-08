@@ -10,6 +10,14 @@ return new class extends Migration
     {
         Schema::create('registrations', function (Blueprint $table) {
             $table->id();
+            
+            // RELASI KE USER (PENTING)
+            // Menggunakan constrained() agar otomatis terhubung ke tabel users
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
+            
+            // NOMOR PENDAFTARAN (Unik untuk identitas pendaftar)
+            $table->string('registration_number')->unique()->nullable();
+
             $table->string('name');
             $table->string('nisn', 20)->unique();
             $table->string('school_origin');
@@ -21,12 +29,17 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->string('parent_name')->nullable();
             $table->string('parent_phone', 20)->nullable();
-            $table->enum('status', ['pending', 'verified', 'rejected'])->default('pending');
+            
+            // STATUS PENDAFTARAN
+            // Saya tambahkan 'lulus' & 'tidak_lulus' agar sinkron dengan Dashboard
+            $table->enum('status', ['pending', 'verified', 'rejected', 'lulus', 'tidak_lulus'])->default('pending');
+            
             $table->text('notes')->nullable();
             $table->timestamps();
+            
+            // INDEXING UNTUK PERFORMA
             $table->index('status');
             $table->index('created_at');
-
             $table->softDeletes();
         });
     }

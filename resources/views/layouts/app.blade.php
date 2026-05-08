@@ -75,13 +75,6 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        /* Glassmorphism Effect */
-        .glass {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-
         /* Animations */
         .card-hover {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -142,10 +135,11 @@
 <body class="bg-white text-dark-900 overflow-x-hidden">
 
     <!-- Navbar -->
-    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <nav id="navbar"
+        class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-dark-950  shadow-xl shadow-black/5 text-white text-dark-900">
+        <div class="max-w-7xl mx-auto  lg:px-4">
             <div class="flex items-center justify-between h-20">
-                <!-- Logo -->
+                <!-- Logo Tetap Sama -->
                 <a href="{{ route('home') }}" class="flex items-center gap-3 group">
                     <div
                         class="bg-white/10 backdrop-blur rounded-2xl flex items-center justify-center p-1.5 group-hover:scale-105 transition-transform">
@@ -154,7 +148,7 @@
                     </div>
                     <div>
                         <span id="nav-brand"
-                            class="font-display font-bold text-lg leading-tight block text-white transition-colors duration-300">SMP
+                            class="font-display font-bold text-lg leading-tight block text-white transition-colors duration-300 text-white text-dark-900">SMP
                             Tunas Harapan</span>
                         <span id="nav-sub-brand"
                             class="text-xs text-white/70 block transition-colors duration-300">Berbasis Karakter &
@@ -162,22 +156,46 @@
                     </div>
                 </a>
 
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center gap-1">
+                <!-- Desktop Menu (Disederhanakan) -->
+                <div class="hidden md:flex items-center gap-2">
                     @php $currentRoute = request()->route()->getName(); @endphp
-                    @foreach (['home' => 'Beranda', 'about' => 'Tentang', 'berita' => 'Berita', 'cek-status' => 'Cek Status', 'contact' => 'Kontak'] as $route => $label)
+
+                    @foreach (['home' => 'Beranda', 'about' => 'Tentang', 'berita' => 'Berita', 'contact' => 'Kontak'] as $route => $label)
                         <a href="{{ route($route) }}"
                             class="nav-link px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 {{ $currentRoute === $route || ($route === 'berita' && str_contains($currentRoute, 'berita')) ? 'text-primary-500 bg-primary-50' : 'text-white hover:text-primary-400' }}">
                             {{ $label }}
                         </a>
                     @endforeach
-                    <a href="{{ route('spmb') }}"
-                        class="ml-3 px-5 py-2.5 bg-primary-500 text-white text-sm font-semibold rounded-xl hover:bg-primary-600 hover:shadow-lg shadow-primary-500/30 transition-all">
-                        Daftar SPMB
-                    </a>
+
+                    <div class="h-6 w-[1px] bg-white/20 mx-2"></div>
+
+                    @auth
+                        <!-- Tampilan Jika Sudah Login -->
+                        <div class="flex items-center gap-4">
+                            <a href="{{ route('dashboard') }}"
+                                class="flex items-center gap-2 px-4 py-2 bg-primary-500 text-white text-sm font-bold rounded-xl hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/20">
+                                <i class="fa-solid fa-gauge-high"></i> Dashboard
+                            </a>
+                            <form action="{{ route('logout') }}" method="POST" class="inline">
+                                @csrf
+                                <button type="submit"
+                                    class="text-white/70 hover:text-red-400 text-sm font-medium transition-colors">
+                                    <i class="fa-solid fa-power-off"></i>
+                                </button>
+                            </form>
+                        </div>
+                    @else
+                        <!-- Tampilan Jika Belum Login -->
+                        <a href="{{ route('login') }}"
+                            class="nav-link px-4 py-2 text-white text-sm font-medium hover:text-primary-400">Masuk</a>
+                        <a href="{{ route('register') }}"
+                            class="ml-2 px-6 py-2.5 bg-white text-primary-600 text-sm font-bold rounded-xl hover:bg-primary-50 shadow-lg shadow-black/5 transition-all">
+                            Daftar
+                        </a>
+                    @endauth
                 </div>
 
-                <!-- Mobile Trigger -->
+                <!-- Mobile Trigger Tetap Sama -->
                 <button id="offcanvas-open"
                     class="md:hidden p-2.5 rounded-xl text-white hover:bg-white/10 transition-colors">
                     <i class="fa-solid fa-bars-staggered text-2xl"></i>
@@ -188,29 +206,95 @@
 
     <!-- Offcanvas Mobile Menu -->
     <div id="offcanvas-menu" class="fixed inset-0 z-[60] invisible transition-all duration-300">
+        <!-- Backdrop dengan blur yang lebih halus -->
         <div id="offcanvas-backdrop"
-            class="absolute inset-0 bg-dark-950/40 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+            class="absolute inset-0 bg-dark-950/60 backdrop-blur-md opacity-0 transition-opacity duration-300"></div>
+
         <div id="offcanvas-content"
-            class="absolute top-0 right-0 bottom-0 w-[300px] bg-white translate-x-full transition-transform duration-300 ease-out flex flex-col">
-            <div class="p-6 flex items-center justify-between border-b border-gray-100">
-                <span class="font-display font-bold text-dark-900">Navigasi</span>
-                <button id="offcanvas-close" class="p-2 rounded-lg text-gray-400 hover:bg-gray-100"><i
-                        class="fa-solid fa-xmark text-xl"></i></button>
+            class="absolute top-0 right-0 bottom-0 w-[320px] bg-white translate-x-full transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) flex flex-col shadow-2xl">
+
+            <!-- Header dengan Branding -->
+            <div class="p-6 flex items-center justify-between border-b border-gray-50">
+                <div class="flex items-center gap-3">
+                    <img src="{{ asset('assets/images/logo-tunas-harapan.png') }}" class="w-8 h-8 object-contain"
+                        alt="Logo">
+                    <span class="font-display font-bold text-dark-900 tracking-tight">Navigasi Utama</span>
+                </div>
+                <button id="offcanvas-close"
+                    class="w-10 h-10 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-dark-900 transition-all">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
             </div>
-            <div class="flex-1 overflow-y-auto p-6 space-y-2">
-                @foreach (['home' => ['house', 'Beranda'], 'about' => ['circle-info', 'Tentang'], 'berita' => ['newspaper', 'Berita'], 'cek-status' => ['magnifying-glass', 'Cek Status'], 'contact' => ['envelope', 'Kontak']] as $route => $info)
-                    <a href="{{ route($route) }}"
-                        class="flex items-center gap-4 px-4 py-3 rounded-xl text-dark-700 hover:bg-primary-50 hover:text-primary-600 transition-all">
-                        <i class="fa-solid fa-{{ $info[0] }} w-5"></i> <span
-                            class="font-medium">{{ $info[1] }}</span>
+
+            <div class="flex-1 overflow-y-auto custom-scrollbar">
+                <!-- Section: User Account (Hanya jika login) -->
+                @auth
+                    <div class="p-6 bg-primary-50/50 border-b border-primary-100/50">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div
+                                class="w-12 h-12 bg-primary-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-primary-500/20">
+                                <i class="fa-solid fa-user-graduate text-lg"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] uppercase tracking-widest font-bold text-primary-600 mb-0.5">Pendaftar
+                                </p>
+                                <p class="font-display font-bold text-dark-900 leading-none">
+                                    {{ Str::words(auth()->user()->name, 2) }}</p>
+                            </div>
+                        </div>
+                        <a href="{{ route('dashboard') }}"
+                            class="flex items-center justify-center gap-2 w-full py-2.5 bg-white border border-primary-200 text-primary-600 text-xs font-bold rounded-xl hover:bg-primary-50 transition-all">
+                            <i class="fa-solid fa-gauge-high"></i> Buka Dashboard
+                        </a>
+                    </div>
+                @endauth
+
+                <!-- Section: Menu Links -->
+                <div class="p-4 space-y-1">
+                    <p class="px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Menu Utama</p>
+                    @foreach (['home' => ['house', 'Beranda'], 'about' => ['circle-info', 'Tentang Kami'], 'berita' => ['newspaper', 'Berita & Artikel'], 'contact' => ['envelope', 'Hubungi Kami']] as $route => $info)
+                        <a href="{{ route($route) }}"
+                            class="flex items-center gap-4 px-4 py-3.5 rounded-2xl text-dark-700 hover:bg-gray-50 hover:text-primary-600 transition-all group {{ request()->routeIs($route) ? 'bg-primary-50 text-primary-600 font-bold' : '' }}">
+                            <div
+                                class="w-8 h-8 rounded-xl flex items-center justify-center bg-gray-100 group-hover:bg-primary-100 transition-colors {{ request()->routeIs($route) ? 'bg-primary-100 text-primary-600' : '' }}">
+                                <i class="fa-solid fa-{{ $info[0] }} text-sm"></i>
+                            </div>
+                            <span class="text-sm">{{ $info[1] }}</span>
+                        </a>
+                    @endforeach
+                </div>
+
+                <!-- Section: Sosial Media -->
+                <div class="p-8 mt-4">
+                    <p class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-4 text-center">Ikuti
+                        Kami</p>
+                    <div class="flex justify-center gap-4">
+                        @foreach (['instagram', 'facebook', 'youtube', 'tiktok'] as $social)
+                            <a href="#"
+                                class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-primary-500 hover:text-white transition-all shadow-sm">
+                                <i class="fa-brands fa-{{ $social }}"></i>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Offcanvas: Action Button -->
+            <div class="p-6 border-t border-gray-50 bg-white">
+                @auth
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit"
+                            class="w-full py-4 text-sm font-bold text-red-500 hover:bg-red-50 rounded-2xl transition-all">
+                            <i class="fa-solid fa-power-off mr-2"></i> Keluar Akun
+                        </button>
+                    </form>
+                @else
+                    <a href="{{ route('spmb') }}"
+                        class="flex items-center justify-center gap-3 w-full py-4 bg-primary-500 text-white font-bold rounded-2xl shadow-xl shadow-primary-500/30 hover:bg-primary-600 transition-all active:scale-[0.98]">
+                        Daftar SPMB 2026 <i class="fa-solid fa-arrow-right-long animate-pulse"></i>
                     </a>
-                @endforeach
-            </div>
-            <div class="p-6 border-t border-gray-100">
-                <a href="{{ route('spmb') }}"
-                    class="flex items-center justify-center gap-2 w-full py-4 bg-primary-500 text-white font-bold rounded-xl shadow-lg shadow-primary-500/30">
-                    Daftar SPMB <i class="fa-solid fa-arrow-right"></i>
-                </a>
+                @endauth
             </div>
         </div>
     </div>
@@ -226,8 +310,8 @@
             <div class="grid md:grid-cols-4 gap-12 pb-12 border-b border-dark-800">
                 <div class="md:col-span-1">
                     <div class="flex items-center gap-3 mb-6">
-                        <img src="{{ asset('assets/images/logo-tunas-harapan.png') }}" class="w-12 h-12 object-contain"
-                            alt="Logo">
+                        <img src="{{ asset('assets/images/logo-tunas-harapan.png') }}"
+                            class="w-12 h-12 object-contain" alt="Logo">
                         <span class="font-display font-bold text-lg text-white">SMP Tunas Harapan</span>
                     </div>
                     <p class="text-sm leading-relaxed mb-6">Membentuk generasi cerdas, berkarakter Islami, dan siap
@@ -275,7 +359,7 @@
                     </a>
                 </div>
             </div>
-            <div class="pt-8 flex flex-col md:row justify-between items-center gap-4 text-xs">
+            <div class="pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
                 <p>&copy; {{ date('Y') }} SMP Tunas Harapan Bekasi. All rights reserved.</p>
                 <div class="flex gap-6">
                     <a href="{{ route('admin.login') }}" class="hover:text-white"><i
@@ -302,35 +386,6 @@
     @endforeach
 
     <script>
-        // Navbar Logic
-        const navbar = document.getElementById('navbar');
-        const navBrand = document.getElementById('nav-brand');
-        const navSubBrand = document.getElementById('nav-sub-brand');
-        const navLinks = document.querySelectorAll('.nav-link');
-        const mobileBtn = document.getElementById('offcanvas-open');
-
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 30) {
-                navbar.classList.add('glass', 'shadow-xl', 'shadow-black/5');
-                navBrand.classList.replace('text-white', 'text-dark-900');
-                navSubBrand.classList.replace('text-white/70', 'text-dark-400');
-                mobileBtn.classList.replace('text-white', 'text-dark-900');
-                navLinks.forEach(link => {
-                    if (!link.classList.contains('text-primary-500')) link.classList.replace('text-white',
-                        'text-dark-700');
-                });
-            } else {
-                navbar.classList.remove('glass', 'shadow-xl', 'shadow-black/5');
-                navBrand.classList.replace('text-dark-900', 'text-white');
-                navSubBrand.classList.replace('text-dark-400', 'text-white/70');
-                mobileBtn.classList.replace('text-dark-900', 'text-white');
-                navLinks.forEach(link => {
-                    if (!link.classList.contains('text-primary-500')) link.classList.replace(
-                        'text-dark-700', 'text-white');
-                });
-            }
-        });
-
         // Offcanvas Logic
         const offcanvas = document.getElementById('offcanvas-menu');
         const content = document.getElementById('offcanvas-content');

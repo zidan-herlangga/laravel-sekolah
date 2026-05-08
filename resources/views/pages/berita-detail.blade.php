@@ -12,201 +12,177 @@
 @endsection
 
 @section('content')
+    <!-- Progress Bar Reading -->
+    <div id="reading-progress" class="fixed top-0 left-0 h-1 bg-primary-500 z-[100] transition-all duration-150"
+        style="width: 0%"></div>
 
-    <style>
-        /* Blok Style Kustom untuk Konten Berita */
-        .berita-content {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #334155;
-        }
-
-        .berita-content h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            color: #0f172a;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        .berita-content h2 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin-top: 1.8rem;
-            margin-bottom: 0.8rem;
-            color: #0f172a;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        .berita-content h3 {
-            font-size: 1.35rem;
-            font-weight: 600;
-            margin-top: 1.5rem;
-            margin-bottom: 0.6rem;
-            color: #1e293b;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        .berita-content h4 {
-            font-size: 1.15rem;
-            font-weight: 600;
-            margin-top: 1.2rem;
-            margin-bottom: 0.5rem;
-            color: #1e293b;
-        }
-
-        .berita-content p {
-            margin-bottom: 1rem;
-        }
-
-        .berita-content ul,
-        .berita-content ol {
-            margin-bottom: 1rem;
-            padding-left: 1.8rem;
-        }
-
-        .berita-content li {
-            margin-bottom: 0.4rem;
-        }
-
-        .berita-content ul li {
-            list-style-type: disc;
-        }
-
-        .berita-content ol li {
-            list-style-type: decimal;
-        }
-
-        .berita-content strong,
-        .berita-content b {
-            font-weight: 700;
-            color: #0f172a;
-        }
-
-        .berita-content em,
-        .berita-content i {
-            font-style: italic;
-        }
-
-        .berita-content a {
-            color: #d97706;
-            text-decoration: underline;
-        }
-
-        .berita-content img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 12px;
-            margin: 1.5rem 0;
-        }
-
-        .berita-content blockquote {
-            border-left: 4px solid #d97706;
-            padding-left: 1rem;
-            margin: 1.5rem 0;
-            color: #64748b;
-            font-style: italic;
-        }
-
-        .berita-content table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1.5rem 0;
-        }
-
-        .berita-content th,
-        .berita-content td {
-            border: 1px solid #e2e8f0;
-            padding: 0.75rem;
-            text-align: left;
-        }
-
-        .berita-content th {
-            background-color: #f8fafc;
-            font-weight: 600;
-        }
-    </style>
-
-    <!-- Hero Section -->
-    <section class="relative pt-32 pb-16 bg-dark-900 overflow-hidden">
-        <div class="absolute inset-0">
-            <img src="{{ $post->image ? Storage::url($post->image) : 'https://picsum.photos/seed/news-' . $post->id . '/1920/600' }}"
-                alt="{{ $post->title }}" class="w-full h-full object-cover opacity-25">
-        </div>
-        <div class="absolute inset-0 bg-gradient-to-b from-dark-950/80 to-dark-900"></div>
-        <div class="relative max-w-4xl mx-auto px-6 lg:px-8">
-            <div class="flex flex-wrap items-center gap-3 mb-6">
-                <a href="{{ route('berita') }}"
-                    class="inline-flex items-center gap-2 text-dark-300 hover:text-primary-400 text-sm transition-colors">
-                    <i class="fas fa-arrow-left"></i> Kembali ke Berita
-                </a>
+    <!-- Header Section -->
+    <header class="pt-32 pb-16 bg-white">
+        <div class="max-w-4xl mx-auto px-6">
+            <nav class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary-600 mb-8">
+                <a href="{{ route('home') }}" class="hover:text-dark-900 transition-colors">Beranda</a>
+                <i class="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
+                <a href="{{ route('berita') }}" class="hover:text-dark-900 transition-colors">Berita</a>
                 @if ($post->category)
-                    <span class="text-dark-500">•</span>
-                    <span
-                        class="px-3 py-1 bg-primary-500/20 text-primary-400 text-xs font-bold uppercase tracking-wider rounded border border-primary-500/30">
-                        {{ $post->category->name }}
-                    </span>
+                    <i class="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
+                    <span class="text-gray-400">{{ $post->category->name }}</span>
                 @endif
-            </div>
-            <div class="flex items-center gap-4 text-sm text-dark-400 mb-4">
-                <span><i class="far fa-calendar mr-1"></i>{{ $post->created_at->format('d F Y') }}</span>
-                <span><i class="far fa-clock mr-1"></i>{{ $post->reading_time }} menit baca</span>
-            </div>
-            <h1 class="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-tight">
-                {{ $post->title }}</h1>
-        </div>
-    </section>
+            </nav>
 
-    <section class="py-16 bg-white">
-        <div class="max-w-4xl mx-auto px-6 lg:px-8">
+            <h1 class="font-display text-3xl md:text-5xl font-extrabold text-dark-900 leading-[1.15] mb-8 tracking-tight">
+                {{ $post->title }}
+            </h1>
 
-            @if ($post->image)
-                <div class="mb-10 rounded-2xl overflow-hidden shadow-lg border border-gray-100">
-                    <img src="{{ Storage::url($post->image) }}" alt="{{ $post->title }}"
-                        class="w-full h-auto object-cover" style="max-height: 450px;">
-                </div>
-            @endif
-
-            <!-- ISI KONTEN BERITA (Menggunakan class berita-content) -->
-            <article class="berita-content">
-                {!! $post->content !!}
-            </article>
-
-            <!-- BAGIAN KOMENTAR (DISQUS) -->
-            <div class="mt-16 pt-8 border-t border-gray-200">
-                <h3 class="font-display text-2xl font-bold text-dark-900 mb-6">Komentar</h3>
-                <div id="disqus_thread"></div>
-            </div>
-
-            <!-- RELATED POSTS -->
-            @if ($relatedPosts->count())
-                <div class="mt-20 pt-12 border-t border-gray-100">
-                    <h3 class="font-display text-2xl font-bold text-dark-900 mb-8">Berita Terkait</h3>
-                    <div class="grid md:grid-cols-3 gap-6">
-                        @foreach ($relatedPosts as $related)
-                            <article class="bg-gray-50 rounded-xl overflow-hidden card-hover group">
-                                <div class="aspect-[16/10] overflow-hidden">
-                                    <img src="{{ $related->image ? Storage::url($related->image) : 'https://picsum.photos/seed/news-' . $related->id . '/400/250' }}"
-                                        alt="{{ $related->title }}"
-                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                </div>
-                                <div class="p-4">
-                                    <span class="text-xs text-dark-400">{{ $related->created_at->format('d M Y') }}</span>
-                                    <h4
-                                        class="font-display font-bold text-dark-900 text-sm mt-1 group-hover:text-primary-500 transition-colors line-clamp-2">
-                                        <a href="{{ route('berita.detail', $related->slug) }}">{{ $related->title }}</a>
-                                    </h4>
-                                </div>
-                            </article>
-                        @endforeach
+            <div class="flex flex-wrap items-center justify-between gap-6 pb-8 border-b border-gray-100">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-primary-50 flex items-center justify-center text-primary-600">
+                        <i class="fa-solid fa-user-nib"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-black uppercase tracking-widest text-dark-900">Penulis</p>
+                        <p class="text-sm text-gray-500">Admin SMP Tunas Harapan</p>
                     </div>
                 </div>
+                <div class="flex items-center gap-8">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-xs font-black uppercase tracking-widest text-dark-900">Diterbitkan</p>
+                        <p class="text-sm text-gray-500">{{ $post->created_at->format('d M, Y') }}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="share('facebook')"
+                            class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-primary-500 hover:text-white transition-all shadow-sm">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </button>
+                        <button onclick="share('twitter')"
+                            class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-dark-900 hover:text-white transition-all shadow-sm">
+                            <i class="fa-brands fa-x-twitter"></i>
+                        </button>
+                        <button onclick="copyLink()"
+                            class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-emerald-500 hover:text-white transition-all shadow-sm">
+                            <i class="fa-solid fa-link"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Section -->
+    <section class="pb-24 bg-white">
+        <div class="max-w-4xl mx-auto px-6">
+
+            @if ($post->image)
+                <div class="relative -mt-4 mb-16 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-primary-900/10 group">
+                    <img src="{{ Storage::url($post->image) }}" alt="{{ $post->title }}"
+                        class="w-full h-auto object-cover max-h-[550px] transition-transform duration-700 group-hover:scale-105">
+                    @if ($post->image_caption)
+                        <div class="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-black/60 to-transparent">
+                            <p class="text-white/90 text-xs italic">{{ $post->image_caption }}</p>
+                        </div>
+                    @endif
+                </div>
             @endif
+
+            <div class="grid lg:grid-cols-12 gap-12">
+                <!-- Sidebar Samping (Floating) -->
+                <aside class="lg:col-span-1 hidden lg:block">
+                    <div class="sticky top-32 flex flex-col gap-6 items-center">
+                        <span
+                            class="text-[10px] font-black uppercase tracking-widest text-gray-300 vertical-text">Share</span>
+                        <div class="w-px h-12 bg-gray-100"></div>
+                        <!-- Social Floating Buttons -->
+                    </div>
+                </aside>
+
+                <!-- Article Body -->
+                <div class="lg:col-span-11">
+                    <article
+                        class="prose prose-lg max-w-none prose-slate prose-headings:font-display prose-headings:font-black prose-headings:tracking-tight prose-a:text-primary-600 prose-img:rounded-3xl prose-blockquote:border-primary-500 prose-blockquote:bg-primary-50 prose-blockquote:py-1 prose-blockquote:px-6">
+                        {!! $post->content !!}
+                    </article>
+
+                    <!-- Tags / Kategori Bawah -->
+                    <div class="mt-16 flex items-center gap-3">
+                        <i class="fa-solid fa-tags text-gray-300"></i>
+                        <span
+                            class="px-4 py-2 bg-gray-50 text-dark-900 text-xs font-bold rounded-xl border border-gray-100">#Pendidikan</span>
+                        <span
+                            class="px-4 py-2 bg-gray-50 text-dark-900 text-xs font-bold rounded-xl border border-gray-100">#SMPTunasHarapan</span>
+                    </div>
+
+                    <!-- Author Box -->
+                    <div class="mt-16 p-8 bg-gray-50 rounded-[2rem] border border-gray-100 flex items-center gap-6">
+                        <div class="w-20 h-20 rounded-2xl bg-white shadow-sm flex items-center justify-center text-3xl">
+                            🏫
+                        </div>
+                        <div>
+                            <h4 class="font-display font-bold text-dark-900 text-lg">Panitia Humas Sekolah</h4>
+                            <p class="text-sm text-gray-500 mt-1 leading-relaxed">Menyajikan informasi akurat dan terkini
+                                seputar kegiatan akademik dan non-akademik di lingkungan SMP Tunas Harapan Bekasi.</p>
+                        </div>
+                    </div>
+
+                    <!-- Disqus Section -->
+                    <div class="mt-20 pt-12 border-t border-gray-100">
+                        <div class="flex items-center gap-4 mb-10">
+                            <h3 class="font-display text-3xl font-black text-dark-900 tracking-tight">Diskusi Berita</h3>
+                            <div class="h-px flex-1 bg-gray-100"></div>
+                        </div>
+                        <div id="disqus_thread" class="bg-white"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
+    <!-- Related Posts Section (Horizontal Scroll on Mobile) -->
+    @if ($relatedPosts->count())
+        <section class="py-24 bg-gray-50 border-t border-gray-100">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8">
+                <div class="flex items-end justify-between mb-12">
+                    <div>
+                        <span class="text-[10px] font-black uppercase tracking-[0.2em] text-primary-500 mb-2 block">Jangan
+                            Lewatkan</span>
+                        <h3 class="font-display text-3xl font-black text-dark-900 tracking-tight">Berita Terkait</h3>
+                    </div>
+                    <a href="{{ route('berita') }}"
+                        class="text-xs font-black uppercase tracking-widest text-dark-400 hover:text-primary-500 transition-colors">Lihat
+                        Semua</a>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    @foreach ($relatedPosts as $related)
+                        <article
+                            class="flex flex-col bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group">
+                            <div class="aspect-[16/10] overflow-hidden">
+                                <img src="{{ $related->image ? Storage::url($related->image) : 'https://picsum.photos/seed/news-' . $related->id . '/600/400' }}"
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            </div>
+                            <div class="p-6">
+                                <span
+                                    class="text-[10px] font-black uppercase tracking-widest text-primary-500">{{ $related->category->name ?? 'Update' }}</span>
+                                <h4
+                                    class="font-display font-bold text-dark-900 mt-2 line-clamp-2 hover:text-primary-500 transition-colors leading-snug">
+                                    <a href="{{ route('berita.detail', $related->slug) }}">{{ $related->title }}</a>
+                                </h4>
+                            </div>
+                        </article>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
     <script>
+        // Progress Bar Logic
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("reading-progress").style.width = scrolled + "%";
+        });
+
+        // Disqus Config
         var disqus_config = function() {
             this.page.url = '{{ url()->current() }}';
             this.page.identifier = '{{ $post->id }}';
@@ -218,6 +194,11 @@
             s.setAttribute('data-timestamp', +new Date());
             (d.head || d.body).appendChild(s);
         })();
-    </script>
 
+        // Share Helpers
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Tautan berhasil disalin!');
+        }
+    </script>
 @endsection

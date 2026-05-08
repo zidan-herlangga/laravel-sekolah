@@ -3,13 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Registration;
+use App\Services\SettingService;
+use Barryvdh\DomPDF\Facade\Pdf;  
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PublicRegistrationController extends Controller
 {
     public function store(Request $request)
     {
-        // 1. VALIDASI DATA (Digabung jadi satu blok yang rapi)
+        // 1. CEK APAKAH USER SUDAH PERNAH MENDAFTAR
+        $existing = Registration::where('user_id', Auth::id())->first();
+        if ($existing) {
+            return redirect()->route('dashboard')->with('error', 'Anda sudah melakukan pendaftaran dengan nomor: ' . $existing->registration_number);
+        }
+
+        // 2. VALIDASI DATA
         $validated = $request->validate([
             // Data Pribadi
             'name'              => 'required|string|max:255',
@@ -17,7 +26,7 @@ class PublicRegistrationController extends Controller
                 'required',
                 'numeric',
                 'digits:10',
-                'unique:registrations,nisn' // Cek unik di tabel registrations kolom nisn
+                'unique:registrations,nisn' 
             ],
             'school_origin'     => 'required|string|max:255',
             'phone'             => 'required|string|max:20',
@@ -31,38 +40,62 @@ class PublicRegistrationController extends Controller
             'parent_name'       => 'required|string|max:255',
             'parent_phone'      => 'required|string|max:20',
             
-            // Dokumen (Wajib diupload)
+            // Dokumen (Wajib)
             'kartu_keluarga'    => 'required|mimes:pdf,jpg,jpeg,png|max:2048',
             'ijazah'            => 'required|mimes:pdf,jpg,jpeg,png|max:2048',
             'akte_kelahiran'    => 'required|mimes:pdf,jpg,jpeg,png|max:2048',
         ], [
-            // Pesan Error Kustom (Opsional)
-            'nisn.unique' => 'NISN ini sudah terdaftar sebelumnya.',
-            'nisn.digits' => 'NISN harus 10 digit angka.',
-            'kartu_keluarga.required' => 'Kartu Keluarga wajib diupload.',
-            'ijazah.required' => 'Ijazah / SKL wajib diupload.',
-            'akte_kelahiran.required' => 'Akte Kelahiran wajib diupload.',
+            'nisn.unique' => 'NISN ini sudah terdaftar dalam sistem.',
+            'nisn.digits' => 'NISN harus berjumlah 10 digit angka.',
+            'kartu_keluarga.max' => 'Ukuran file Kartu Keluarga maksimal 2MB.',
         ]);
 
-        // 2. PROSES UPLOAD FILE
-        // Kita ambil path file dan masukkan ke array $validated
-        if ($request->hasFile('kartu_keluarga')) {
-            $validated['kartu_keluarga'] = $request->file('kartu_keluarga')->store('documents/spmb', 'public');
+        // 3. GENERATE NOMOR PENDAFTARAN OTOMATIS (Format: REG-2026-0001)
+        $year = date('Y');
+        $lastReg = Registration::whereYear('created_at', $year)->latest()->first();
+        $nextNumber = $lastReg ? (int) substr($lastReg->registration_number, -4) + 1 : 1;
+        $registrationNumber = 'REG-' . $year . '-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+
+        // 4. PROSES UPLOAD FILE
+        $filePaths = [];
+        $documents = ['kartu_keluarga', 'ijazah', 'akte_kelahiran'];
+        
+        foreach ($documents as $doc) {
+            if ($request->hasFile($doc)) {
+                $filePaths[$doc] = $request->file($doc)->store('documents/spmb', 'public');
+            }
         }
 
-        if ($request->hasFile('ijazah')) {
-            $validated['ijazah'] = $request->file('ijazah')->store('documents/spmb', 'public');
+        // 5. SIMPAN KE DATABASE DENGAN RELASI USER
+        Registration::create(array_merge($validated, $filePaths, [
+            'user_id' => Auth::id(),
+            'registration_number' => $registrationNumber,
+            'status' => 'pending' // Default status
+        ]));
+
+        // 6. REDIRECT KE DASHBOARD
+        return redirect()->route('dashboard')->with('success', 'Pendaftaran Berhasil! Nomor Anda: ' . $registrationNumber);
+    }
+
+    public function downloadBukti()
+    {
+        // 1. Ambil data pendaftaran milik user yang sedang login
+        $registration = Registration::where('user_id', Auth::id())->first();
+
+        // 2. Jika data tidak ditemukan, kembalikan dengan pesan error
+        if (!$registration) {
+            return redirect()->route('dashboard')->with('error', 'Data pendaftaran tidak ditemukan.');
         }
 
-        if ($request->hasFile('akte_kelahiran')) {
-            $validated['akte_kelahiran'] = $request->file('akte_kelahiran')->store('documents/spmb', 'public');
-        }
+        // 3. Ambil setting sekolah (menggunakan service yang Anda punya)
+        $settings = app(SettingService::class);
 
-        // 3. SIMPAN KE DATABASE
-        // Status default 'pending' ada di migration, jadi tidak perlu di set manual
-        Registration::create($validated);
+        // 4. Load view khusus PDF dan lempar datanya
+        // Pastikan file view ini ada di: resources/views/pages/pendaftar/bukti-pdf.blade.php
+        $pdf = Pdf::loadView('pages.pendaftar.pdf.bukti-pendaftaran', compact('registration', 'settings'))
+                  ->setPaper('a4', 'portrait');
 
-        // 4. REDIRECT
-        return redirect()->route('spmb')->with('success', 'Pendaftaran Berhasil! Silakan cek status secara berkala.');
+        // 5. Download file PDF-nya
+        return $pdf->download('Bukti_Pendaftaran_' . $registration->registration_number . '.pdf');
     }
 }

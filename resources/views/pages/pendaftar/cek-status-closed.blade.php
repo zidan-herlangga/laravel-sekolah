@@ -3,19 +3,6 @@
 @section('title', 'Pengecekan Status Ditutup - ' . $settings->get('school_name'))
 
 @section('content')
-    <section class="relative pt-32 pb-16 bg-dark-900 overflow-hidden">
-        <div class="absolute inset-0">
-            <img src="https://picsum.photos/id/160/1920/600" alt="" class="w-full h-full object-cover opacity-20">
-        </div>
-        <div class="absolute inset-0 bg-gradient-to-b from-dark-950/80 to-dark-900"></div>
-        <div class="relative max-w-7xl mx-auto px-6 lg:px-8 text-center">
-            <h1 class="font-display text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">Layanan Nonaktif</h1>
-            <p class="text-dark-300 max-w-2xl mx-auto">
-                Beranda > <span class="text-primary-400">Cek Status</span>
-            </p>
-        </div>
-    </section>
-
     <section class="py-24 bg-white">
         <div class="max-w-3xl mx-auto px-6 lg:px-8 text-center">
             <div class="bg-gray-50 border border-gray-200 rounded-3xl p-10 md:p-16 shadow-sm">

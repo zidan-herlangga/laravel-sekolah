@@ -3,6 +3,11 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\CheckRole;
+use App\Http\Middleware\IsSpmbMiddleware;
+
+use App\Http\Middleware\SecurityHeaders;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -11,24 +16,27 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        
-        // 1. Redirect Guest to Login
-        $middleware->redirectGuestsTo(function () {
-            return route('admin.login');
+    
+        // 1. Redirect Guest ke Login secara Dinamis
+        $middleware->redirectGuestsTo(function ($request) {
+            // Jika URL mengandung kata 'admin', lempar ke login admin
+            if ($request->is('admin') || $request->is('admin/*')) {
+                return route('admin.login');
+            }
+
+            // Jika selain itu (seperti /spmb), lempar ke login pendaftar
+            return route('login');
         });
 
-        // 2. Alias Middleware (PENTING)
-        // Pastikan nama class di sini PERSIS sama dengan nama file
+        // 2. Alias Middleware (Tetap seperti kode Anda)
         $middleware->alias([
-            'admin' => \App\Http\Middleware\AdminMiddleware::class,
-            'check.role' => \App\Http\Middleware\CheckRole::class,
-            'is.spmb' => \App\Http\Middleware\IsSpmbMiddleware::class,
+            'admin' => AdminMiddleware::class,
+            'check.role' => CheckRole::class,
+            'is.spmb' => IsSpmbMiddleware::class,
         ]);
 
-        // 3. Menghandle SecurityHeaders (SOLUSI STABIL)
-        // Kita daftarkan SecurityHeaders sebagai Class Middleware, bukan Closure
-        // Pastikan file ada di: app/Http/Middleware/SecurityHeaders.php
-        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
+        // 3. Security Headers (Tetap)
+        $middleware->append(SecurityHeaders::class);
         
     })
     ->withExceptions(function (Exceptions $exceptions) {

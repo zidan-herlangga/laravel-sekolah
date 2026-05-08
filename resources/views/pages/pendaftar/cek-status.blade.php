@@ -3,27 +3,6 @@
 @section('title', 'Cek Status SPMB - ' . $settings->get('school_name'))
 
 @section('content')
-    <!-- Hero -->
-    <section class="relative pt-32 pb-16 bg-dark-900 overflow-hidden">
-        <div class="absolute inset-0">
-            <img src="https://picsum.photos/id/20/1920/600" alt="" class="w-full h-full object-cover opacity-25">
-        </div>
-        <div class="absolute inset-0 bg-gradient-to-b from-dark-950/80 to-dark-900"></div>
-        <div class="absolute inset-0 hero-pattern"></div>
-        <div class="relative max-w-7xl mx-auto px-6 lg:px-8 text-center">
-            <div
-                class="inline-flex items-center gap-2 px-4 py-2 bg-primary-400/10 border border-primary-400/20 rounded-full mb-6">
-                <span class="w-2 h-2 bg-primary-400 rounded-full animate-pulse"></span>
-                <span class="text-primary-300 text-xs font-semibold uppercase tracking-widest">Verifikasi Data</span>
-            </div>
-            <h1 class="font-display text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">Cek Status SPMB</h1>
-            <p class="text-dark-300 max-w-2xl mx-auto">
-                Beranda > <a href="{{ route('spmb') }}" class="text-primary-400 hover:text-primary-500">SPMB</a> > Cek
-                Status
-            </p>
-        </div>
-    </section>
-
     <!-- Content -->
     <section class="py-24 bg-white">
         <div class="max-w-3xl mx-auto px-6 lg:px-8">
@@ -40,7 +19,7 @@
                         <p class="text-dark-500">Masukkan 10 digit NISN Anda untuk mengecek status pendaftaran.</p>
                     </div>
 
-                    <form method="POST" action="{{ route('cek-status.check') }}" id="cek-form">
+                    <form method="POST" action="{{ route('pendaftar.cek-status.check') }}" id="cek-form">
                         @csrf
                         <div class="space-y-5">
                             <div>
@@ -167,7 +146,7 @@
                     <div class="flex flex-col gap-4">
                         @if ($status === 'verified')
                             {{-- GANTI TOMBOL INI DENGAN FORM --}}
-                            <form method="GET" action="{{ route('cek-status.pdf') }}" class="w-full">
+                            <form method="GET" action="{{ route('pendaftar.cek-status.pdf') }}" class="w-full">
                                 {{-- Kita kirim NISN secara rahasia (hidden) --}}
                                 <input type="hidden" name="nisn" value="{{ $reg->nisn }}">
 
@@ -182,7 +161,7 @@
                                 <i class="fas fa-info-circle"></i> Hubungi Panitia
                             </a>
                         @endif
-                        <a href="{{ route('cek-status') }}"
+                        <a href="{{ route('pendaftar.cek-status') }}"
                             class="text-center text-sm text-dark-500 hover:underline font-medium">
                             <i class="fas fa-arrow-left mr-1"></i> Kembali
                         </a>
@@ -204,7 +183,7 @@
                                 class="w-full py-4 bg-primary-400 text-white font-semibold rounded-xl hover:bg-primary-500 transition-colors">
                                 Daftar SPMB Sekarang
                             </a>
-                            <a href="{{ route('cek-status') }}"
+                            <a href="{{ route('pendaftar.cek-status') }}"
                                 class="text-sm text-dark-500 hover:underline font-medium">Gunakan NISN Lain</a>
                         </div>
                     </div>
