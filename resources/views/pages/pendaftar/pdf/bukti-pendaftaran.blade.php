@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Bukti Pendaftaran - {{ $reg->name }}</title>
+    <title>Bukti Pendaftaran - {{ $registration->name }}</title>
     <style>
         @page {
             margin: 0;
@@ -203,7 +203,7 @@
                     style="width: 80px;">
             </div>
             <div class="header-text">
-                <h2>{{ $schoolName }}</h2>
+                <h2>{{ $settings->get('school_name') }}</h2>
                 <p>JL. RS. Mekar Sari No 71.B Bekasi Jaya-Bekasi Timur 17112 Kota Bekasi</p>
                 <p>Email: smptupanbekasi71@gmail.com | Telp: 081770748835 | Website:
                     https://smptunasharapanbekasi.sch.id/</p>
@@ -214,11 +214,11 @@
         <table class="registration-meta">
             <tr>
                 <td><strong>No. Registrasi:</strong> <span
-                        style="color: #1a5f7a;">#PPDB-{{ date('Y') }}-{{ str_pad($reg->id, 4, '0', STR_PAD_LEFT) }}</span>
+                        style="color: #1a5f7a;">#PPDB-{{ date('Y') }}-{{ str_pad($registration->id, 4, '0', STR_PAD_LEFT) }}</span>
                 </td>
                 {{-- realtime jam --}}
                 <td style="text-align: right;"><strong>Tanggal Pendaftaran:</strong>
-                    {{ $reg->created_at->format('d F Y, H:i') }}</td>
+                    {{ $registration->created_at->format('d F Y, H:i') }}</td>
             </tr>
         </table>
 
@@ -229,43 +229,44 @@
         <table class="info-table">
             <tr>
                 <td class="label">Nama Lengkap</td>
-                <td class="value">{{ $reg->name }}</td>
+                <td class="value">{{ $registration->name }}</td>
             </tr>
             <tr>
                 <td class="label">NISN</td>
-                <td class="value">{{ $reg->nisn }}</td>
+                <td class="value">{{ $registration->nisn }}</td>
             </tr>
             <tr>
                 <td class="label">Tempat, Tgl Lahir</td>
-                <td class="value">{{ $reg->birth_place }}, {{ $reg->birth_date?->format('d F Y') }}</td>
+                <td class="value">{{ $registration->birth_place }}, {{ $registration->birth_date?->format('d F Y') }}
+                </td>
             </tr>
             <tr>
                 <td class="label">Jenis Kelamin</td>
-                <td class="value">{{ $reg->gender_label }}</td>
+                <td class="value">{{ $registration->gender_label }}</td>
             </tr>
             <tr>
                 <td class="label">Asal Sekolah</td>
-                <td class="value">{{ $reg->school_origin }}</td>
+                <td class="value">{{ $registration->school_origin }}</td>
             </tr>
             <tr>
                 <td class="label">Nama Orang Tua</td>
-                <td class="value">{{ $reg->parent_name }}</td>
+                <td class="value">{{ $registration->parent_name }}</td>
             </tr>
             <tr>
                 <td class="label">Alamat Lengkap</td>
-                <td class="value" style="font-weight: normal; font-size: 10pt;">{{ $reg->address }}</td>
+                <td class="value" style="font-weight: normal; font-size: 10pt;">{{ $registration->address }}</td>
             </tr>
             <tr>
                 <td class="label">Status Saat Ini</td>
-                <td><span class="status-badge">{{ $reg->status_label }}</span></td>
+                <td><span class="status-badge">{{ $registration->status_label }}</span></td>
             </tr>
         </table>
 
-        @if ($reg->notes)
+        @if ($registration->notes)
             <div class="notes-box">
                 <h4><i class="alert-icon"></i> INFORMASI PENTING / CATATAN PANITIA:</h4>
                 <div class="notes-content">
-                    {!! nl2br(e($reg->notes)) !!}
+                    {!! nl2br(e($registration->notes)) !!}
                 </div>
             </div>
         @endif
@@ -291,7 +292,7 @@
 
         <div class="footer-text">
             Simpan bukti pendaftaran ini sebagai syarat verifikasi ulang. Dokumen ini diterbitkan secara elektronik oleh
-            Sistem Informasi Akademik {{ $schoolName }}.
+            Sistem Informasi Akademik {{ $settings->get('school_name') }}.
         </div>
     </div>
 

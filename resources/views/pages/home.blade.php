@@ -1,374 +1,263 @@
 @extends('layouts.app')
 
-@section('title', $settings->get('school_name'))
+@section('title', 'Beranda - ' . $settings->get('school_name'))
 
 @section('content')
 
-    <!-- ==================== HERO SECTION ==================== -->
+    <!-- ==================== HERO SECTION (REMASTERED) ==================== -->
     <section class="relative min-h-screen flex items-center overflow-hidden bg-dark-900">
-        <!-- Background Image -->
-        <div class="absolute inset-0">
-            <img src="{{ asset('assets/images/gedung-sekolah.jpeg') }}" alt=""
-                class="w-full h-full object-cover opacity-40" loading="eager">
-            <div class="absolute inset-0 bg-gradient-to-r from-dark-900 via-dark-900/50 to-dark-900/60"></div>
-            {{-- <div class="absolute inset-0 hero-pattern"></div> --}}
+        <!-- Parallax Background -->
+        <div class="absolute inset-0 z-0">
+            <img src="{{ asset('assets/images/gedung-sekolah.jpeg') }}" alt="Gedung SMP Tunas Harapan"
+                class="w-full h-full object-cover opacity-30 scale-105" loading="eager">
+            <div class="absolute inset-0 bg-gradient-to-r from-dark-900 via-dark-900/40 to-transparent"></div>
         </div>
 
-        <!-- Floating Decorations -->
-        <div class="absolute top-20 right-20 w-72 h-72 bg-primary-400/10 rounded-full blur-3xl float-anim"></div>
-        <div class="absolute bottom-20 left-10 w-56 h-56 bg-primary-500/10 rounded-full blur-3xl float-anim"
-            style="animation-delay:1.5s"></div>
+        <!-- Animated Shapes -->
+        <div class="absolute top-1/4 -right-20 w-96 h-96 bg-primary-600/20 rounded-full blur-[120px] animate-pulse"></div>
+        <div class="absolute -bottom-20 -left-20 w-72 h-72 bg-blue-600/10 rounded-full blur-[100px]"></div>
 
-        <div class="relative max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-20">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div>
+        <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-20">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="fade-up">
                     <div
-                        class="inline-flex items-center gap-2 px-4 py-2 bg-primary-400/10 border border-primary-400/20 rounded-full mb-6">
-                        <span class="w-2 h-2 bg-primary-400 rounded-full animate-pulse"></span>
-                        <span
-                            class="text-primary-300 text-xs font-semibold uppercase tracking-widest">{{ $settings->get('school_name') }}</span>
+                        class="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full mb-8 backdrop-blur-sm">
+                        <span class="flex h-2 w-2 relative">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
+                        </span>
+                        <span class="text-white/80 text-[10px] font-black uppercase tracking-[0.2em]">Penerimaan Siswa Baru
+                            2026</span>
                     </div>
 
                     <h1
-                        class="font-display text-5xl sm:text-5xl lg:text-5xl xl:text-6xl font-extrabold text-white leading-[1.05] tracking-tight mb-6">
-                        SMP
-                        <span
-                            class="block text-transparent bg-clip-text bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500">Berbasis
-                            Karakter & </span> Kreativitas Digital
+                        class="font-display text-5xl md:text-7xl font-extrabold text-white leading-[1.1] tracking-tighter mb-8">
+                        Masa Depan <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-blue-400">Dimulai di
+                            Sini.</span>
                     </h1>
 
-                    <p class="text-lg text-dark-300 leading-relaxed max-w-lg mb-8">
-                        {{ $settings->get('school_motto') }}
+                    <p class="text-lg text-dark-300 leading-relaxed max-w-lg mb-10 font-medium">
+                        {{ $settings->get('school_motto', 'Membentuk generasi cerdas, berkarakter, dan siap menghadapi tantangan kreativitas digital.') }}
                     </p>
 
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="{{ route('spmb') }}"
-                            class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary-400 text-white font-semibold rounded-xl hover:bg-primary-500 hover:shadow-2xl hover:shadow-primary-400/30 transition-all duration-300 group">
-                            Daftar Sekarang
-                            <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    <div class="flex flex-wrap gap-5">
+                        <a href="{{ route('register') }}"
+                            class="px-10 py-5 bg-primary-500 text-white font-bold rounded-2xl hover:bg-primary-600 shadow-2xl shadow-primary-500/30 transition-all transform hover:-translate-y-1 active:scale-95 flex items-center gap-3">
+                            Daftar Sekarang <i class="fa-solid fa-arrow-right-long"></i>
                         </a>
                         <a href="{{ route('about') }}"
-                            class="inline-flex items-center justify-center gap-2 px-8 py-4 border border-dark-600 text-white font-semibold rounded-xl hover:bg-white/5 hover:border-dark-500 transition-all duration-300">
-                            <i class="fas fa-play-circle"></i>
-                            Tentang Kami
+                            class="px-10 py-5 bg-white/5 text-white font-bold rounded-2xl border border-white/10 hover:bg-white/10 backdrop-blur-md transition-all flex items-center gap-3">
+                            Profil Sekolah
                         </a>
                     </div>
 
-                    <!-- Mini Stats -->
-                    <div class="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-dark-700/50">
+                    <!-- Trusted Stats -->
+                    <div class="mt-16 flex items-center gap-12">
                         <div>
-                            <div class="font-display text-3xl font-bold text-white">600<span
-                                    class="text-primary-400">+</span></div>
-                            <div class="text-sm text-dark-400 mt-1">Siswa Aktif</div>
+                            <p class="text-3xl font-display font-black text-white">600+</p>
+                            <p class="text-[10px] font-bold text-dark-400 uppercase tracking-widest mt-1">Siswa</p>
                         </div>
+                        <div class="h-10 w-px bg-white/10"></div>
                         <div>
-                            <div class="font-display text-3xl font-bold text-white">98<span
-                                    class="text-primary-400">%</span></div>
-                            <div class="text-sm text-dark-400 mt-1">Kelulusan</div>
+                            <p class="text-3xl font-display font-black text-white">30+</p>
+                            <p class="text-[10px] font-bold text-dark-400 uppercase tracking-widest mt-1">Ekstrakurikuler
+                            </p>
                         </div>
+                        <div class="h-10 w-px bg-white/10"></div>
                         <div>
-                            <div class="font-display text-3xl font-bold text-white">20<span
-                                    class="text-primary-400">+</span></div>
-                            <div class="text-sm text-dark-400 mt-1">Pengajar</div>
+                            <p class="text-3xl font-display font-black text-white">A</p>
+                            <p class="text-[10px] font-bold text-dark-400 uppercase tracking-widest mt-1">Akreditasi</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Hero Image -->
-                {{-- <div class="hidden lg:block relative">
-                <div class="relative">
-                    <img src="https://picsum.photos/seed/students-happy/600/700" alt="Siswa Sekolah" class="rounded-3xl shadow-2xl shadow-black/30 object-cover w-full max-w-md mx-auto">
-                    <!-- Decorative badge -->
-                    <div class="absolute -bottom-6 -left-6 bg-white rounded-2xl p-4 shadow-xl">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
-                                <i class="fas fa-trophy text-emerald-600 text-xl"></i>
-                            </div>
-                            <div>
-                                <div class="font-display font-bold text-dark-900">A Accredited</div>
-                                <div class="text-xs text-dark-500">BSNP & AIJ 2024</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="absolute -top-4 -right-4 bg-primary-400 rounded-2xl p-4 shadow-xl">
-                        <div class="text-center">
-                            <div class="font-display font-bold text-white text-2xl">25</div>
-                            <div class="text-xs text-primary-100">Tahun</div>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
-            </div>
-        </div>
-
-        <!-- Scroll indicator -->
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-            <span class="text-xs text-dark-400 uppercase tracking-widest">Scroll</span>
-            <div class="w-6 h-10 border-2 border-dark-600 rounded-full flex justify-center pt-2">
-                <div class="w-1.5 h-3 bg-primary-400 rounded-full animate-bounce"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ==================== PROGRAM UNGGULAN ==================== -->
-    <section class="py-24 bg-gray-50/50">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="text-center mb-16 fade-up">
-                <span
-                    class="inline-block px-4 py-1.5 bg-primary-100 text-primary-600 text-xs font-semibold uppercase tracking-widest rounded-full mb-4">Program
-                    Kami</span>
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-dark-900 tracking-tight mb-4">Program Unggulan
-                </h2>
-                <p class="text-dark-500 max-w-2xl mx-auto">Kurikulum terintegrasi yang memadukan keunggulan akademis,
-                    keislaman, dan pengembangan karakter.</p>
-            </div>
-
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach ($programs as $program)
-                    <div class="fade-up bg-white rounded-2xl p-8 card-hover border border-gray-100 group">
+                <!-- Floating Card Illustration -->
+                <div class="hidden lg:block relative fade-up" style="transition-delay: 200ms">
+                    <div class="relative z-10 rounded-[3rem] overflow-hidden border-8 border-white/5 shadow-2xl">
+                        <img src="{{ asset('assets/images/gedung-sekolah.jpeg') }}" class="w-full aspect-[4/5] object-cover"
+                            alt="">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-transparent to-transparent"></div>
                         <div
-                            class="w-14 h-14 bg-primary-50 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-primary-400 transition-colors duration-300">
-                            <i
-                                class="{{ $program->icon ?? 'fas fa-star' }} text-xl text-primary-500 group-hover:text-white transition-colors duration-300"></i>
-                        </div>
-                        <h3 class="font-display text-lg font-bold text-dark-900 mb-3">{{ $program->title }}</h3>
-                        <p class="text-sm text-dark-500 leading-relaxed">{{ Str::limit($program->description, 120) }}</p>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-    <!-- ==================== PROFIL SINGKAT ==================== -->
-    <section class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <div class="fade-up relative">
-                    <img src="{{ asset('assets/images/gedung-sekolah.jpeg') }}" alt="Gedung Sekolah"
-                        class="rounded-3xl shadow-xl w-full object-cover">
-                    <div class="absolute -bottom-6 -right-6 bg-primary-400 text-white rounded-2xl p-6 shadow-xl">
-                        <div class="font-display text-4xl font-bold">38+</div>
-                        <div class="text-sm text-primary-100">Tahun Melayani</div>
-                    </div>
-                </div>
-
-                <div class="fade-up">
-                    <span
-                        class="inline-block px-4 py-1.5 bg-primary-100 text-primary-600 text-xs font-semibold uppercase tracking-widest rounded-full mb-4">Tentang
-                        SMP Tunas Harapan Bekasi</span>
-                    <h2 class="font-display text-3xl md:text-4xl font-bold text-dark-900 tracking-tight mb-6">Profil Singkat
-                        Sekolah</h2>
-                    <p class="text-dark-500 leading-relaxed mb-6">
-                        SMP Tunas Harapan Bekasi didirikan pada tahun 1980, dengan komitmen untuk menyediakan pendidikan
-                        bermutu bagi generasi masa depan. Sejak berdiri, sekolah telah berhasil mencetak banyak prestasi
-                        dalam bidang akademik, olahraga, dan seni budaya.
-                    </p>
-
-                    {{-- <p class="text-dark-500 leading-relaxed mb-8">
-                    Dengan menggabungkan kurikulum nasional, pendidikan karakter islami, dan program internasional, kami berkomitmen membentuk peserta didik yang cerdas, berakhlak mulia, dan siap menghadapi tantangan global.
-                </p> --}}
-
-                    {{-- <div class="grid grid-cols-2 gap-4 mb-8">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center"><i class="fas fa-check text-emerald-600"></i></div>
-                        <span class="text-sm font-medium text-dark-800">Kurikulum Merdeka</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center"><i class="fas fa-check text-emerald-600"></i></div>
-                        <span class="text-sm font-medium text-dark-800">Akreditasi A</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center"><i class="fas fa-check text-emerald-600"></i></div>
-                        <span class="text-sm font-medium text-dark-800">Fasilitas Modern</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center"><i class="fas fa-check text-emerald-600"></i></div>
-                        <span class="text-sm font-medium text-dark-800">Guru Berpengalaman</span>
-                    </div>
-                </div> --}}
-
-                    <a href="{{ route('about') }}"
-                        class="inline-flex items-center gap-2 px-6 py-3 bg-dark-900 text-white font-semibold rounded-xl hover:bg-dark-800 transition-colors group">
-                        Selengkapnya <i
-                            class="fas fa-arrow-right group-hover:translate-x-1 transition-transform text-sm"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ==================== FASILITAS ==================== -->
-    <section class="py-24 bg-dark-900">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="text-center mb-16 fade-up">
-                <span
-                    class="inline-block px-4 py-1.5 bg-primary-400/10 text-primary-400 text-xs font-semibold uppercase tracking-widest rounded-full mb-4">Fasilitas</span>
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-white tracking-tight mb-4">Fasilitas Unggulan
-                </h2>
-                <p class="text-dark-400 max-w-2xl mx-auto">Fasilitas modern dan lengkap untuk mendukung proses belajar
-                    mengajar yang efektif dan nyaman.</p>
-            </div>
-
-            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                @foreach ([['Ruang Kelas', 'fas fa-school', 'class-room'], ['Ruang OSIS', 'fas fa-book', 'library'], ['Kantin', 'fas fa-solid fa-bowl-food', 'canteen'], ['Lapangan Olahraga', 'fas fa-futbol', 'sports-field'], ['Ruang UKS', 'fas fa-solid fa-stethoscope', 'health-center'], ['LAB Komputer', 'fas fa-laptop', 'computer-lab']] as $item)
-                    <div class="fade-up group relative overflow-hidden rounded-2xl aspect-[3/4] cursor-pointer">
-                        <img src="https://picsum.photos/seed/{{ $item[2] }}/400/533" alt="{{ $item[0] }}"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                        <div class="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/20 to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 right-0 p-6">
-                            <div class="w-10 h-10 bg-primary-400/20 rounded-lg flex items-center justify-center mb-3">
-                                <i class="{{ $item[1] }} text-primary-400"></i>
-                            </div>
-                            <h3 class="font-display font-bold text-white text-lg">{{ $item[0] }}</h3>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-    <!-- ==================== SAMBUTAN KEPALA SEKOLAH ==================== -->
-    <section class="py-24 bg-gray-50/50">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="grid lg:grid-cols-5 gap-12 items-center">
-                <div class="lg:col-span-2 fade-up flex justify-center">
-                    <div class="relative">
-                        <img src="{{ asset('kepala-sekolah.jpeg') }}"
-                            alt="{{ $teacher->name ?? 'Dra.Hj. Neneng Yeti.D, M.Pd' }}"
-                            class="rounded-3xl shadow-xl w-72 h-80 object-cover">
-                        <div
-                            class="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-white rounded-xl px-6 py-3 shadow-lg whitespace-nowrap">
-                            <span
-                                class="font-display font-bold text-dark-900 text-sm">{{ $teacher->name ?? 'Dra.Hj. Neneng Yeti.D, M.Pd' }}</span>
+                            class="absolute bottom-10 left-10 right-10 p-8 bg-white/10 backdrop-blur-xl rounded-[2rem] border border-white/20">
+                            <i class="fa-solid fa-quote-left text-primary-400 text-3xl mb-4"></i>
+                            <p class="text-white font-medium italic text-lg leading-relaxed">
+                                "Pendidikan bukan persiapan untuk hidup; pendidikan adalah hidup itu sendiri."
+                            </p>
                         </div>
                     </div>
                 </div>
-
-                <div class="lg:col-span-3 fade-up">
-                    <span
-                        class="inline-block px-4 py-1.5 bg-primary-100 text-primary-600 text-xs font-semibold uppercase tracking-widest rounded-full mb-4">Sambutan</span>
-                    <h2 class="font-display text-3xl md:text-4xl font-bold text-dark-900 tracking-tight mb-6">Sambutan
-                        Kepala Sekolah</h2>
-                    <div class="relative pl-6 border-l-4 border-primary-400">
-                        <div class="text-dark-600 leading-relaxed italic text-lg mb-4">
-                            {!! $settings->get('headmaster_welcome', '#') !!}
-                        </div>
-                    </div>
-                    <p class="text-dark-500 leading-relaxed mt-4">
-                        Kami berharap website ini dapat menjadi jembatan komunikasi yang efektif antara sekolah, orang tua,
-                        dan masyarakat.
-                    </p>
-                </div>
             </div>
         </div>
     </section>
 
-    <!-- ==================== GALERI ==================== -->
-    <section class="py-24 bg-white">
+    <!-- ==================== PROGRAM UNGGULAN (MODERN GRID) ==================== -->
+    <section class="py-32 bg-white">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="text-center mb-16 fade-up">
-                <span
-                    class="inline-block px-4 py-1.5 bg-primary-100 text-primary-600 text-xs font-semibold uppercase tracking-widest rounded-full mb-4">Galeri</span>
-                <h2 class="font-display text-3xl md:text-4xl font-bold text-dark-900 tracking-tight mb-4">Galeri Kegiatan
-                </h2>
-            </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                @foreach ($galleries as $index => $gallery)
-                    <div
-                        class="fade-up overflow-hidden rounded-2xl {{ $index === 0 ? 'md:col-span-2 md:row-span-2' : '' }} aspect-square group cursor-pointer">
-                        <img src="storage/{{ $gallery->image }}" alt="{{ $gallery->title ?? 'Galeri' }}"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            loading="lazy">
-                        <div
-                            class="absolute inset-0 bg-dark-900/0 group-hover:bg-dark-900/40 transition-colors duration-300 flex items-end">
-                            @if ($gallery->title)
-                                <span
-                                    class="text-white font-medium text-sm p-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">{{ $gallery->title }}</span>
-                            @endif
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-    <!-- ==================== BERITA TERBARU ==================== -->
-    <section class="py-24 bg-gray-50/50">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 fade-up">
-                <div>
-                    <span
-                        class="inline-block px-4 py-1.5 bg-primary-100 text-primary-600 text-xs font-semibold uppercase tracking-widest rounded-full mb-4">Berita</span>
-                    <h2 class="font-display text-3xl md:text-4xl font-bold text-dark-900 tracking-tight">Berita Terbaru
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-6">
+                <div class="max-w-2xl">
+                    <span class="text-xs font-black uppercase tracking-[0.3em] text-primary-500 mb-4 block">Our
+                        Excellence</span>
+                    <h2 class="font-display text-4xl md:text-5xl font-black text-dark-900 tracking-tight leading-none">
+                        Fasilitas & Program <span class="text-gray-300">Unggulan</span>
                     </h2>
                 </div>
-                <a href="{{ route('berita') }}"
-                    class="mt-4 md:mt-0 inline-flex items-center gap-2 text-primary-500 font-semibold hover:text-primary-600 transition-colors group">
-                    Lihat Semua <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform text-sm"></i>
-                </a>
+                <p class="text-dark-500 max-w-sm font-medium">Kami menyediakan ekosistem terbaik untuk perkembangan kognitif
+                    dan emosional siswa.</p>
             </div>
 
             <div class="grid md:grid-cols-3 gap-8">
-                @foreach ($posts as $post)
-                    <article class="fade-up bg-white rounded-2xl overflow-hidden card-hover border border-gray-100 group">
-                        <div class="aspect-[16/10] overflow-hidden">
-                            <img src="{{ 'storage/' . $post->image ?? 'https://picsum.photos/seed/news-' . $post->id . '/600/375' }}"
-                                alt="{{ $post->title }}"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                loading="lazy">
+                @foreach ($programs as $program)
+                    <div
+                        class="group p-10 bg-gray-50 rounded-[2.5rem] hover:bg-primary-600 transition-all duration-500 cursor-default">
+                        <div
+                            class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:rotate-6 transition-transform">
+                            <i class="{{ $program->icon ?? 'fas fa-star' }} text-2xl text-primary-500"></i>
                         </div>
-                        <div class="p-6">
-                            <div class="flex items-center gap-3 text-xs text-dark-400 mb-3">
-                                <span><i class="far fa-calendar mr-1"></i>{{ $post->created_at->format('d M Y') }}</span>
-                                <span><i class="far fa-clock mr-1"></i>{{ $post->reading_time }} menit</span>
-                            </div>
-                            <h3
-                                class="font-display font-bold text-dark-900 mb-2 group-hover:text-primary-500 transition-colors line-clamp-2">
-                                <a href="{{ route('berita.detail', $post->slug) }}">{{ $post->title }}</a>
-                            </h3>
-                            <p class="text-sm text-dark-500 leading-relaxed line-clamp-2">{{ $post->excerpt }}</p>
+                        <h3
+                            class="font-display text-xl font-bold text-dark-900 mb-4 group-hover:text-white transition-colors">
+                            {{ $program->title }}</h3>
+                        <p class="text-dark-500 leading-relaxed group-hover:text-primary-100 transition-colors">
+                            {{ Str::limit($program->description, 100) }}</p>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FASILITAS (INTERACTIVE GRID) ==================== -->
+    <section class="py-32 bg-dark-950 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <h2 class="font-display text-4xl font-black text-white mb-6">Lingkungan Belajar <span
+                        class="text-primary-500 italic">Modern</span></h2>
+                <p class="text-dark-400 max-w-xl mx-auto">Mendukung kreativitas tanpa batas dengan infrastruktur teknologi
+                    terkini.</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                @php
+                    $facilities = [
+                        ['LAB Komputer', 'computer-lab'],
+                        ['Perpustakaan Digital', 'library'],
+                        ['Studio Kreatif', 'studio'],
+                        ['Lapangan Olahraga', 'sports'],
+                    ];
+                @endphp
+                @foreach ($facilities as $index => $f)
+                    <div
+                        class="group relative aspect-[3/4] rounded-[2rem] overflow-hidden {{ $index % 2 == 1 ? 'md:translate-y-12' : '' }}">
+                        <img src="https://picsum.photos/seed/{{ $f[1] }}/600/800"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            alt="">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-dark-900 via-transparent to-transparent opacity-80">
                         </div>
+                        <div class="absolute bottom-8 left-8">
+                            <p class="text-white font-display font-bold text-xl">{{ $f[0] }}</p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SAMBUTAN (ELEGANT SECTION) ==================== -->
+    <section class="py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="bg-gray-50 rounded-[4rem] p-12 md:p-24 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-12 opacity-5">
+                    <i class="fa-solid fa-quote-right text-[15rem]"></i>
+                </div>
+                <div class="grid lg:grid-cols-2 gap-16 items-center relative z-10">
+                    <div class="order-2 lg:order-1">
+                        <span class="text-xs font-black uppercase tracking-widest text-primary-500 mb-6 block">Sambutan
+                            Kepala Sekolah</span>
+                        <h2 class="font-display text-3xl md:text-4xl font-black text-dark-900 mb-8 leading-tight">
+                            "Membentuk Karakter, <br>Mengukir Prestasi."
+                        </h2>
+                        <div class="text-dark-600 text-lg leading-relaxed italic mb-10">
+                            {!! $settings->get(
+                                'headmaster_welcome',
+                                'Selamat datang di SMP Tunas Harapan Bekasi. Kami berkomitmen memberikan layanan pendidikan terbaik dengan mengedepankan nilai-nilai Islami dan kemajuan teknologi.',
+                            ) !!}
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-px bg-primary-500"></div>
+                            <p class="font-display font-bold text-dark-900">Dra. Hj. Neneng Yeti.D, M.Pd</p>
+                        </div>
+                    </div>
+                    <div class="order-1 lg:order-2 flex justify-center">
+                        <div class="relative">
+                            <div class="absolute -inset-4 bg-primary-500/10 rounded-[3rem] blur-xl"></div>
+                            <img src="{{ asset('kepala-sekolah.jpeg') }}"
+                                class="relative w-72 h-96 object-cover rounded-[3rem] shadow-2xl" alt="Kepala Sekolah">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== BERITA TERBARU (CLEAN LIST) ==================== -->
+    <section class="py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between mb-16">
+                <h2 class="font-display text-4xl font-black text-dark-900">Warta <span
+                        class="text-primary-500">Sekolah</span></h2>
+                <a href="{{ route('berita') }}"
+                    class="font-bold text-sm text-dark-400 hover:text-primary-500 transition-colors uppercase tracking-widest">Semua
+                    Berita</a>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-12">
+                @foreach ($posts->take(3) as $post)
+                    <article class="group cursor-pointer">
+                        <div class="aspect-video rounded-[2rem] overflow-hidden mb-8">
+                            <img src="{{ asset('storage/' . $post->image) }}"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                alt="">
+                        </div>
+                        <div
+                            class="flex items-center gap-4 text-xs font-bold text-dark-400 uppercase tracking-widest mb-4">
+                            <span class="text-primary-500">{{ $post->created_at->format('d M Y') }}</span>
+                            <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                            <span>{{ $post->reading_time ?? '5' }} Min Read</span>
+                        </div>
+                        <h3
+                            class="font-display text-xl font-bold text-dark-900 leading-snug group-hover:text-primary-500 transition-colors">
+                            <a href="{{ route('berita.detail', $post->slug) }}">{{ $post->title }}</a>
+                        </h3>
                     </article>
                 @endforeach
             </div>
         </div>
     </section>
 
-    <!-- ==================== CTA SPMB ==================== -->
-    <section class="py-24 bg-dark-900 relative overflow-hidden">
-        <div class="absolute inset-0 hero-pattern"></div>
-        <div class="absolute top-0 right-0 w-96 h-96 bg-primary-400/10 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 left-0 w-80 h-80 bg-primary-500/10 rounded-full blur-3xl"></div>
-
-        <div class="relative max-w-4xl mx-auto px-6 lg:px-8 text-center fade-up">
-            <div
-                class="inline-flex items-center gap-2 px-4 py-2 bg-primary-400/10 border border-primary-400/20 rounded-full mb-6">
-                <span class="w-2 h-2 bg-primary-400 rounded-full animate-pulse"></span>
-                <span class="text-primary-300 text-xs font-semibold uppercase tracking-widest">Pendaftaran Dibuka</span>
+    <!-- ==================== CTA FINAL ==================== -->
+    <section class="py-20 px-6">
+        <div
+            class="max-w-7xl mx-auto bg-primary-600 rounded-[4rem] p-16 md:p-24 text-center relative overflow-hidden shadow-3xl shadow-primary-500/40">
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10">
             </div>
-
-            <h2 class="font-display text-3xl md:text-5xl font-bold text-white tracking-tight mb-6">Siap Bergabung Bersama
-                Kami?</h2>
-            <div class="text-lg text-dark-300 max-w-2xl mx-auto mb-10">
-                {!! $settings->get(
-                    'spmb_info',
-                    'Pendaftaran peserta didik baru telah dibuka. Segera daftarkan putra-putri Anda!',
-                ) !!}
-            </div>
-
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ route('spmb') }}"
-                    class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary-400 text-white font-semibold rounded-xl hover:bg-primary-500 hover:shadow-2xl hover:shadow-primary-400/30 transition-all duration-300 group text-lg">
-                    Daftar Sekarang
-                    <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                </a>
-                <a href="https://wa.me/{{ $settings->get('school_phone', '#') }}"
-                    class="inline-flex items-center justify-center gap-2 px-8 py-4 border border-dark-600 text-white font-semibold rounded-xl hover:bg-white/5 transition-all duration-300 text-lg"
-                    target="_blank">
-                    <i class="fas fa-phone-alt"></i>
-                    Hubungi Kami
-                </a>
+            <div class="relative z-10">
+                <h2 class="font-display text-4xl md:text-6xl font-black text-white mb-8 tracking-tighter">
+                    Siap Menjadi Bagian <br> dari Kami?
+                </h2>
+                <p class="text-primary-100 text-lg mb-12 max-w-xl mx-auto font-medium">
+                    Jangan lewatkan kesempatan untuk bergabung di lingkungan belajar yang inspiratif dan inovatif.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-6">
+                    <a href="{{ route('register') }}"
+                        class="px-12 py-6 bg-white text-primary-600 font-black rounded-2xl hover:bg-primary-50 transition-all shadow-xl active:scale-95 text-lg uppercase tracking-widest">
+                        Daftar PPDB
+                    </a>
+                    <a href="https://wa.me/{{ $settings->get('school_phone') }}"
+                        class="px-12 py-6 bg-primary-700 text-white font-black rounded-2xl hover:bg-primary-800 transition-all active:scale-95 text-lg uppercase tracking-widest">
+                        Hubungi CS
+                    </a>
+                </div>
             </div>
         </div>
     </section>

@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Registration extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'user_id',             // Relasi ke akun login
+        'registration_number', // Nomor unik pendaftar
         'name',
         'nisn',
         'school_origin',
@@ -23,21 +26,29 @@ class Registration extends Model
         'parent_phone',
         'status',
         'notes',
-        // Kolom Upload File & Verifikasi Dokumen
         'kartu_keluarga', 
         'ijazah', 
         'akte_kelahiran', 
         'documents_verified'
     ];
 
-    /**
-     * The attributes that should be cast.
-     */
     protected $casts = [
         'birth_date' => 'date',
         'status' => 'string',
         'documents_verified' => 'boolean',
     ];
+
+    // =============================
+    // RELATIONSHIPS
+    // =============================
+
+    /**
+     * Menghubungkan data pendaftaran dengan akun User pendaftar.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     // =============================
     // LOCAL SCOPES
@@ -53,6 +64,11 @@ class Registration extends Model
         return $query->where('status', 'verified');
     }
 
+    public function scopeLulus($query)
+    {
+        return $query->where('status', 'lulus');
+    }
+
     public function scopeRejected($query)
     {
         return $query->where('status', 'rejected');
@@ -63,43 +79,42 @@ class Registration extends Model
     // =============================
 
     /**
-     * Mendapatkan label status dalam Bahasa Indonesia
+     * Label status yang disinkronkan dengan Dashboard Pendaftar
      */
     public function getStatusLabelAttribute(): string
     {
         return match ($this->status) {
-            'verified' => 'Terverifikasi',
-            'rejected' => 'Ditolak',
-            default => 'Menunggu Verifikasi', // 'pending'
+            'verified' => 'Terverifikasi Berkas',
+            'lulus' => 'Dinyatakan Lulus',
+            'tidak_lulus' => 'Tidak Lulus',
+            'rejected' => 'Berkas Ditolak',
+            default => 'Menunggu Verifikasi',
         };
     }
 
     /**
-     * Mendapatkan warna badge untuk status (CSS class)
+     * Warna badge Tailwind untuk status
      */
     public function getStatusColorAttribute(): string
     {
         return match ($this->status) {
-            'verified' => 'success',
-            'rejected' => 'danger',
-            default => 'warning', // 'pending'
+            'verified' => 'blue',
+            'lulus' => 'emerald',
+            'tidak_lulus' => 'red',
+            'rejected' => 'red',
+            default => 'amber',
         };
     }
 
-    /**
-     * Mendapatkan label jenis kelamin
-     */
     public function getGenderLabelAttribute(): string
     {
-        // Tambahkan default untuk menghindari error jika gender null
         return match ($this->gender) {
             'L' => 'Laki-laki',
             'P' => 'Perempuan',
             default => '-',
         };
     }
-    
-    // Opsional: Helper untuk cek apakah dokumen lengkap
+
     public function getDocumentsCompleteAttribute(): bool
     {
         return !empty($this->kartu_keluarga) 

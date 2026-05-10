@@ -8,10 +8,18 @@ use Illuminate\Support\Facades\Validator;
 
 class CheckStatusController extends Controller
 {
-  public function show()
-  {
-    return view('pages.cek-status');
-  }
+    public function show()
+    {
+        // Cari data pendaftaran berdasarkan user yang sedang login
+        $registration = \App\Models\Registration::where('user_id', auth()->id())->first();
+
+        // Jika belum mendaftar, arahkan untuk mengisi formulir dulu
+        if (!$registration) {
+            return redirect()->route('spmb')->with('error', 'Anda belum mengisi formulir pendaftaran.');
+        }
+
+        return view('pages.pendaftar.cek-status', compact('registration'));
+    }
 
   public function check(Request $request)
   {
@@ -22,11 +30,11 @@ class CheckStatusController extends Controller
       $registration = Registration::where('nisn', $request->nisn)->first();
 
       if (!$registration) {
-          return redirect()->route('cek-status')->with('not_found', true)->withInput();
+          return redirect()->route('pendaftar.cek-status')->with('not_found', true)->withInput();
       }
 
       // Kirim data registration ke session
-      return redirect()->route('cek-status')->with('registration', $registration);
+      return redirect()->route('pendaftar.cek-status')->with('registration', $registration);
   }
 
   public function downloadPdf(Request $request)

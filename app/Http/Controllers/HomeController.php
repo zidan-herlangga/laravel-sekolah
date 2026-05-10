@@ -25,6 +25,26 @@ class HomeController extends Controller
         return view('pages.home', compact('programs', 'posts', 'galleries', 'headmaster', 'settings'));
     }
 
+    public function dashboard()
+    {
+        $user = auth()->user();
+        // Ambil data pendaftaran jika user sudah pernah mengisi form SPMB
+        $registration = \App\Models\Registration::where('user_id', $user->id)->first();
+
+        return view('pages.pendaftar.dashboard', compact('user', 'registration'));
+    }
+
+    public function profile()
+    {
+        $registration = \App\Models\Registration::where('user_id', auth()->id())->first();
+        
+        if (!$registration) {
+            return redirect()->route('spmb')->with('error', 'Silakan isi formulir pendaftaran terlebih dahulu.');
+        }
+
+        return view('pages.pendaftar.profile', compact('registration'));
+    }
+
     public function about()
     {
         $teachers = Teacher::guru()->ordered()->get();
@@ -56,7 +76,7 @@ class HomeController extends Controller
     {
         $settings = $this->settingService;
 
-        return view('pages.spmb', compact('settings'));
+        return view('pages.pendaftar.spmb', compact('settings'));
     }
 
     public function contact()
