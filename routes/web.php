@@ -157,8 +157,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // 3. Grup SPMB & EXAMP (Admin & Panitia/Staff SPMB)
         Route::middleware([IsSpmbMiddleware::class])->group(function () {
+            
             Route::resource('registrations', RegistrationController::class);
-            Route::post('registrations/verify/{id}', [RegistrationController::class, 'verifyDocuments'])->name('registrations.verify');
+            Route::post('registrations/verify/{id}', [RegistrationController::class, 'verifyDocuments'])->name('registrations.verify-documents');
+            Route::post('registrations/export/', [RegistrationController::class, 'export'])->name('registrations.export');
+            Route::post('registrations/export-pdf/', [RegistrationController::class, 'exportPdf'])->name('registrations.export-pdf');
 
             // Fitur CBT (Examp)
             Route::prefix('examp')->name('examp.')->group(function() {
