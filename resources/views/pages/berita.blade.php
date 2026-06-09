@@ -118,7 +118,7 @@
     <!-- CTA Section -->
     <section class="pb-24 bg-gray-50/50 px-6">
         <div
-            class="max-w-5xl mx-auto bg-primary-600 rounded-[3rem] p-12 md:p-16 text-center relative overflow-hidden shadow-2xl shadow-primary-500/20">
+            class="max-w-5xl mx-auto bg-primary-600 rounded-[3rem] p-8 md:p-16 text-center relative overflow-hidden shadow-2xl shadow-primary-500/20">
             <div class="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full -ml-32 -mt-32 blur-3xl"></div>
             <div class="relative z-10">
                 <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-6">Ingin Berlangganan Berita?</h2>

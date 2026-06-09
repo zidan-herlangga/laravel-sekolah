@@ -36,27 +36,39 @@
                         </h3>
 
                         @if ($registration)
+                            @php
+                                $statusColors = [
+                                    'pending' => 'bg-amber-500 text-white',
+                                    'verified' => 'bg-blue-500 text-white',
+                                    'lulus' => 'bg-emerald-500 text-white',
+                                    'tidak_lulus' => 'bg-red-500 text-white',
+                                    'rejected' => 'bg-red-500 text-white',
+                                ];
+                                $badgeClass = $statusColors[$registration->status] ?? 'bg-gray-500 text-white';
+                            @endphp
                             <div
-                                class="flex items-center justify-between p-6 bg-primary-50 rounded-2xl border border-primary-100">
+                                class="flex flex-col sm:flex-row sm:items-center justify-between p-6 bg-primary-50 rounded-2xl border border-primary-100 gap-4">
                                 <div>
                                     <p class="text-xs text-primary-600 font-bold uppercase tracking-wider mb-1">Nomor
                                         Pendaftaran</p>
                                     <p class="text-xl font-display font-black text-primary-900">
                                         {{ $registration->registration_number }}</p>
                                 </div>
-                                <div class="text-right">
-                                    <span
-                                        class="px-4 py-2 rounded-full text-xs font-bold uppercase {{ $registration->status == 'lulus' ? 'bg-emerald-500 text-white' : 'bg-amber-400 text-white' }}">
-                                        {{ $registration->status ?? 'Proses Seleksi' }}
+                                <div class="sm:text-right">
+                                    <span class="px-4 py-2 rounded-full text-xs font-bold uppercase {{ $badgeClass }}">
+                                        {{ $registration->status_label }}
                                     </span>
                                 </div>
                             </div>
                         @else
                             <div class="text-center py-6">
+                                <div class="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                    <i class="fa-solid fa-file-pen text-2xl text-gray-400"></i>
+                                </div>
                                 <p class="text-dark-500 text-sm mb-4">Anda belum melengkapi formulir pendaftaran.</p>
                                 <a href="{{ route('spmb') }}"
-                                    class="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 text-white font-bold rounded-xl hover:bg-primary-600 transition-all">
-                                    Isi Formulir Sekarang <i class="fa-solid fa-arrow-right"></i>
+                                    class="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 text-white font-bold rounded-xl hover:bg-primary-600 transition-all shadow-lg shadow-primary-500/20">
+                                    <i class="fa-solid fa-pen-to-square"></i> Isi Formulir Sekarang
                                 </a>
                             </div>
                         @endif
@@ -199,36 +211,108 @@
                         <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-primary-500/10 rounded-full blur-3xl"></div>
                     </div>
 
-                    <!-- Pengumuman Singkat -->
+                    @php
+                        $stepConfig = [];
+                        // Step 1: Verifikasi Berkas
+                        if (!$registration) {
+                            $stepConfig[1] = ['state' => 'pending', 'desc' => 'Lengkapi form pendaftaran SPMB terlebih dahulu.', 'action' => 'Isi Formulir', 'route' => 'spmb'];
+                        } elseif ($registration->status === 'rejected') {
+                            $stepConfig[1] = ['state' => 'failed', 'desc' => 'Berkas ditolak. Silakan hubungi panitia.', 'action' => null, 'route' => null];
+                        } elseif (in_array($registration->status, ['verified', 'lulus'])) {
+                            $stepConfig[1] = ['state' => 'completed', 'desc' => 'Berkas telah diverifikasi oleh panitia.', 'action' => null, 'route' => null];
+                        } else {
+                            $stepConfig[1] = ['state' => 'active', 'desc' => 'Menunggu verifikasi berkas oleh panitia.', 'action' => null, 'route' => null];
+                        }
+
+                        // Step 2: Ujian Seleksi Online
+                        if (!$registration || $registration->status === 'pending' || $registration->status === 'rejected') {
+                            $stepConfig[2] = ['state' => 'pending', 'desc' => 'Tersedia setelah berkas terverifikasi.', 'action' => null, 'route' => null];
+                        } elseif ($registration->status === 'verified' && !$examResult) {
+                            $stepConfig[2] = ['state' => 'active', 'desc' => 'Silakan ikuti ujian seleksi online sekarang.', 'action' => 'Ikuti Ujian', 'route' => 'pendaftar.ujian.index'];
+                        } else {
+                            $stepConfig[2] = ['state' => 'completed', 'desc' => 'Ujian seleksi telah selesai.', 'action' => null, 'route' => null];
+                        }
+
+                        // Step 3: Pengumuman Kelulusan
+                        if (in_array($registration->status ?? '', ['lulus', 'tidak_lulus'])) {
+                            if ($registration->status === 'lulus') {
+                                $stepConfig[3] = ['state' => 'completed', 'desc' => 'Selamat! Anda dinyatakan lulus seleksi.', 'action' => null, 'route' => null];
+                            } else {
+                                $stepConfig[3] = ['state' => 'failed', 'desc' => 'Mohon maaf, Anda belum berhasil. Tetap semangat!', 'action' => null, 'route' => null];
+                            }
+                        } elseif (($registration->status ?? '') === 'verified' && $examResult) {
+                            $stepConfig[3] = ['state' => 'active', 'desc' => 'Menunggu pengumuman hasil seleksi oleh panitia.', 'action' => null, 'route' => null];
+                        } else {
+                            $stepConfig[3] = ['state' => 'pending', 'desc' => 'Belum tersedia.', 'action' => null, 'route' => null];
+                        }
+
+                        // Step 4: Pembayaran Daftar Ulang
+                        if ($registration && $registration->status === 'lulus') {
+                            if ($registration->payment_status === 'paid') {
+                                $stepConfig[4] = ['state' => 'completed', 'desc' => 'Pembayaran telah lunas. Selamat bergabung!', 'action' => null, 'route' => null];
+                            } else {
+                                $stepConfig[4] = ['state' => 'active', 'desc' => 'Silakan lakukan pembayaran daftar ulang.', 'action' => 'Bayar Sekarang', 'route' => 'payment.index'];
+                            }
+                        } elseif ($registration && $registration->status === 'tidak_lulus') {
+                            $stepConfig[4] = ['state' => 'pending', 'desc' => 'Tidak tersedia.', 'action' => null, 'route' => null];
+                        } else {
+                            $stepConfig[4] = ['state' => 'pending', 'desc' => 'Belum tersedia.', 'action' => null, 'route' => null];
+                        }
+                    @endphp
+
                     <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
-                        <h4 class="font-display font-bold text-dark-900 mb-4 uppercase tracking-widest text-[10px]">Alur
+                        <h4 class="font-display font-bold text-dark-900 mb-6 uppercase tracking-widest text-[10px]">Alur
                             Selanjutnya</h4>
-                        <ul class="space-y-4">
-                            <li class="flex gap-3">
-                                <div
-                                    class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 text-[10px] font-bold">
-                                    1</div>
-                                <p class="text-xs text-dark-600">Verifikasi berkas oleh panitia.</p>
-                            </li>
-                            <li class="flex gap-3">
-                                <div
-                                    class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 text-[10px] font-bold">
-                                    2</div>
-                                <p class="text-xs text-dark-600">Ujian seleksi online (gratis, tanpa biaya).</p>
-                            </li>
-                            <li class="flex gap-3">
-                                <div
-                                    class="w-6 h-6 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center flex-shrink-0 text-[10px] font-bold">
-                                    3</div>
-                                <p class="text-xs text-dark-400">Pengumuman kelulusan.</p>
-                            </li>
-                            <li class="flex gap-3">
-                                <div
-                                    class="w-6 h-6 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center flex-shrink-0 text-[10px] font-bold">
-                                    4</div>
-                                <p class="text-xs text-dark-400">Pembayaran daftar ulang (jika lulus).</p>
-                            </li>
-                        </ul>
+                        <div class="space-y-0">
+                            @foreach ([1 => 'Verifikasi Berkas', 2 => 'Ujian Seleksi Online', 3 => 'Pengumuman Kelulusan', 4 => 'Pembayaran Daftar Ulang'] as $num => $label)
+                                @php $s = $stepConfig[$num]; @endphp
+                                <div class="flex gap-4 {{ !$loop->last ? 'pb-6' : '' }}">
+                                    {{-- Circle & Connector --}}
+                                    <div class="flex flex-col items-center">
+                                        <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold
+                                            {{ $s['state'] === 'completed' ? 'bg-emerald-500 text-white' : ($s['state'] === 'active' ? 'bg-primary-500 text-white' : ($s['state'] === 'failed' ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-400')) }}
+                                            {{ $s['state'] === 'active' ? 'shadow-lg shadow-primary-500/30' : '' }}">
+                                            @if ($s['state'] === 'completed')
+                                                <i class="fa-solid fa-check text-xs"></i>
+                                            @elseif ($s['state'] === 'failed')
+                                                <i class="fa-solid fa-xmark text-xs"></i>
+                                            @elseif ($s['state'] === 'active')
+                                                <div class="flex h-2 w-2">
+                                                    <div class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-primary-400 opacity-75"></div>
+                                                    <div class="relative inline-flex rounded-full h-2 w-2 bg-white"></div>
+                                                </div>
+                                            @else
+                                                {{ $num }}
+                                            @endif
+                                        </div>
+                                        @if (!$loop->last)
+                                            <div class="w-px flex-1 min-h-[24px] mt-1
+                                                {{ $s['state'] === 'completed' || ($stepConfig[$num + 1]['state'] ?? '') === 'completed' ? 'bg-emerald-200' : 'bg-gray-200' }}">
+                                            </div>
+                                        @endif
+                                    </div>
+                                    {{-- Content --}}
+                                    <div class="flex-1 min-w-0 {{ $loop->last ? 'pb-0' : '' }}">
+                                        <div class="flex items-center justify-between gap-2">
+                                            <h5 class="text-sm font-bold text-dark-900">{{ $label }}</h5>
+                                            <span class="text-[10px] font-bold uppercase tracking-widest whitespace-nowrap
+                                                {{ $s['state'] === 'completed' ? 'text-emerald-600' : ($s['state'] === 'active' ? 'text-primary-600' : ($s['state'] === 'failed' ? 'text-red-500' : 'text-gray-400')) }}">
+                                                {{ $s['state'] === 'completed' ? 'Selesai' : ($s['state'] === 'active' ? 'Berlangsung' : ($s['state'] === 'failed' ? 'Gagal' : 'Menunggu')) }}
+                                            </span>
+                                        </div>
+                                        <p class="text-xs text-dark-500 mt-1 leading-relaxed">{{ $s['desc'] }}</p>
+                                        @if ($s['action'] && $s['route'])
+                                            <a href="{{ route($s['route']) }}"
+                                                class="inline-flex items-center gap-1.5 mt-3 px-4 py-2 text-xs font-bold rounded-xl
+                                                {{ $s['state'] === 'active' ? 'bg-primary-500 text-white hover:bg-primary-600' : 'bg-gray-100 text-dark-600 hover:bg-gray-200' }}
+                                                transition-all">
+                                                {{ $s['action'] }} <i class="fa-solid fa-arrow-right-long text-[10px]"></i>
+                                            </a>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>

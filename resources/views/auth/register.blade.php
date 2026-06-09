@@ -28,7 +28,7 @@
                     <input type="email" name="email" value="{{ old('email') }}" required
                         class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all text-sm @error('email') border-red-500 @enderror">
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-semibold text-dark-700 mb-1.5">Sandi</label>
                         <div class="relative">

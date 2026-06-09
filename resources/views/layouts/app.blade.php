@@ -120,6 +120,22 @@
             background-color: #128c7e;
         }
 
+        @media (max-width: 640px) {
+            .whatsapp-float {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                right: 20px;
+                font-size: 24px;
+            }
+            .flash-msg {
+                bottom: 80px !important;
+                right: 16px !important;
+                left: 16px !important;
+                font-size: 13px;
+            }
+        }
+
         @media print {
 
             nav,

@@ -32,15 +32,15 @@
                     <p class="font-display text-3xl font-black text-primary-600">500+</p>
                     <p class="text-xs text-dark-400 font-bold uppercase mt-1">Siswa Aktif</p>
                 </div>
-                <div class="text-center border-l border-gray-100">
+                <div class="text-center md:border-l border-gray-100">
                     <p class="font-display text-3xl font-black text-primary-600">30+</p>
                     <p class="text-xs text-dark-400 font-bold uppercase mt-1">Guru Ahli</p>
                 </div>
-                <div class="text-center border-l border-gray-100">
+                <div class="text-center md:border-l border-gray-100">
                     <p class="font-display text-3xl font-black text-primary-600">15+</p>
                     <p class="text-xs text-dark-400 font-bold uppercase mt-1">Ekstrakurikuler</p>
                 </div>
-                <div class="text-center border-l border-gray-100">
+                <div class="text-center md:border-l border-gray-100">
                     <p class="font-display text-3xl font-black text-primary-600">100%</p>
                     <p class="text-xs text-dark-400 font-bold uppercase mt-1">Akreditasi A</p>
                 </div>

@@ -32,7 +32,7 @@
                     </div>
 
                     <h1
-                        class="font-display text-5xl md:text-7xl font-extrabold text-white leading-[1.1] tracking-tighter mb-8">
+                        class="font-display text-4xl sm:text-5xl md:text-7xl font-extrabold text-white leading-[1.1] tracking-tighter mb-8">
                         Masa Depan <br>
                         <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-blue-400">Dimulai di
                             Sini.</span>
@@ -54,7 +54,7 @@
                     </div>
 
                     <!-- Trusted Stats -->
-                    <div class="mt-16 flex items-center gap-12">
+                    <div class="mt-16 flex items-center gap-4 sm:gap-12 flex-wrap">
                         <div>
                             <p class="text-3xl font-display font-black text-white">600+</p>
                             <p class="text-[10px] font-bold text-dark-400 uppercase tracking-widest mt-1">Siswa</p>
@@ -211,7 +211,7 @@
                     Berita</a>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-12">
+            <div class="grid md:grid-cols-3 gap-8 md:gap-12">
                 @foreach ($posts->take(3) as $post)
                     <article class="group cursor-pointer">
                         <div class="aspect-video rounded-[2rem] overflow-hidden mb-8">
@@ -238,7 +238,7 @@
     <!-- ==================== CTA FINAL ==================== -->
     <section class="py-20 px-6">
         <div
-            class="max-w-7xl mx-auto bg-primary-600 rounded-[4rem] p-16 md:p-24 text-center relative overflow-hidden shadow-3xl shadow-primary-500/40">
+            class="max-w-7xl mx-auto bg-primary-600 rounded-[4rem] p-10 md:p-16 lg:p-24 text-center relative overflow-hidden shadow-3xl shadow-primary-500/40">
             <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10">
             </div>
             <div class="relative z-10">

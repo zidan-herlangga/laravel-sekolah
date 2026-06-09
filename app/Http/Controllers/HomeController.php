@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\Teacher;
 use App\Models\Gallery;
 use App\Models\Program;
+use App\Models\ExamResult;
 use App\Services\SettingService;
 
 class HomeController extends Controller
@@ -29,7 +30,7 @@ class HomeController extends Controller
     {
         $user = auth()->user();
         $registration = \App\Models\Registration::where('user_id', $user->id)->first();
-
+        $examResult = ExamResult::where('user_id', $user->id)->first();
 
         $maxScore = \App\Models\Question::sum('points');
 
@@ -43,8 +44,8 @@ class HomeController extends Controller
 
         return view('pages.pendaftar.dashboard', compact(
             'user', 
-            'registration', 
-            
+            'registration',
+            'examResult',
             'maxScore', 
             'payment'));
     }
