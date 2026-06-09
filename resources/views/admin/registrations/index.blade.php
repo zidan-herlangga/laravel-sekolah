@@ -49,8 +49,11 @@
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <h3 class="card-title font-weight-bold"><i class="fas fa-user-graduate mr-2 text-amber-600"></i>Daftar
                     Pendaftar</h3>
-                <div class="d-flex gap-2">
-                    <!-- Tombol Export Terpisah -->
+                <div class="d-flex gap-2 flex-wrap">
+                    <button type="submit" form="bulk-delete-form" id="bulk-delete-btn" class="btn btn-danger btn-sm"
+                        style="border-radius:4px; display:none;" onclick="return confirm('Yakin hapus data yang dipilih?')">
+                        <i class="fas fa-trash mr-1"></i> Hapus Terpilih
+                    </button>
                     <form method="POST" action="{{ route('admin.registrations.export') }}">
                         @csrf
                         <button type="submit" class="btn btn-success btn-sm" style="border-radius:4px">
@@ -91,11 +94,14 @@
             </form>
 
             <!-- Table -->
-            <div class="table-responsive">
+            <form id="bulk-delete-form" method="POST" action="{{ route('admin.registrations.bulk-delete') }}">
+                @csrf
+                <div class="table-responsive">
                 <table class="table table-bordered table-hover table-sm">
                     <thead class="thead-light">
                         <tr>
-                            <th style="width: 50px;">#</th>
+                            <th style="width: 40px;"><input type="checkbox" id="select-all"></th>
+                            <th style="width: 40px;">#</th>
                             <th>Nama</th>
                             <th>NISN</th>
                             <th>Asal Sekolah</th>
@@ -108,6 +114,7 @@
                     <tbody>
                         @forelse($registrations as $reg)
                             <tr>
+                                <td><input type="checkbox" class="row-checkbox" name="ids[]" value="{{ $reg->id }}"></td>
                                 <td>{{ $registrations->firstItem() + $loop->index }}</td>
                                 <td class="font-weight-semibold">{{ Str::limit($reg->name, 30) }}</td>
                                 <td><code>{{ $reg->nisn }}</code></td>
@@ -136,12 +143,13 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center py-4 text-muted">Tidak ada data pendaftar.</td>
+                                <td colspan="9" class="text-center py-4 text-muted">Tidak ada data pendaftar.</td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
+            </form>
             <div class="mt-3">{{ $registrations->links() }}</div>
         </div>
     </div>

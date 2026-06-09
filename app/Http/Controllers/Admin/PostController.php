@@ -81,4 +81,18 @@ class PostController extends Controller
         $post->delete();
         return redirect()->route('admin.posts.index')->with('success', 'Berita berhasil dihapus.');
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'Tidak ada data yang dipilih.');
+        }
+        $posts = Post::whereIn('id', $ids)->get();
+        foreach ($posts as $post) {
+            if ($post->image) $this->fileUpload->delete($post->image);
+            $post->delete();
+        }
+        return redirect()->back()->with('success', count($ids) . ' berita berhasil dihapus.');
+    }
 }

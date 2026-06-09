@@ -65,4 +65,18 @@ class GalleryController extends Controller
 
         return redirect()->route('admin.galleries.index')->with('success', 'Foto berhasil dihapus.');
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'Tidak ada data yang dipilih.');
+        }
+        $galleries = Gallery::whereIn('id', $ids)->get();
+        foreach ($galleries as $gallery) {
+            $this->fileUpload->delete($gallery->image);
+            $gallery->delete();
+        }
+        return redirect()->back()->with('success', count($ids) . ' foto berhasil dihapus.');
+    }
 }

@@ -6,10 +6,16 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <h3 class="card-title font-weight-bold"><i class="fas fa-newspaper mr-2 text-info"></i>Daftar Berita</h3>
-                <a href="{{ route('admin.posts.create') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus mr-1"></i>
-                    Tambah Berita</a>
+                <div class="d-flex gap-2">
+                    <button type="submit" form="bulk-delete-form" id="bulk-delete-btn" class="btn btn-danger btn-sm"
+                        style="display:none;" onclick="return confirm('Yakin hapus berita yang dipilih?')">
+                        <i class="fas fa-trash mr-1"></i> Hapus Terpilih
+                    </button>
+                    <a href="{{ route('admin.posts.create') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus mr-1"></i>
+                        Tambah Berita</a>
+                </div>
             </div>
         </div>
         <div class="card-body">
@@ -47,10 +53,13 @@
                 </div>
             </form>
 
+            <form id="bulk-delete-form" method="POST" action="{{ route('admin.posts.bulk-delete') }}">
+                @csrf
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
                     <thead class="thead-light">
                         <tr>
+                            <th style="width:40px"><input type="checkbox" id="select-all"></th>
                             <th style="width:60px" class="text-center">Gambar</th>
                             <th>Judul & Slug</th>
                             <th style="width:150px">Kategori</th>
@@ -62,6 +71,7 @@
                     <tbody>
                         @forelse($posts as $post)
                             <tr>
+                                <td><input type="checkbox" class="row-checkbox" name="ids[]" value="{{ $post->id }}"></td>
                                 <td class="text-center">
                                     <img src="{{ $post->image ? Storage::url($post->image) : 'https://via.placeholder.com/50x50?text=No+Img' }}"
                                         alt=""
@@ -109,7 +119,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-5 text-muted">
+                                <td colspan="7" class="text-center py-5 text-muted">
                                     <i class="fas fa-folder-open fa-3x mb-3 d-block opacity-50"></i>
                                     Tidak ada data berita yang ditemukan.
                                 </td>
@@ -118,7 +128,7 @@
                     </tbody>
                 </table>
             </div>
-
+            </form>
             <div class="mt-3 d-flex justify-content-end">
                 {{ $posts->links() }}
             </div>

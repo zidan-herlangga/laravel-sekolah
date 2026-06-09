@@ -148,21 +148,27 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         // 1. Grup Konten (Admin & Penulis)
-        Route::middleware([CheckRole::class . ':admin,penulis'])->group(function () {
-            Route::resource('posts', PostController::class);
-            Route::resource('galleries', GalleryController::class);
-            Route::resource('programs', ProgramController::class);
-            Route::resource('categories', CategoryController::class)->except(['show', 'edit', 'update']);
+            Route::middleware([CheckRole::class . ':admin,penulis'])->group(function () {
+                Route::resource('posts', PostController::class);
+                Route::post('posts/bulk-delete', [PostController::class, 'bulkDelete'])->name('posts.bulk-delete');
+                Route::resource('galleries', GalleryController::class);
+                Route::post('galleries/bulk-delete', [GalleryController::class, 'bulkDelete'])->name('galleries.bulk-delete');
+                Route::resource('programs', ProgramController::class);
+                Route::post('programs/bulk-delete', [ProgramController::class, 'bulkDelete'])->name('programs.bulk-delete');
+                Route::resource('categories', CategoryController::class)->except(['show', 'edit', 'update']);
+                Route::post('categories/bulk-delete', [CategoryController::class, 'bulkDelete'])->name('categories.bulk-delete');
 
-            // 2. Grup Khusus Root Admin (Settings & Guru)
-            Route::middleware([CheckRole::class . ':admin'])->group(function () {
-                Route::resource('teachers', TeacherController::class);
-                Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
-                Route::post('contacts/mark-all-read', [ContactController::class, 'markAllRead'])->name('contacts.mark-all-read');
-                Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
-                Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
+                // 2. Grup Khusus Root Admin (Settings & Guru)
+                Route::middleware([CheckRole::class . ':admin'])->group(function () {
+                    Route::resource('teachers', TeacherController::class);
+                    Route::post('teachers/bulk-delete', [TeacherController::class, 'bulkDelete'])->name('teachers.bulk-delete');
+                    Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
+                    Route::post('contacts/bulk-delete', [ContactController::class, 'bulkDelete'])->name('contacts.bulk-delete');
+                    Route::post('contacts/mark-all-read', [ContactController::class, 'markAllRead'])->name('contacts.mark-all-read');
+                    Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
+                    Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
+                });
             });
-        });
 
         // 3. Grup SPMB & EXAMP (Admin & Panitia/Staff SPMB)
         Route::middleware([IsSpmbMiddleware::class])->group(function () {
@@ -172,12 +178,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('registrations/{registration}/update-payment', [RegistrationController::class, 'updatePayment'])->name('registrations.update-payment');
             Route::post('registrations/export/', [RegistrationController::class, 'export'])->name('registrations.export');
             Route::post('registrations/export-pdf/', [RegistrationController::class, 'exportPdf'])->name('registrations.export-pdf');
+            Route::post('registrations/bulk-delete', [RegistrationController::class, 'bulkDelete'])->name('registrations.bulk-delete');
 
             // Data Pembayaran
             Route::prefix('payments')->name('payments.')->group(function () {
                 Route::get('/', [\App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('index');
                 Route::post('export', [\App\Http\Controllers\Admin\PaymentController::class, 'exportCsv'])->name('export');
                 Route::post('export-pdf', [\App\Http\Controllers\Admin\PaymentController::class, 'exportPdf'])->name('export-pdf');
+                Route::delete('{id}', [\App\Http\Controllers\Admin\PaymentController::class, 'destroy'])->name('destroy');
+                Route::post('bulk-delete', [\App\Http\Controllers\Admin\PaymentController::class, 'bulkDelete'])->name('bulk-delete');
                 Route::get('/{id}', [\App\Http\Controllers\Admin\PaymentController::class, 'show'])->name('show');
             });
 
@@ -190,6 +199,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::post('/store', [ExampController::class, 'store'])->name('store');
                 Route::get('/results', [ExampController::class, 'results'])->name('results');
                 Route::delete('/{id}', [ExampController::class, 'destroy'])->name('destroy');
+                Route::post('/bulk-delete', [ExampController::class, 'bulkDelete'])->name('bulk-delete');
             });
         });
     });

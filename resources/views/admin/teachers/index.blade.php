@@ -6,11 +6,17 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <h3 class="card-title font-weight-bold"><i class="fas fa-chalkboard-teacher mr-2 text-success"></i>Guru &
                     Staff</h3>
-                <a href="{{ route('admin.teachers.create') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus mr-1"></i>
-                    Tambah</a>
+                <div class="d-flex gap-2">
+                    <button type="submit" form="bulk-delete-form" id="bulk-delete-btn" class="btn btn-danger btn-sm"
+                        style="display:none;" onclick="return confirm('Yakin hapus data yang dipilih?')">
+                        <i class="fas fa-trash mr-1"></i> Hapus Terpilih
+                    </button>
+                    <a href="{{ route('admin.teachers.create') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus mr-1"></i>
+                        Tambah</a>
+                </div>
             </div>
         </div>
         <div class="card-body">
@@ -32,10 +38,13 @@
                 </div>
             </form>
 
+            <form id="bulk-delete-form" method="POST" action="{{ route('admin.teachers.bulk-delete') }}">
+                @csrf
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
                     <thead class="thead-light">
                         <tr>
+                            <th style="width:40px"><input type="checkbox" id="select-all"></th>
                             <th style="width:60px">Foto</th>
                             <th>Nama</th>
                             <th>Jabatan</th>
@@ -47,6 +56,7 @@
                     <tbody>
                         @forelse($teachers as $teacher)
                             <tr>
+                                <td><input type="checkbox" class="row-checkbox" name="ids[]" value="{{ $teacher->id }}"></td>
                                 <td><img src="{{ $teacher->photo ? Storage::url($teacher->photo) : 'https://via.placeholder.com/50x50?text=' . urlencode(substr($teacher->name, 0, 1)) }}"
                                         class="img-thumb" alt=""></td>
                                 <td class="font-weight-semibold">{{ $teacher->name }}</td>
@@ -71,12 +81,13 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-4 text-muted">Tidak ada data.</td>
+                                <td colspan="7" class="text-center py-4 text-muted">Tidak ada data.</td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
+            </form>
             {{-- Pagination --}}
             <div class="d-flex justify-content-center ">
                 {{ $teachers->withQueryString()->links() }}

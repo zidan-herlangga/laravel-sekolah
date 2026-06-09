@@ -54,4 +54,14 @@ class ProgramController extends Controller
 
         return redirect()->route('admin.programs.index')->with('success', 'Program berhasil dihapus.');
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'Tidak ada data yang dipilih.');
+        }
+        Program::whereIn('id', $ids)->delete();
+        return redirect()->back()->with('success', count($ids) . ' program berhasil dihapus.');
+    }
 }

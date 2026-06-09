@@ -13,7 +13,11 @@
                         <span class="badge badge-warning ml-2">{{ $unreadCount }} baru</span>
                     @endif
                 </h3>
-                <div>
+                <div class="d-flex gap-2">
+                    <button type="submit" form="bulk-delete-form" id="bulk-delete-btn" class="btn btn-danger btn-sm"
+                        style="display:none;" onclick="return confirm('Yakin hapus pesan yang dipilih?')">
+                        <i class="fas fa-trash mr-1"></i> Hapus Terpilih
+                    </button>
                     @if ($unreadCount > 0)
                         <form method="POST" action="{{ route('admin.contacts.mark-all-read') }}" class="d-inline"
                             onsubmit="return confirm('Tandai semua sudah dibaca?')">
@@ -33,10 +37,13 @@
                 </div>
             @endif
 
+            <form id="bulk-delete-form" method="POST" action="{{ route('admin.contacts.bulk-delete') }}">
+                @csrf
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
                     <thead class="thead-light">
                         <tr>
+                            <th style="width:40px"><input type="checkbox" id="select-all"></th>
                             <th style="width:40px">No</th>
                             <th>Pengirim</th>
                             <th>Email</th>
@@ -48,6 +55,7 @@
                     <tbody>
                         @forelse($contacts as $contact)
                             <tr class="{{ !$contact->is_read ? 'bg-light-blue' : '' }}">
+                                <td><input type="checkbox" class="row-checkbox" name="ids[]" value="{{ $contact->id }}"></td>
                                 <td class="text-center">
                                     {{ $loop->iteration }}
                                     @if (!$contact->is_read)
@@ -72,12 +80,13 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-4 text-muted">Tidak ada pesan.</td>
+                                <td colspan="7" class="text-center py-4 text-muted">Tidak ada pesan.</td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
+            </form>
             <div class="mt-3">{{ $contacts->links() }}</div>
         </div>
     </div>

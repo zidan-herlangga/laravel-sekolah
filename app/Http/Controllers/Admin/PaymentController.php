@@ -95,4 +95,21 @@ class PaymentController extends Controller
 
         return $pdf->download('data-pembayaran-' . date('d-m-Y') . '.pdf');
     }
+
+    public function destroy($id)
+    {
+        $payment = Payment::findOrFail($id);
+        $payment->delete();
+        return redirect()->back()->with('success', 'Data pembayaran berhasil dihapus.');
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'Tidak ada data yang dipilih.');
+        }
+        Payment::whereIn('id', $ids)->delete();
+        return redirect()->back()->with('success', count($ids) . ' data pembayaran berhasil dihapus.');
+    }
 }

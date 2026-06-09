@@ -60,6 +60,16 @@ class RegistrationController extends Controller
         return redirect()->route('admin.registrations.index')->with('success', 'Data pendaftar berhasil dihapus.');
     }
 
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'Tidak ada data yang dipilih.');
+        }
+        Registration::whereIn('id', $ids)->delete();
+        return redirect()->back()->with('success', count($ids) . ' data pendaftar berhasil dihapus.');
+    }
+
     /**
      * Export data ke CSV
      */

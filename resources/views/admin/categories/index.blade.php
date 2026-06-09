@@ -52,12 +52,21 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Daftar Kategori</h3>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="card-title">Daftar Kategori</h3>
+                        <button type="submit" form="bulk-delete-form" id="bulk-delete-btn" class="btn btn-danger btn-sm"
+                            style="display:none;" onclick="return confirm('Yakin hapus kategori yang dipilih?')">
+                            <i class="fas fa-trash mr-1"></i> Hapus Terpilih
+                        </button>
+                    </div>
                 </div>
+                <form id="bulk-delete-form" method="POST" action="{{ route('admin.categories.bulk-delete') }}">
+                    @csrf
                 <div class="card-body p-0">
                     <table class="table table-striped">
                         <thead>
                             <tr>
+                                <th style="width: 40px;"><input type="checkbox" id="select-all"></th>
                                 <th style="width: 50px;">#</th>
                                 <th>Nama Kategori</th>
                                 <th>Slug</th>
@@ -68,6 +77,7 @@
                         <tbody>
                             @forelse($categories as $cat)
                                 <tr>
+                                    <td><input type="checkbox" class="row-checkbox" name="ids[]" value="{{ $cat->id }}"></td>
                                     <td>{{ ($categories->currentPage() - 1) * $categories->perPage() + $loop->iteration }}
                                     </td>
                                     <td>{{ $cat->name }}</td>
@@ -78,7 +88,6 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <!-- Perbaikan: Menggunakan admin.categories.destroy -->
                                         <form method="POST" action="{{ route('admin.categories.destroy', $cat) }}"
                                             class="d-inline" onsubmit="return confirm('Hapus kategori ini?')">
                                             @csrf
@@ -91,19 +100,20 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center py-4 text-muted">Belum ada kategori.</td>
+                                    <td colspan="6" class="text-center py-4 text-muted">Belum ada kategori.</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
-                {{-- Pagination --}}
-                <div class="card-footer clearfix">
-                    <div class="float-right">
-                        {{ $categories->links() }}
-                    </div>
+                </form>
+            </div>
+            <div class="card-footer clearfix">
+                <div class="float-right">
+                    {{ $categories->links() }}
                 </div>
             </div>
+        </div>
         </div>
     </div>
 @endsection

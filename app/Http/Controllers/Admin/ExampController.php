@@ -68,6 +68,15 @@ class ExampController extends Controller
         return redirect()->route('admin.examp.index')->with('success', 'Soal berhasil dihapus');
     }
 
+    public function bulkDelete(Request $request) {
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'Tidak ada data yang dipilih.');
+        }
+        Question::whereIn('id', $ids)->delete();
+        return redirect()->back()->with('success', count($ids) . ' soal berhasil dihapus.');
+    }
+
     // Lihat Hasil Ujian Pendaftar
     public function results() {
 

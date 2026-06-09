@@ -42,6 +42,16 @@ class ContactController extends Controller
         return redirect()->route('admin.contacts.index')->with('success', 'Pesan berhasil dihapus.');
     }
 
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'Tidak ada data yang dipilih.');
+        }
+        Contact::whereIn('id', $ids)->delete();
+        return redirect()->back()->with('success', count($ids) . ' pesan berhasil dihapus.');
+    }
+
     public function markAllRead()
     {
         Contact::unread()->update(['is_read' => true]);

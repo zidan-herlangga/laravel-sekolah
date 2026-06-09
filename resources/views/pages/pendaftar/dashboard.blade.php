@@ -62,7 +62,7 @@
                         @endif
                     </div>
 
-                    @if ($examResult && $examResult->end_time)
+                    {{-- @if ($examResult && $examResult->end_time)
                     <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm transition-all hover:shadow-md">
                         <h3 class="font-display font-bold text-dark-900 mb-6 flex items-center gap-2">
                             <i class="fa-solid fa-scroll text-primary-500"></i>
@@ -80,45 +80,56 @@
                             </div>
                         </div>
                     </div>
-                    @endif
+                    @endif --}}
 
-                    @if ($registration && $registration->status === 'lulus' && $registration->payment_amount && $registration->payment_amount > 0)
-                    <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm transition-all hover:shadow-md">
-                        <h3 class="font-display font-bold text-dark-900 mb-6 flex items-center gap-2">
-                            <i class="fa-solid fa-credit-card text-primary-500"></i>
-                            Pembayaran Daftar Ulang
-                        </h3>
-                        <div class="flex items-center justify-between p-6 rounded-2xl {{ $registration->payment_status === 'paid' ? 'bg-emerald-50 border border-emerald-100' : 'bg-amber-50 border border-amber-100' }}">
-                            <div>
-                                <p class="text-xs font-bold uppercase tracking-wider mb-1 {{ $registration->payment_status === 'paid' ? 'text-emerald-600' : 'text-amber-600' }}">Status Pembayaran</p>
-                                <p class="text-xl font-display font-black {{ $registration->payment_status === 'paid' ? 'text-emerald-900' : 'text-amber-900' }}">
-                                    {{ $registration->payment_status_label }}
-                                </p>
-                                @if ($registration->payment_amount)
-                                <p class="text-sm text-dark-500 mt-1">Nominal: {{ $registration->payment_amount_formatted }}</p>
+                    @if (
+                        $registration &&
+                            $registration->status === 'lulus' &&
+                            $registration->payment_amount &&
+                            $registration->payment_amount > 0)
+                        <div
+                            class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm transition-all hover:shadow-md">
+                            <h3 class="font-display font-bold text-dark-900 mb-6 flex items-center gap-2">
+                                <i class="fa-solid fa-credit-card text-primary-500"></i>
+                                Pembayaran Daftar Ulang
+                            </h3>
+                            <div
+                                class="flex items-center justify-between p-6 rounded-2xl {{ $registration->payment_status === 'paid' ? 'bg-emerald-50 border border-emerald-100' : 'bg-amber-50 border border-amber-100' }}">
+                                <div>
+                                    <p
+                                        class="text-xs font-bold uppercase tracking-wider mb-1 {{ $registration->payment_status === 'paid' ? 'text-emerald-600' : 'text-amber-600' }}">
+                                        Status Pembayaran</p>
+                                    <p
+                                        class="text-xl font-display font-black {{ $registration->payment_status === 'paid' ? 'text-emerald-900' : 'text-amber-900' }}">
+                                        {{ $registration->payment_status_label }}
+                                    </p>
+                                    @if ($registration->payment_amount)
+                                        <p class="text-sm text-dark-500 mt-1">Nominal:
+                                            {{ $registration->payment_amount_formatted }}</p>
+                                    @endif
+                                </div>
+                                @if ($registration->payment_status !== 'paid')
+                                    <a href="{{ route('payment.index') }}"
+                                        class="px-5 py-2.5 bg-primary-500 text-white font-bold rounded-xl hover:bg-primary-600 transition-all text-sm">
+                                        Bayar Sekarang
+                                    </a>
+                                @else
+                                    <div class="text-right flex flex-col items-end gap-1">
+                                        <i class="fa-solid fa-check-circle text-3xl text-emerald-500"></i>
+                                        @if ($registration->paid_at)
+                                            <p class="text-xs text-emerald-600">
+                                                {{ $registration->paid_at->format('d/m/Y') }}</p>
+                                        @endif
+                                        @if ($payment)
+                                            <a href="{{ route('payment.invoice') }}"
+                                                class="text-xs text-primary-600 hover:text-primary-700 font-semibold underline">
+                                                <i class="fa-solid fa-file-invoice mr-1"></i>Download Invoice
+                                            </a>
+                                        @endif
+                                    </div>
                                 @endif
                             </div>
-                            @if ($registration->payment_status !== 'paid')
-                            <a href="{{ route('payment.index') }}"
-                                class="px-5 py-2.5 bg-primary-500 text-white font-bold rounded-xl hover:bg-primary-600 transition-all text-sm">
-                                Bayar Sekarang
-                            </a>
-                            @else
-                            <div class="text-right flex flex-col items-end gap-1">
-                                <i class="fa-solid fa-check-circle text-3xl text-emerald-500"></i>
-                                @if ($registration->paid_at)
-                                <p class="text-xs text-emerald-600">{{ $registration->paid_at->format('d/m/Y') }}</p>
-                                @endif
-                                @if ($payment)
-                                <a href="{{ route('payment.invoice') }}"
-                                    class="text-xs text-primary-600 hover:text-primary-700 font-semibold underline">
-                                    <i class="fa-solid fa-file-invoice mr-1"></i>Download Invoice
-                                </a>
-                                @endif
-                            </div>
-                            @endif
                         </div>
-                    </div>
                     @endif
 
                     <!-- Menu Grid -->

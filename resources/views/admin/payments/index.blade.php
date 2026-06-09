@@ -47,7 +47,11 @@
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <h3 class="card-title font-weight-bold"><i class="fas fa-credit-card mr-2 text-primary"></i>Daftar Pembayaran</h3>
-                <div class="d-flex gap-2">
+                <div class="d-flex gap-2 flex-wrap">
+                    <button type="submit" form="bulk-delete-form" id="bulk-delete-btn" class="btn btn-danger btn-sm"
+                        style="border-radius:4px; display:none;" onclick="return confirm('Yakin hapus data yang dipilih?')">
+                        <i class="fas fa-trash mr-1"></i> Hapus Terpilih
+                    </button>
                     <form method="POST" action="{{ route('admin.payments.export') }}">
                         @csrf
                         <button type="submit" class="btn btn-success btn-sm" style="border-radius:4px">
@@ -85,11 +89,14 @@
                 </div>
             </form>
 
+            <form id="bulk-delete-form" method="POST" action="{{ route('admin.payments.bulk-delete') }}">
+                @csrf
             <div class="table-responsive">
                 <table class="table table-bordered table-hover table-sm">
                     <thead class="thead-light">
                         <tr>
-                            <th style="width: 50px;">#</th>
+                            <th style="width: 40px;"><input type="checkbox" id="select-all"></th>
+                            <th style="width: 40px;">#</th>
                             <th>Pendaftar</th>
                             <th>No. Pendaftaran</th>
                             <th>NISN</th>
@@ -103,6 +110,7 @@
                     <tbody>
                         @forelse($payments as $payment)
                             <tr>
+                                <td><input type="checkbox" class="row-checkbox" name="ids[]" value="{{ $payment->id }}"></td>
                                 <td>{{ $payments->firstItem() + $loop->index }}</td>
                                 <td class="font-weight-semibold">
                                     {{ Str::limit($payment->registration->name ?? '-', 30) }}
@@ -129,16 +137,24 @@
                                         class="btn btn-info btn-xs btn-flat" title="Detail">
                                         <i class="fas fa-eye"></i>
                                     </a>
+                                    <form method="POST" action="{{ route('admin.payments.destroy', $payment->id) }}"
+                                        class="d-inline" onsubmit="return confirm('Yakin hapus data pembayaran ini?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-xs btn-flat" title="Hapus">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="text-center py-4 text-muted">Belum ada data pembayaran.</td>
+                                <td colspan="10" class="text-center py-4 text-muted">Belum ada data pembayaran.</td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
+            </form>
             <div class="mt-3">{{ $payments->links() }}</div>
         </div>
     </div>

@@ -429,6 +429,36 @@
                 }
             }
         });
+
+        // Bulk Delete: Select All & Toggle Button
+        document.addEventListener('change', function(e) {
+            if (e.target && e.target.id === 'select-all') {
+                var checked = e.target.checked;
+                document.querySelectorAll('.row-checkbox').forEach(function(cb) {
+                    cb.checked = checked;
+                });
+                toggleBulkDeleteBtn();
+            }
+            if (e.target && e.target.classList.contains('row-checkbox')) {
+                toggleBulkDeleteBtn();
+            }
+        });
+
+        function toggleBulkDeleteBtn() {
+            var checked = document.querySelectorAll('.row-checkbox:checked');
+            var btn = document.getElementById('bulk-delete-btn');
+            if (btn) {
+                btn.style.display = checked.length > 0 ? 'inline-block' : 'none';
+            }
+        }
+
+        document.addEventListener('submit', function(e) {
+            if (e.target && e.target.classList.contains('form-bulk-delete')) {
+                if (!confirm('Yakin hapus data yang dipilih?')) {
+                    e.preventDefault();
+                }
+            }
+        });
     </script>
 
     @stack('scripts')

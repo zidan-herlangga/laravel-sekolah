@@ -42,4 +42,20 @@ class CategoryController extends Controller
         $category->delete();
         return redirect()->back()->with('success', 'Kategori berhasil dihapus.');
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'Tidak ada data yang dipilih.');
+        }
+        $categories = Category::withCount('posts')->whereIn('id', $ids)->get();
+        foreach ($categories as $category) {
+            if ($category->posts_count > 0) {
+                return redirect()->back()->with('error', "Kategori '{$category->name}' masih memiliki berita dan tidak bisa dihapus.");
+            }
+            $category->delete();
+        }
+        return redirect()->back()->with('success', count($ids) . ' kategori berhasil dihapus.');
+    }
 }

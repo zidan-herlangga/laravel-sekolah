@@ -84,4 +84,20 @@ class TeacherController extends Controller
 
         return redirect()->route('admin.teachers.index')->with('success', 'Data berhasil dihapus.');
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (empty($ids)) {
+            return redirect()->back()->with('error', 'Tidak ada data yang dipilih.');
+        }
+        $teachers = Teacher::whereIn('id', $ids)->get();
+        foreach ($teachers as $teacher) {
+            if ($teacher->photo) {
+                $this->fileUpload->delete($teacher->photo);
+            }
+            $teacher->delete();
+        }
+        return redirect()->back()->with('success', count($ids) . ' data berhasil dihapus.');
+    }
 }

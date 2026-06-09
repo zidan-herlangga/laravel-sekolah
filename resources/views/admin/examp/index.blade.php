@@ -8,6 +8,10 @@
                     <h1 class="m-0 font-weight-bold">Bank Soal CBT</h1>
                 </div>
                 <div class="col-sm-6 text-right">
+                    <button type="submit" form="bulk-delete-form" id="bulk-delete-btn" class="btn btn-danger btn-sm shadow-sm"
+                        style="display:none;" onclick="return confirm('Yakin hapus soal yang dipilih?')">
+                        <i class="fas fa-trash mr-1"></i> Hapus Terpilih
+                    </button>
                     <a href="{{ route('admin.examp.create') }}" class="btn btn-primary shadow-sm">
                         <i class="fas fa-plus-circle mr-1"></i> Tambah Soal Baru
                     </a>
@@ -20,9 +24,12 @@
         <div class="container-fluid">
             <div class="card card-outline card-primary shadow-sm">
                 <div class="card-body table-responsive p-0">
+                    <form id="bulk-delete-form" method="POST" action="{{ route('admin.examp.bulk-delete') }}">
+                        @csrf
                     <table class="table table-hover text-nowrap">
                         <thead class="bg-light">
                             <tr>
+                                <th style="width: 40px"><input type="checkbox" id="select-all"></th>
                                 <th style="width: 50px">No</th>
                                 <th>Pertanyaan</th>
                                 <th class="text-center">Kunci</th>
@@ -33,6 +40,7 @@
                         <tbody>
                             @forelse($questions as $q)
                                 <tr>
+                                    <td><input type="checkbox" class="row-checkbox" name="ids[]" value="{{ $q->id }}"></td>
                                     <td>{{ ($questions->currentPage() - 1) * $questions->perPage() + $loop->iteration }}
                                     </td>
                                     <td>
@@ -61,7 +69,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center py-5 text-muted">
+                                    <td colspan="6" class="text-center py-5 text-muted">
                                         <i class="fas fa-folder-open fa-3x mb-3 d-block"></i>
                                         Belum ada data soal yang tersedia.
                                     </td>
@@ -69,6 +77,7 @@
                             @endforelse
                         </tbody>
                     </table>
+                </form>
                 </div>
                 <div class="card-footer bg-white">
                     <div class="float-right">

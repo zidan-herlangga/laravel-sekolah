@@ -29,7 +29,7 @@ class HomeController extends Controller
     {
         $user = auth()->user();
         $registration = \App\Models\Registration::where('user_id', $user->id)->first();
-        $examResult = \App\Models\ExamResult::where('user_id', $user->id)->first();
+
 
         $maxScore = \App\Models\Question::sum('points');
 
@@ -41,7 +41,12 @@ class HomeController extends Controller
                 ->first();
         }
 
-        return view('pages.pendaftar.dashboard', compact('user', 'registration', 'examResult', 'maxScore', 'payment'));
+        return view('pages.pendaftar.dashboard', compact(
+            'user', 
+            'registration', 
+            
+            'maxScore', 
+            'payment'));
     }
 
     public function profile()

@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('page_title', 'Detail Pembayaran')
-@section('breadcrumb', ' > ' . '<a href="' . route('admin.payments.index') . '">Pembayaran</a> > Detail')
+@section('breadcrumb', ' > ' . ' Pembayaran' . ' > ' . 'Detail')
 
 @section('content')
     <div class="card">
