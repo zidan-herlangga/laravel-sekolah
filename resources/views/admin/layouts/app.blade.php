@@ -256,6 +256,14 @@
                                 </a>
                             </li>
 
+                            <li class="nav-item">
+                                <a href="{{ route('admin.payments.index') }}"
+                                    class="nav-link {{ request()->routeIs('admin.payments.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-credit-card"></i>
+                                    <p>Data Pembayaran</p>
+                                </a>
+                            </li>
+
                             <li class="nav-item {{ request()->routeIs('admin.examp.*') ? 'menu-open' : '' }}">
                                 <a href="#"
                                     class="nav-link {{ request()->routeIs('admin.examp.*') ? 'active' : '' }}">

@@ -62,6 +62,65 @@
                         @endif
                     </div>
 
+                    @if ($examResult && $examResult->end_time)
+                    <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm transition-all hover:shadow-md">
+                        <h3 class="font-display font-bold text-dark-900 mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-scroll text-primary-500"></i>
+                            Hasil Ujian
+                        </h3>
+                        <div class="flex items-center justify-between p-6 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl text-white">
+                            <div>
+                                <p class="text-primary-100 text-xs font-bold uppercase tracking-wider mb-1">Nilai Akhir</p>
+                                <p class="text-4xl font-display font-black">{{ $examResult->score }}</p>
+                                <p class="text-primary-200 text-xs mt-1">dari maksimal {{ $maxScore }}</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-5xl font-black opacity-30">{{ round(($examResult->score / max($maxScore, 1)) * 100) }}%</div>
+                                <p class="text-primary-200 text-xs mt-1">Selesai: {{ $examResult->end_time->format('d M Y, H:i') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
+                    @if ($registration && $registration->status === 'lulus' && $registration->payment_amount && $registration->payment_amount > 0)
+                    <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm transition-all hover:shadow-md">
+                        <h3 class="font-display font-bold text-dark-900 mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-credit-card text-primary-500"></i>
+                            Pembayaran Daftar Ulang
+                        </h3>
+                        <div class="flex items-center justify-between p-6 rounded-2xl {{ $registration->payment_status === 'paid' ? 'bg-emerald-50 border border-emerald-100' : 'bg-amber-50 border border-amber-100' }}">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-wider mb-1 {{ $registration->payment_status === 'paid' ? 'text-emerald-600' : 'text-amber-600' }}">Status Pembayaran</p>
+                                <p class="text-xl font-display font-black {{ $registration->payment_status === 'paid' ? 'text-emerald-900' : 'text-amber-900' }}">
+                                    {{ $registration->payment_status_label }}
+                                </p>
+                                @if ($registration->payment_amount)
+                                <p class="text-sm text-dark-500 mt-1">Nominal: {{ $registration->payment_amount_formatted }}</p>
+                                @endif
+                            </div>
+                            @if ($registration->payment_status !== 'paid')
+                            <a href="{{ route('payment.index') }}"
+                                class="px-5 py-2.5 bg-primary-500 text-white font-bold rounded-xl hover:bg-primary-600 transition-all text-sm">
+                                Bayar Sekarang
+                            </a>
+                            @else
+                            <div class="text-right flex flex-col items-end gap-1">
+                                <i class="fa-solid fa-check-circle text-3xl text-emerald-500"></i>
+                                @if ($registration->paid_at)
+                                <p class="text-xs text-emerald-600">{{ $registration->paid_at->format('d/m/Y') }}</p>
+                                @endif
+                                @if ($payment)
+                                <a href="{{ route('payment.invoice') }}"
+                                    class="text-xs text-primary-600 hover:text-primary-700 font-semibold underline">
+                                    <i class="fa-solid fa-file-invoice mr-1"></i>Download Invoice
+                                </a>
+                                @endif
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                    @endif
+
                     <!-- Menu Grid -->
                     <div class="grid md:grid-cols-2 gap-6">
                         <!-- Cek Kelulusan -->
@@ -100,15 +159,15 @@
                                 lainnya.</p>
                         </a>
 
-                        <!-- Dokumen -->
-                        <a href="#"
+                        <!-- Kartu Peserta -->
+                        <a href="{{ route('pendaftar.kartu') }}"
                             class="group bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:border-primary-500 transition-all card-hover">
                             <div
                                 class="w-12 h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-blue-500 group-hover:text-white transition-all">
-                                <i class="fa-solid fa-file-pdf text-xl"></i>
+                                <i class="fa-solid fa-id-card text-xl"></i>
                             </div>
                             <h4 class="font-display font-bold text-dark-900">Unduh Kartu</h4>
-                            <p class="text-xs text-dark-500 mt-2">Cetak kartu bukti pendaftaran dan kartu ujian seleksi.</p>
+                            <p class="text-xs text-dark-500 mt-2">Cetak kartu peserta ujian seleksi.</p>
                         </a>
                     </div>
                 </div>
@@ -138,19 +197,25 @@
                                 <div
                                     class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 text-[10px] font-bold">
                                     1</div>
-                                <p class="text-xs text-dark-600">Verifikasi berkas oleh panitia (1-3 hari kerja).</p>
+                                <p class="text-xs text-dark-600">Verifikasi berkas oleh panitia.</p>
                             </li>
                             <li class="flex gap-3">
                                 <div
-                                    class="w-6 h-6 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center flex-shrink-0 text-[10px] font-bold">
+                                    class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 text-[10px] font-bold">
                                     2</div>
-                                <p class="text-xs text-dark-400">Pelaksanaan ujian seleksi online sesuai jadwal.</p>
+                                <p class="text-xs text-dark-600">Ujian seleksi online (gratis, tanpa biaya).</p>
                             </li>
                             <li class="flex gap-3">
                                 <div
                                     class="w-6 h-6 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center flex-shrink-0 text-[10px] font-bold">
                                     3</div>
-                                <p class="text-xs text-dark-400">Pengumuman kelulusan melalui dashboard ini.</p>
+                                <p class="text-xs text-dark-400">Pengumuman kelulusan.</p>
+                            </li>
+                            <li class="flex gap-3">
+                                <div
+                                    class="w-6 h-6 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center flex-shrink-0 text-[10px] font-bold">
+                                    4</div>
+                                <p class="text-xs text-dark-400">Pembayaran daftar ulang (jika lulus).</p>
                             </li>
                         </ul>
                     </div>

@@ -152,16 +152,56 @@
                                     Terverifikasi</option>
                                 <option value="rejected" {{ $registration->status === 'rejected' ? 'selected' : '' }}>
                                     Ditolak</option>
+                                <option value="lulus" {{ $registration->status === 'lulus' ? 'selected' : '' }}>
+                                    Lulus</option>
+                                <option value="tidak_lulus" {{ $registration->status === 'tidak_lulus' ? 'selected' : '' }}>
+                                    Tidak Lulus</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label class="font-weight-semibold">Catatan (Untuk Siswa)</label>
-                            {{-- Kolom notes ini akan berisi jadwal tes jika menggunakan tombol Verifikasi --}}
                             <textarea name="notes" class="form-control" rows="3" placeholder="Catatan verifikasi / Jadwal Tes">{{ old('notes', $registration->notes) }}</textarea>
                         </div>
                         <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-save mr-2"></i>Simpan
                             Status</button>
                     </form>
+                </div>
+            </div>
+
+            <!-- Biaya Pendaftaran Card -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3 class="card-title font-weight-bold"><i class="fas fa-money-bill mr-2 text-success"></i>Biaya Pendaftaran</h3>
+                </div>
+                <div class="card-body">
+                    @if ($registration->payment_status === 'paid')
+                        <div class="text-center py-3">
+                            <i class="fas fa-check-circle text-4xl text-emerald-500 mb-2"></i>
+                            <h4 class="font-weight-bold text-emerald-600">Lunas</h4>
+                            <small class="text-muted">Dibayar: {{ $registration->paid_at?->format('d F Y, H:i') }}</small>
+                        </div>
+                    @else
+                        <form method="POST" action="{{ route('admin.registrations.update-payment', $registration) }}">
+                            @csrf
+                            <div class="form-group">
+                                <label class="font-weight-semibold">Nominal Biaya Daftar Ulang (Rp)</label>
+                                <input type="number" name="payment_amount" class="form-control"
+                                    value="{{ old('payment_amount', $registration->payment_amount ?? '') }}"
+                                    min="0" step="5000" placeholder="Contoh: 150000">
+                                <small class="text-muted">Kosongkan jika gratis. Pembayaran daftar ulang hanya muncul setelah status siswa "Lulus".</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-semibold">Status Pembayaran</label>
+                                <select name="payment_status" class="form-control">
+                                    <option value="unpaid" {{ $registration->payment_status === 'unpaid' ? 'selected' : '' }}>Belum Bayar</option>
+                                    <option value="paid" {{ $registration->payment_status === 'paid' ? 'selected' : '' }}>Lunas (Manual)</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-block">
+                                <i class="fas fa-save mr-2"></i>Simpan Biaya
+                            </button>
+                        </form>
+                    @endif
                 </div>
             </div>
         </div>

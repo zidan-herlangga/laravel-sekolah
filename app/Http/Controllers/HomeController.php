@@ -28,10 +28,20 @@ class HomeController extends Controller
     public function dashboard()
     {
         $user = auth()->user();
-        // Ambil data pendaftaran jika user sudah pernah mengisi form SPMB
         $registration = \App\Models\Registration::where('user_id', $user->id)->first();
+        $examResult = \App\Models\ExamResult::where('user_id', $user->id)->first();
 
-        return view('pages.pendaftar.dashboard', compact('user', 'registration'));
+        $maxScore = \App\Models\Question::sum('points');
+
+        $payment = null;
+        if ($registration) {
+            $payment = \App\Models\Payment::where('registration_id', $registration->id)
+                ->where('status', 'success')
+                ->latest()
+                ->first();
+        }
+
+        return view('pages.pendaftar.dashboard', compact('user', 'registration', 'examResult', 'maxScore', 'payment'));
     }
 
     public function profile()
@@ -74,6 +84,10 @@ class HomeController extends Controller
 
     public function spmb()
     {
+        if ($this->settingService->get('spmb_disabled') === '1') {
+            return view('pages.pendaftar.spmb-closed');
+        }
+
         $settings = $this->settingService;
 
         return view('pages.pendaftar.spmb', compact('settings'));

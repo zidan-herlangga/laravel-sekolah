@@ -97,6 +97,7 @@ Route::prefix('spmb')->group(function () {
         Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
         Route::get('/profil', [HomeController::class, 'profile'])->name('pendaftar.profile');
         Route::get('/download-bukti', [PublicRegistrationController::class, 'downloadBukti'])->name('pendaftar.download');
+        Route::get('/download-kartu', [PublicRegistrationController::class, 'downloadKartu'])->name('pendaftar.kartu');
 
         // Cek Status Pendaftaran
         Route::get('/cek-status', [CheckStatusController::class, 'show'])->name('pendaftar.cek-status');
@@ -108,17 +109,24 @@ Route::prefix('spmb')->group(function () {
         Route::get('/ujian/start', [UjianController::class, 'start'])->name('pendaftar.ujian.start');
         Route::post('/ujian/submit', [UjianController::class, 'submit'])->name('pendaftar.ujian.submit');
 
+        // Payment
+        Route::get('/payment', [App\Http\Controllers\PaymentController::class, 'index'])->name('payment.index');
+        Route::post('/payment/create', [App\Http\Controllers\PaymentController::class, 'create'])->name('payment.create');
+        Route::get('/payment/success', [App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
+        Route::get('/payment/unfinish', [App\Http\Controllers\PaymentController::class, 'unfinish'])->name('payment.unfinish');
+        Route::get('/payment/error', [App\Http\Controllers\PaymentController::class, 'error'])->name('payment.error');
+        Route::get('/payment/invoice', [App\Http\Controllers\PaymentController::class, 'downloadInvoice'])->name('payment.invoice');
+
         // Form Pendaftaran
-        Route::get('/', function () {
-            if (app(SettingService::class)->get('spmb_disabled') === '1') {
-                return view('pages.pendaftar.spmb-closed');
-            }
-            return app(HomeController::class)->spmb();
-        })->name('spmb');
+        Route::get('/', [HomeController::class, 'spmb'])->name('spmb');
 
         Route::post('/store', [PublicRegistrationController::class, 'store'])->name('pendaftar.spmb.store');
     });
 });
+
+// Midtrans Callback (no auth)
+Route::post('/payment/callback', [App\Http\Controllers\PaymentController::class, 'callback'])->name('payment.callback');
+    
 
 /*
 |--------------------------------------------------------------------------
@@ -150,6 +158,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::middleware([CheckRole::class . ':admin'])->group(function () {
                 Route::resource('teachers', TeacherController::class);
                 Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
+                Route::post('contacts/mark-all-read', [ContactController::class, 'markAllRead'])->name('contacts.mark-all-read');
                 Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
                 Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
             });
@@ -160,8 +169,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
             
             Route::resource('registrations', RegistrationController::class);
             Route::post('registrations/verify/{id}', [RegistrationController::class, 'verifyDocuments'])->name('registrations.verify-documents');
+            Route::post('registrations/{registration}/update-payment', [RegistrationController::class, 'updatePayment'])->name('registrations.update-payment');
             Route::post('registrations/export/', [RegistrationController::class, 'export'])->name('registrations.export');
             Route::post('registrations/export-pdf/', [RegistrationController::class, 'exportPdf'])->name('registrations.export-pdf');
+
+            // Data Pembayaran
+            Route::prefix('payments')->name('payments.')->group(function () {
+                Route::get('/', [\App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('index');
+                Route::post('export', [\App\Http\Controllers\Admin\PaymentController::class, 'exportCsv'])->name('export');
+                Route::post('export-pdf', [\App\Http\Controllers\Admin\PaymentController::class, 'exportPdf'])->name('export-pdf');
+                Route::get('/{id}', [\App\Http\Controllers\Admin\PaymentController::class, 'show'])->name('show');
+            });
 
             // Fitur CBT (Examp)
             Route::prefix('examp')->name('examp.')->group(function() {

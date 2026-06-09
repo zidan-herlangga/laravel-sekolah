@@ -36,6 +36,9 @@ class SettingController extends Controller
             'headmaster_welcome' => 'nullable|string|max:5000',
 
 
+            'spmb_exam_date' => 'nullable|string|max:20',
+            'spmb_exam_time' => 'nullable|string|max:20',
+            'spmb_exam_location' => 'nullable|string|max:255',
             'spmb_disabled' => 'nullable',
             'google_site_verification' => 'nullable|string|max:255',
             'msvalidate.01' => 'nullable|string|max:255',
@@ -45,7 +48,8 @@ class SettingController extends Controller
             'school_name', 'school_short_name', 'school_motto',
             'school_address', 'school_phone', 'school_email',
             'school_facebook', 'school_instagram', 'school_youtube', 'school_tiktok',
-            'spmb_info', 'headmaster_welcome', 'spmb_disabled', 'google_site_verification', 'msvalidate.01'
+            'spmb_info', 'spmb_exam_date', 'spmb_exam_time', 'spmb_exam_location',
+            'headmaster_welcome', 'spmb_disabled', 'google_site_verification', 'msvalidate.01'
         ];
 
         foreach ($fields as $field) {

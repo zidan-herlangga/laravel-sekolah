@@ -17,7 +17,6 @@ class SecurityHeaders
         $response->headers->set('X-XSS-Protection', '1; mode=block');
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
 
-        // Saya menambahkan wildcard *.disqus.com dan *.disquscdn.com agar mencakup semua subdomain
         $cdn_domains = implode(' ', [
             'https://cdn.tailwindcss.com',
             'https://cdn.jsdelivr.net',
@@ -28,16 +27,23 @@ class SecurityHeaders
             'https://disqusads.com',
         ]);
 
+        $midtrans = implode(' ', [
+            'https://app.sandbox.midtrans.com',
+            'https://app.midtrans.com',
+            'https://api.sandbox.midtrans.com',
+            'https://api.midtrans.com',
+        ]);
+
         $csp = [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' data: {$cdn_domains}",
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com {$cdn_domains}",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' data: {$cdn_domains} {$midtrans}",
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com {$cdn_domains} {$midtrans}",
             "font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com",
-            "img-src 'self' data: blob: https:", // Lebih aman daripada '*'
-            "frame-src 'self' https://www.google.com https://www.google.co.id https://disqus.com https://disqusads.com",
-            "connect-src 'self' {$cdn_domains} https://links.services.disqus.com", // Tambahan untuk Disqus
+            "img-src 'self' data: blob: https: {$midtrans}",
+            "frame-src 'self' https://www.google.com https://www.google.co.id https://disqus.com https://disqusads.com {$midtrans}",
+            "connect-src 'self' {$cdn_domains} {$midtrans} https://links.services.disqus.com",
             "worker-src 'self' blob:",
-            "upgrade-insecure-requests", // Otomatis upgrade HTTP ke HTTPS
+            "upgrade-insecure-requests",
         ];
 
         $response->headers->set('Content-Security-Policy', implode('; ', $csp));

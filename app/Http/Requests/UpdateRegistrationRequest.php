@@ -14,7 +14,7 @@ class UpdateRegistrationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => 'required|in:pending,verified,rejected',
+            'status' => 'required|in:pending,verified,rejected,lulus,tidak_lulus',
             'notes' => 'nullable|string|max:1000',
         ];
     }

@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateRegistrationRequest;
 use App\Models\Registration;
-use App\Models\SiteSetting; // Tambahkan model ini
-use Barryvdh\DomPDF\Facade\Pdf; // Tambahkan alias ini untuk PDF (Pastikan sudah install)
+use App\Services\SettingService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class RegistrationController extends Controller
@@ -115,7 +115,7 @@ class RegistrationController extends Controller
         $registrations = Registration::latest()->get();
 
         // Ambil setting nama sekolah (opsional, untuk judul PDF)
-        $schoolName = SiteSetting::where('key', 'school_name')->first()?->value ?? 'Sekolah';
+        $schoolName = app(SettingService::class)->get('school_name', 'Sekolah');
 
         // Load view PDF dan kirim datanya
         // Pastikan Anda sudah membuat view 'admin.registrations.pdf'
@@ -135,12 +135,12 @@ class RegistrationController extends Controller
         ]);
 
         // Ambil Data Jadwal dari Settings
-        $examDate = \App\Models\SiteSetting::where('key', 'spmb_exam_date')->first()?->value ?? '-';
-        $examLocation = \App\Models\SiteSetting::where('key', 'spmb_exam_location')->first()?->value ?? '-';
-        $examTime = \App\Models\SiteSetting::where('key', 'spmb_exam_time')->first()?->value ?? '-';
+        $examDate = app(SettingService::class)->get('spmb_exam_date', '-');
+        $examLocation = app(SettingService::class)->get('spmb_exam_location', '-');
+        $examTime = app(SettingService::class)->get('spmb_exam_time', '-');
 
         // Buat Pesan Sukses
-        $message = "Selamat, data Anda terverifikasi lengkap! Silahkan mengikuti tes offline.\n\n";
+        $message = "Selamat, data Anda terverifikasi lengkap! Silahkan mengikuti ujian seleksi online (gratis).\n\n";
         $message .= "📅 Tanggal: $examDate\n";
         $message .= "⏰ Waktu: $examTime\n";
         $message .= "📍 Lokasi: $examLocation";
@@ -149,5 +149,21 @@ class RegistrationController extends Controller
         $registration->update(['notes' => $message]);
 
         return redirect()->back()->with('success', 'Data siswa diverifikasi dan jadwal tes diberikan.');
-    }  
+    }
+
+    public function updatePayment(Request $request, Registration $registration)
+    {
+        $validated = $request->validate([
+            'payment_amount' => 'nullable|numeric|min:0',
+            'payment_status' => 'required|in:unpaid,paid',
+        ]);
+
+        $registration->update([
+            'payment_amount' => $validated['payment_amount'] ?? null,
+            'payment_status' => $validated['payment_status'],
+            'paid_at' => $validated['payment_status'] === 'paid' ? now() : null,
+        ]);
+
+        return redirect()->back()->with('success', 'Biaya pendaftaran berhasil diperbarui.');
+    }
 }

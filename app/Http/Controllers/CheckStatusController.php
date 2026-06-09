@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Registration;
+use App\Services\SettingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -47,7 +48,7 @@ class CheckStatusController extends Controller
       $reg = \App\Models\Registration::where('nisn', $nisn)->firstOrFail();
 
       // 3. Ambil setting nama sekolah
-      $schoolName = \App\Models\SiteSetting::where('key', 'school_name')->first()?->value ?? 'Sekolah';
+      $schoolName = app(SettingService::class)->get('school_name', 'Sekolah');
 
       // 4. Load PDF
       $pdf = \PDF::loadView('pdf.bukti-pendaftaran', compact('reg', 'schoolName'));

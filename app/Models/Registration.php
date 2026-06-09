@@ -29,13 +29,18 @@ class Registration extends Model
         'kartu_keluarga', 
         'ijazah', 
         'akte_kelahiran', 
-        'documents_verified'
+        'documents_verified',
+        'payment_amount',
+        'payment_status',
+        'paid_at',
     ];
 
     protected $casts = [
         'birth_date' => 'date',
         'status' => 'string',
         'documents_verified' => 'boolean',
+        'payment_amount' => 'decimal:2',
+        'paid_at' => 'datetime',
     ];
 
     // =============================
@@ -48,6 +53,11 @@ class Registration extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function payment()
+    {
+        return $this->hasOne(\App\Models\Payment::class);
     }
 
     // =============================
@@ -120,5 +130,30 @@ class Registration extends Model
         return !empty($this->kartu_keluarga) 
             && !empty($this->ijazah) 
             && !empty($this->akte_kelahiran);
+    }
+
+    public function getPaymentStatusLabelAttribute(): string
+    {
+        return match ($this->payment_status) {
+            'paid' => 'Lunas',
+            'pending' => 'Menunggu Pembayaran',
+            'expired' => 'Kedaluwarsa',
+            default => 'Belum Bayar',
+        };
+    }
+
+    public function getPaymentStatusColorAttribute(): string
+    {
+        return match ($this->payment_status) {
+            'paid' => 'emerald',
+            'pending' => 'amber',
+            'expired' => 'red',
+            default => 'gray',
+        };
+    }
+
+    public function getPaymentAmountFormattedAttribute(): string
+    {
+        return $this->payment_amount ? 'Rp ' . number_format($this->payment_amount, 0, ',', '.') : '-';
     }
 }

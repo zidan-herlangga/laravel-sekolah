@@ -10,11 +10,17 @@ class Gallery extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'image',
         'title',
         'description',
         'order',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     protected function casts(): array
     {

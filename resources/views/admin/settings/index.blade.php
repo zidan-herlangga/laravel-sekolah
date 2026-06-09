@@ -132,6 +132,39 @@
                         <textarea name="spmb_info" class="form-control">{{ old('spmb_info', $settings['spmb_info'] ?? '') }}</textarea>
                     </div>
 
+                    <hr class="my-4">
+                    <h5 class="font-weight-bold mb-3">Jadwal Ujian Seleksi</h5>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Tanggal Ujian</label>
+                                <input type="date" name="spmb_exam_date"
+                                    value="{{ old('spmb_exam_date', $settings['spmb_exam_date'] ?? '') }}"
+                                    class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Waktu Ujian</label>
+                                <input type="time" name="spmb_exam_time"
+                                    value="{{ old('spmb_exam_time', $settings['spmb_exam_time'] ?? '') }}"
+                                    class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Lokasi Ujian</label>
+                                <input type="text" name="spmb_exam_location"
+                                    value="{{ old('spmb_exam_location', $settings['spmb_exam_location'] ?? '') }}"
+                                    class="form-control" placeholder="Contoh: Lab Komputer Sekolah">
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-muted small">Peserta hanya bisa memulai ujian setelah waktu yang ditentukan tiba.</p>
+
+                    <hr class="my-4">
+
                     <div class="form-check">
                         <input type="checkbox" name="spmb_disabled" value="1"
                             {{ ($settings['spmb_disabled'] ?? '') === '1' ? 'checked' : '' }}

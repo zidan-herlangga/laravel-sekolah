@@ -98,4 +98,20 @@ class PublicRegistrationController extends Controller
         // 5. Download file PDF-nya
         return $pdf->download('Bukti_Pendaftaran_' . $registration->registration_number . '.pdf');
     }
+
+    public function downloadKartu()
+    {
+        $registration = Registration::where('user_id', Auth::id())->first();
+
+        if (!$registration) {
+            return redirect()->route('dashboard')->with('error', 'Data pendaftaran tidak ditemukan.');
+        }
+
+        $settings = app(SettingService::class);
+
+        $pdf = Pdf::loadView('pages.pendaftar.pdf.kartu-peserta', compact('registration', 'settings'))
+                  ->setPaper([0, 0, 520, 720], 'portrait');
+
+        return $pdf->download('Kartu_Peserta_' . $registration->registration_number . '.pdf');
+    }
 }

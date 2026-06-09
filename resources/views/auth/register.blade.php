@@ -31,15 +31,28 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-semibold text-dark-700 mb-1.5">Sandi</label>
-                        <input type="password" name="password" required
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all text-sm">
+                        <div class="relative">
+                            <input type="password" name="password" id="password" required
+                                class="w-full px-4 py-3 pr-10 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all text-sm">
+                            <button type="button" onclick="togglePassword('password', this)"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-dark-700 mb-1.5">Konfirmasi</label>
-                        <input type="password" name="password_confirmation" required
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all text-sm">
+                        <div class="relative">
+                            <input type="password" name="password_confirmation" id="password_confirmation" required
+                                class="w-full px-4 py-3 pr-10 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all text-sm">
+                            <button type="button" onclick="togglePassword('password_confirmation', this)"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
+                <p class="text-[11px] text-dark-400 mt-1">Minimal 8 karakter.</p>
                 <div class="p-4 bg-blue-50 rounded-xl border border-blue-100 flex gap-3 mt-4">
                     <i class="fa-solid fa-envelope-circle-check text-blue-500 mt-1"></i>
                     <p class="text-[11px] text-blue-700 leading-relaxed">Sistem akan mengirimkan link verifikasi ke email
@@ -52,3 +65,19 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+<script>
+    function togglePassword(id, btn) {
+        const input = document.getElementById(id);
+        const icon = btn.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    }
+</script>
+@endpush
