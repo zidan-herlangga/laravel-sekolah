@@ -6,12 +6,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckRole
 {
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        $userRole = $request->user()->role;
-        $allowedRoles = array_map('trim', explode(',', $role));
-        
-        if (!in_array($userRole, $allowedRoles)) {
+        if (!in_array($request->user()->role, $roles)) {
             abort(403);
         }
         return $next($request);

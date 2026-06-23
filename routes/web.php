@@ -13,6 +13,7 @@ use App\Http\Controllers\CheckStatusController;
 use App\Http\Controllers\UjianController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CommentController;
 
 // --- Controller Admin ---
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
@@ -26,6 +27,7 @@ use App\Http\Controllers\Admin\RegistrationController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ExampController;
+use App\Http\Controllers\Admin\CommentController as AdminCommentController;
 
 // --- Middleware ---
 use App\Http\Middleware\AdminMiddleware;
@@ -45,6 +47,10 @@ Route::get('/berita', [HomeController::class, 'berita'])->name('berita');
 Route::get('/berita/{slug}', [HomeController::class, 'beritaDetail'])->name('berita.detail');
 Route::get('/kontak', [HomeController::class, 'contact'])->name('contact');
 Route::post('/kontak', [PublicContactController::class, 'store'])->name('contact.store');
+
+// Comments
+Route::get('/berita/{post:slug}/comments', [CommentController::class, 'index'])->name('comments.index');
+Route::post('/berita/{post:slug}/comments', [CommentController::class, 'store'])->name('comments.store');
 
 /*
 |--------------------------------------------------------------------------
@@ -84,6 +90,8 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -148,7 +156,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         // 1. Grup Konten (Admin & Penulis)
-            Route::middleware([CheckRole::class . ':admin,penulis'])->group(function () {
+            Route::middleware(['check.role:admin,penulis'])->group(function () {
                 Route::resource('posts', PostController::class);
                 Route::post('posts/bulk-delete', [PostController::class, 'bulkDelete'])->name('posts.bulk-delete');
                 Route::resource('galleries', GalleryController::class);
@@ -158,17 +166,28 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::resource('categories', CategoryController::class)->except(['show', 'edit', 'update']);
                 Route::post('categories/bulk-delete', [CategoryController::class, 'bulkDelete'])->name('categories.bulk-delete');
 
+                // Komentar
+                Route::prefix('comments')->name('comments.')->group(function () {
+                    Route::get('/', [AdminCommentController::class, 'index'])->name('index');
+                    Route::patch('{comment}/approve', [AdminCommentController::class, 'approve'])->name('approve');
+                    Route::delete('{comment}', [AdminCommentController::class, 'destroy'])->name('destroy');
+                });
+
                 // 2. Grup Khusus Root Admin (Settings & Guru)
-                Route::middleware([CheckRole::class . ':admin'])->group(function () {
+                Route::middleware(['check.role:admin'])->group(function () {
                     Route::resource('teachers', TeacherController::class);
                     Route::post('teachers/bulk-delete', [TeacherController::class, 'bulkDelete'])->name('teachers.bulk-delete');
-                    Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
-                    Route::post('contacts/bulk-delete', [ContactController::class, 'bulkDelete'])->name('contacts.bulk-delete');
-                    Route::post('contacts/mark-all-read', [ContactController::class, 'markAllRead'])->name('contacts.mark-all-read');
                     Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
                     Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
                 });
             });
+
+        // Pesan Masuk (Admin & SPMB)
+        Route::middleware(['check.role:admin,spmb'])->group(function () {
+            Route::resource('contacts', ContactController::class)->only(['index', 'show', 'destroy']);
+            Route::post('contacts/bulk-delete', [ContactController::class, 'bulkDelete'])->name('contacts.bulk-delete');
+            Route::post('contacts/mark-all-read', [ContactController::class, 'markAllRead'])->name('contacts.mark-all-read');
+        });
 
         // 3. Grup SPMB & EXAMP (Admin & Panitia/Staff SPMB)
         Route::middleware([IsSpmbMiddleware::class])->group(function () {

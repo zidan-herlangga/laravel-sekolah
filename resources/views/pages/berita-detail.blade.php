@@ -122,13 +122,55 @@
                         </div>
                     </div>
 
-                    <!-- Disqus Section -->
-                    <div class="mt-20 pt-12 border-t border-gray-100">
+                    <!-- Komentar Section -->
+                    <div class="mt-20 pt-12 border-t border-gray-100" id="comments-section">
                         <div class="flex items-center gap-4 mb-10">
                             <h3 class="font-display text-3xl font-black text-dark-900 tracking-tight">Diskusi Berita</h3>
+                            <span id="comment-count" class="text-sm text-gray-400 font-bold">(0)</span>
                             <div class="h-px flex-1 bg-gray-100"></div>
                         </div>
-                        <div id="disqus_thread" class="bg-white"></div>
+
+                        <!-- Form Komentar -->
+                        <div class="mb-12 p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                            <form id="comment-form" class="space-y-4">
+                                @csrf
+                                <input type="hidden" name="parent_id" id="parent_id" value="">
+                                <div id="reply-info" class="hidden flex items-center gap-2 text-sm text-primary-600 bg-primary-50 px-4 py-2 rounded-lg">
+                                    <i class="fa-solid fa-reply"></i>
+                                    <span>Membalas komentar</span>
+                                    <button type="button" onclick="cancelReply()" class="ml-auto text-gray-400 hover:text-red-500">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                                <textarea name="body" id="comment-body" rows="3"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary-400 focus:ring-2 focus:ring-primary-100 resize-none text-sm"
+                                    placeholder="Tulis komentar..." required></textarea>
+                                <div class="flex items-center justify-between">
+                                    @auth
+                                        <p class="text-sm text-gray-500">Sebagai <strong>{{ auth()->user()->name }}</strong></p>
+                                    @else
+                                        <div class="flex gap-3 flex-1 mr-4">
+                                            <input type="text" name="name" id="comment-name" placeholder="Nama *"
+                                                class="w-1/2 px-4 py-2 rounded-xl border border-gray-200 focus:border-primary-400 focus:ring-2 focus:ring-primary-100 text-sm" required>
+                                            <input type="email" name="email" id="comment-email" placeholder="Email (opsional)"
+                                                class="w-1/2 px-4 py-2 rounded-xl border border-gray-200 focus:border-primary-400 focus:ring-2 focus:ring-primary-100 text-sm">
+                                        </div>
+                                    @endauth
+                                    <button type="submit" id="comment-submit"
+                                        class="px-6 py-2.5 bg-primary-500 hover:bg-primary-600 text-white text-sm font-bold rounded-xl transition-colors">
+                                        Kirim
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Daftar Komentar -->
+                        <div id="comments-list" class="space-y-6">
+                            <div class="text-center py-12 text-gray-400">
+                                <i class="fa-solid fa-spinner fa-spin text-2xl"></i>
+                                <p class="mt-2 text-sm">Memuat komentar...</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -182,18 +224,118 @@
             document.getElementById("reading-progress").style.width = scrolled + "%";
         });
 
-        // Disqus Config
-        var disqus_config = function() {
-            this.page.url = '{{ url()->current() }}';
-            this.page.identifier = '{{ $post->id }}';
-        };
-        (function() {
-            var d = document,
-                s = d.createElement('script');
-            s.src = 'https://zidanherlangga.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-        })();
+        // Comment System
+        const postId = '{{ $post->id }}';
+        const commentForm = document.getElementById('comment-form');
+        const commentsList = document.getElementById('comments-list');
+        const commentCount = document.getElementById('comment-count');
+        const submitBtn = document.getElementById('comment-submit');
+
+        async function loadComments() {
+            try {
+                const res = await fetch('/berita/{{ $post->slug }}/comments');
+                const comments = await res.json();
+                renderComments(comments);
+                commentCount.textContent = '(' + comments.length + ')';
+            } catch {
+                commentsList.innerHTML = '<div class="text-center py-12 text-gray-400"><p class="text-sm">Gagal memuat komentar.</p></div>';
+            }
+        }
+
+        function renderComments(comments) {
+            if (!comments.length) {
+                commentsList.innerHTML = '<div class="text-center py-12 text-gray-400"><i class="fa-solid fa-comment-slash text-2xl"></i><p class="mt-2 text-sm">Belum ada komentar. Jadilah yang pertama!</p></div>';
+                return;
+            }
+            commentsList.innerHTML = comments.map(c => renderComment(c)).join('');
+        }
+
+        function renderComment(c, isReply = false) {
+            const date = new Date(c.created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+            const avatar = c.user
+                ? `<div class="w-10 h-10 rounded-xl bg-primary-100 flex items-center justify-center text-primary-600 font-bold text-sm">${c.name.charAt(0).toUpperCase()}</div>`
+                : `<div class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 font-bold text-sm">${c.name.charAt(0).toUpperCase()}</div>`;
+
+            let repliesHtml = '';
+            if (c.replies && c.replies.length) {
+                repliesHtml = `<div class="ml-14 mt-4 space-y-4">${c.replies.map(r => renderComment(r, true)).join('')}</div>`;
+            }
+
+            const replyBtn = !isReply ? `<button onclick="setReply(${c.id}, '${c.name.replace(/'/g, "\\'")}')" class="text-xs text-gray-400 hover:text-primary-500 font-bold transition-colors"><i class="fa-solid fa-reply"></i> Balas</button>` : '';
+
+            return `
+                <div class="p-5 bg-white rounded-2xl border border-gray-100 shadow-sm ${isReply ? '' : ''}">
+                    <div class="flex items-start gap-3">
+                        ${avatar}
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-bold text-dark-900">${escapeHtml(c.name)}</span>
+                                <span class="text-xs text-gray-400">${date}</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-1.5 leading-relaxed">${escapeHtml(c.body)}</p>
+                            <div class="flex items-center gap-3 mt-2">
+                                ${replyBtn}
+                            </div>
+                        </div>
+                    </div>
+                    ${repliesHtml}
+                </div>
+            `;
+        }
+
+        function setReply(parentId, name) {
+            document.getElementById('parent_id').value = parentId;
+            const replyInfo = document.getElementById('reply-info');
+            replyInfo.classList.remove('hidden');
+            replyInfo.querySelector('span').textContent = 'Membalas ' + name;
+            document.getElementById('comment-body').focus();
+        }
+
+        function cancelReply() {
+            document.getElementById('parent_id').value = '';
+            document.getElementById('reply-info').classList.add('hidden');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        commentForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Mengirim...';
+
+            const formData = new FormData(this);
+
+            try {
+                const res = await fetch('/berita/{{ $post->slug }}/comments', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                    }
+                });
+
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err.message || err.errors?.[Object.keys(err.errors || {})[0]]?.[0] || 'Gagal (' + res.status + ')');
+                }
+
+                this.reset();
+                cancelReply();
+                loadComments();
+            } catch (err) {
+                alert(err.message || 'Gagal mengirim komentar. Silakan coba lagi.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Kirim';
+            }
+        });
+
+        loadComments();
 
         // Share Helpers
         function copyLink() {

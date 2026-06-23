@@ -230,6 +230,13 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a href="{{ route('admin.comments.index') }}"
+                                    class="nav-link {{ request()->routeIs('admin.comments.*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-comments"></i>
+                                    <p>Komentar</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="{{ route('admin.galleries.index') }}"
                                     class="nav-link {{ request()->routeIs('admin.galleries.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-images"></i>
